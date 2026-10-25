@@ -60,18 +60,17 @@ def obelisk_stone(top=False):
     return rows
 
 
-# A chain of diamonds, 3 pixels tall, period 4: the ornament on every ring
+# A running wave, 2 pixels tall, period 4: the ornament on every ring
 ORNAMENT = [
-    ".o..",
-    "o.oo",
-    ".o..",
+    ".oo.",
+    "o..o",
 ]
 
 
 def ornament():
     rows = []
     for y in range(16):
-        rows.append("".join(ORNAMENT[y][x % 4] if y < 3 else "." for x in range(16)))
+        rows.append("".join(ORNAMENT[y][x % 4] if y < len(ORNAMENT) else "." for x in range(16)))
     return rows
 
 

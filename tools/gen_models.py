@@ -41,14 +41,14 @@ PARTS = [
     ("tip", [7.25, 32, 7.25], [8.75, 34, 8.75], "diamond", "diamond"),
 ]
 
-# Ornament rings, one more per tier, all 3 units tall so the 3-pixel ornament maps 1:1. They stand 0.06 off
-# the shaft: closer than that the two surfaces fight and shimmer at a distance.
+# Ornament rings, one more per tier, 2 units tall with gaps between them so each reads as its own ring.
+# They stand 0.06 off the shaft: closer than that the two surfaces fight and shimmer at a distance.
 RUNE_BANDS = [
-    ([4.94, 4.5, 4.94], [11.06, 7.5, 11.06]),
-    ([4.94, 10, 4.94], [11.06, 13, 11.06]),
-    ([4.94, 13, 4.94], [11.06, 16, 11.06]),
-    ([5.44, 16, 5.44], [10.56, 19, 10.56]),
-    ([5.44, 19, 5.44], [10.56, 22, 10.56]),
+    ([4.94, 5, 4.94], [11.06, 7, 11.06]),
+    ([4.94, 10.5, 4.94], [11.06, 12.5, 11.06]),
+    ([4.94, 13.5, 4.94], [11.06, 15.5, 11.06]),
+    ([5.44, 17, 5.44], [10.56, 19, 10.56]),
+    ([5.44, 20, 5.44], [10.56, 22, 10.56]),
 ]
 
 
@@ -117,7 +117,7 @@ def eye_elements():
 
 
 def rune_element(i, frm, to):
-    faces = {face: {"uv": [0, 0, 16, 3], "texture": "#runes"} for face in ("north", "south", "east", "west")}
+    faces = {face: {"uv": [0, 0, 16, 2], "texture": "#runes"} for face in ("north", "south", "east", "west")}
     return {"name": f"ornament ring {i}", "from": frm, "to": to, "shade": False, "faces": faces}
 
 
