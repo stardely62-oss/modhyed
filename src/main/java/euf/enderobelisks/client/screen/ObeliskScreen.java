@@ -502,7 +502,12 @@ public class ObeliskScreen extends Screen {
 	private void drawMarkers(DrawContext context, int mouseX, int mouseY) {
 		Entry hovered = entryAt(mouseX, mouseY);
 		float t = ObeliskUi.time();
-		for (Entry entry : data.entries()) {
+		// Labels go in order of importance (here, chosen, under the mouse, the rest); one that would overlap a label
+		// already placed is left out
+		List<Entry> order = new ArrayList<>(data.entries());
+		order.sort(Comparator.comparingInt((Entry e) -> e.id().equals(data.sourceId()) ? 0 : e.id().equals(selected) ? 1 : e == hovered ? 2 : 3));
+		List<int[]> placed = new ArrayList<>();
+		for (Entry entry : order) {
 			if (!sameDimension(entry)) {
 				continue; // other dimensions are in the list, not on this map
 			}
@@ -533,8 +538,12 @@ public class ObeliskScreen extends Screen {
 			boolean label = isSelected || entry == hovered || here || scale >= 0.12;
 			if (label) {
 				int tw = textRenderer.getWidth(entry.name());
-				context.fill(x - tw / 2 - 3, y + 6, x + tw / 2 + 3, y + 17, 0x90000000);
-				context.drawCenteredTextWithShadow(textRenderer, entry.name(), x, y + 8, color);
+				int[] box = {x - tw / 2 - 3, y + 6, x + tw / 2 + 3, y + 17};
+				if (placed.stream().noneMatch(b -> b[0] < box[2] && box[0] < b[2] && b[1] < box[3] && box[1] < b[3])) {
+					placed.add(box);
+					context.fill(box[0], box[1], box[2], box[3], 0x90000000);
+					context.drawCenteredTextWithShadow(textRenderer, entry.name(), x, y + 8, color);
+				}
 			}
 		}
 	}
