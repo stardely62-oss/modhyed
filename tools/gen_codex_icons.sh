@@ -12,6 +12,7 @@ declare -A P=(
   [upgrade]="A teal crystal shard with a bold upward pointing arrow made of glowing runes above it."
   [cooldown]="An hourglass with a dark obsidian frame and glowing teal sand falling."
   [return_shard]="ITEM SPRITE in the diagonal Minecraft item pose (from bottom-left to top-right): a jagged shard of dark violet obsidian crystal with a glowing ender teal rune of a curved arrow pointing back on itself carved into it, two tiny teal sparks. Bold simple shape, at most 7 colours."
+  [time_shard]="ITEM SPRITE in the diagonal Minecraft item pose (from bottom-left to top-right): a slender shard of pale glowing ender-teal crystal with a tiny golden hourglass frozen inside it, a few motes of light hanging still around it. Bold simple shape, at most 7 colours."
   [range]="A rune circle: a thin glowing teal ring with four small violet diamond runes at north, south, east and west."
 )
 NAMES=("${@:2}")
