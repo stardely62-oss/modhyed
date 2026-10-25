@@ -22,7 +22,7 @@
 			"euf.enderobelisks.client.EnderObelisksClient"
 		],
 		"journeymap": [
-			"euf.enderobelisks.compat.JourneyMapPlugin"
+			"euf.enderobelisks.compat.JourneyMapCompat"
 		]
 	},
 	"depends": {

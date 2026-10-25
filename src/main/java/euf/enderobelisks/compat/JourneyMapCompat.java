@@ -24,7 +24,7 @@ import net.minecraft.util.Identifier;
  * never touched. It compiles against stand-ins of the API (src/jmstubs) that are not packaged.
  */
 @JourneyMapPlugin(apiVersion = "2.0.0")
-public class JourneyMapPlugin implements IClientPlugin {
+public class JourneyMapCompat implements IClientPlugin {
 	private static final Identifier ICON = EnderObelisks.id("textures/gui/map_marker.png");
 	/** How often to check that JourneyMap still has our markers (it drops overlays when the world changes). */
 	private static final int CHECK_TICKS = 100;
