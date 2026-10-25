@@ -1,4 +1,6 @@
 {
 	"item.modhyed.euf_gem": "Эуф-кристалл",
-	"block.modhyed.euf_block": "Эуф-блок"
+	"block.modhyed.euf_block": "Эуф-блок",
+	"block.modhyed.euf_statue": "Статуя стража (рисовал Claude)",
+	"block.modhyed.euf_statue_codex": "Статуя стража (Codex)"
 }

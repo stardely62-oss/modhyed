@@ -41,5 +41,7 @@ timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' ./gradlew runHarness --stackt
 
 echo '--- harness result ---'
 cat "$CLIENT/harness-result.txt" 2>/dev/null || echo '(no result file: the client crashed or never reached the world)'
-test -s "$CLIENT/screenshots/harness.png" || { echo 'no screenshot was written'; exit 1; }
+for shot in overview angle statue_hand statue_codex; do
+  test -s "$CLIENT/screenshots/$shot.png" || { echo "screenshot $shot.png was not written"; exit 1; }
+done
 grep -qx 'RESULT PASS' "$CLIENT/harness-result.txt"

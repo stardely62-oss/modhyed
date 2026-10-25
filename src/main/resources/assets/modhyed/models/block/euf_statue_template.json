@@ -1,0 +1,46 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"particle": "#pedestal_side",
+		"crystal": "modhyed:block/euf_block"
+	},
+	"elements": [
+		{
+			"name": "pedestal",
+			"from": [1, 0, 1], "to": [15, 8, 15],
+			"faces": {
+				"north": {"uv": [1, 4, 15, 12], "texture": "#pedestal_side"},
+				"south": {"uv": [1, 4, 15, 12], "texture": "#pedestal_side"},
+				"east":  {"uv": [1, 4, 15, 12], "texture": "#pedestal_side"},
+				"west":  {"uv": [1, 4, 15, 12], "texture": "#pedestal_side"},
+				"up":    {"uv": [1, 1, 15, 15], "texture": "#pedestal_top"},
+				"down":  {"uv": [1, 1, 15, 15], "texture": "#pedestal_top", "cullface": "down"}
+			}
+		},
+		{
+			"name": "head, face toward north (the blockstate turns it)",
+			"from": [4, 8, 4], "to": [12, 16, 12],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#head_front"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#head_side"},
+				"east":  {"uv": [0, 0, 16, 16], "texture": "#head_side"},
+				"west":  {"uv": [0, 0, 16, 16], "texture": "#head_side"},
+				"up":    {"uv": [0, 0, 16, 16], "texture": "#head_top"},
+				"down":  {"uv": [0, 0, 16, 16], "texture": "#head_side"}
+			}
+		},
+		{
+			"name": "floating crystal, turned 45 degrees",
+			"from": [7, 17, 7], "to": [9, 21, 9],
+			"rotation": {"origin": [8, 19, 8], "axis": "y", "angle": 45},
+			"faces": {
+				"north": {"uv": [6, 4, 8, 12], "texture": "#crystal"},
+				"south": {"uv": [8, 4, 10, 12], "texture": "#crystal"},
+				"east":  {"uv": [6, 4, 8, 12], "texture": "#crystal"},
+				"west":  {"uv": [8, 4, 10, 12], "texture": "#crystal"},
+				"up":    {"uv": [7, 7, 9, 9], "texture": "#crystal"},
+				"down":  {"uv": [7, 7, 9, 9], "texture": "#crystal"}
+			}
+		}
+	]
+}

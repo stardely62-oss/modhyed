@@ -66,10 +66,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           JAR=$(ls build/libs/modhyed-*.jar | grep -v -- '-sources' | head -1)
-          cp build/harness-client/screenshots/harness.png screenshot.png
+          cp build/harness-client/screenshots/overview.png screenshot.png
           zip -j modhyed-updater.zip tools/update-modhyed.bat tools/update-modhyed.ps1
           gh release delete dev --yes --cleanup-tag || true
-          gh release create dev "$JAR" screenshot.png modhyed-updater.zip \
+          gh release create dev "$JAR" screenshot.png build/harness-client/screenshots/{angle,statue_hand,statue_codex}.png modhyed-updater.zip \
             --prerelease --target "$GITHUB_SHA" \
             --title "Dev build ${{ github.run_number }}" \
             --notes "Свежая сборка из main (коммит ${GITHUB_SHA::7}). Поставить: скачай modhyed-updater.zip, распакуй и запусти update-modhyed.bat. Тесты: GameTest + клиент, скриншот приложен."
@@ -81,4 +81,4 @@ jobs:
         run: |
           JAR=$(ls build/libs/modhyed-*.jar | grep -v -- '-sources' | head -1)
           zip -j modhyed-updater.zip tools/update-modhyed.bat tools/update-modhyed.ps1
-          gh release create "$GITHUB_REF_NAME" "$JAR" build/harness-client/screenshots/harness.png modhyed-updater.zip --generate-notes
+          gh release create "$GITHUB_REF_NAME" "$JAR" build/harness-client/screenshots/*.png modhyed-updater.zip --generate-notes

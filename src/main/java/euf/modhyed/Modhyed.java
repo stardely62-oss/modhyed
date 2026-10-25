@@ -25,6 +25,17 @@ public class Modhyed implements ModInitializer {
 	public static final Item EUF_BLOCK_ITEM = Registry.register(Registries.ITEM, id("euf_block"),
 			new BlockItem(EUF_BLOCK, new Item.Settings()));
 
+	// Same model, two texture sets: drawn by a script (hand) and generated with Codex
+	public static final Block EUF_STATUE = registerStatue("euf_statue");
+	public static final Block EUF_STATUE_CODEX = registerStatue("euf_statue_codex");
+
+	private static Block registerStatue(String name) {
+		Block block = Registry.register(Registries.BLOCK, id(name),
+				new StatueBlock(FabricBlockSettings.copyOf(Blocks.STONE_BRICKS).nonOpaque().luminance(4)));
+		Registry.register(Registries.ITEM, id(name), new BlockItem(block, new Item.Settings()));
+		return block;
+	}
+
 	public static Identifier id(String path) {
 		return new Identifier(MOD_ID, path);
 	}
@@ -33,6 +44,10 @@ public class Modhyed implements ModInitializer {
 	public void onInitialize() {
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> entries.add(EUF_GEM));
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(entries -> entries.add(EUF_BLOCK_ITEM));
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
+			entries.add(EUF_STATUE);
+			entries.add(EUF_STATUE_CODEX);
+		});
 		LOGGER.info("Modhyed loaded");
 	}
 }
