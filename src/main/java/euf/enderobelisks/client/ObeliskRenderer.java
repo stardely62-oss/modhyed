@@ -20,9 +20,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 /**
  * The animated parts of an obelisk, drawn from the lower half's block entity: the ender eye floating in the cage
@@ -70,8 +71,9 @@ public class ObeliskRenderer implements BlockEntityRenderer<ObeliskBlockEntity> 
 		updateEye(entity, time);
 		matrices.push();
 		matrices.translate(0.5, EYE_Y + MathHelper.sin(time * 0.08f) * 0.03, 0.5);
-		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.eyeYaw));
-		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(entity.eyePitch));
+		// Turn the model's front (-Z) onto the look direction, keeping the slit pupil upright
+		Vector3f dir = entity.eyeDirection;
+		matrices.multiply(new Quaternionf().lookAlong(dir.x, dir.y, dir.z, 0, 1, 0).invert());
 		// A little bigger than the gap between the bars: the eye is wedged into its cage
 		matrices.scale(EYE_SCALE, EYE_SCALE, EYE_SCALE);
 		matrices.translate(-0.5, -0.5, -0.5);
@@ -94,22 +96,24 @@ public class ObeliskRenderer implements BlockEntityRenderer<ObeliskBlockEntity> 
 		}
 	}
 
-	/** The pupil (model front, -Z) turns smoothly toward the nearest player's eyes; with nobody near it idly spins. */
+	/** The pupil turns smoothly toward the nearest player's eyes; with nobody near it slowly looks around. */
 	private static void updateEye(ObeliskBlockEntity entity, float time) {
 		Vec3d eye = Vec3d.ofBottomCenter(entity.getPos()).add(0, EYE_Y, 0);
 		PlayerEntity player = entity.getWorld().getClosestPlayer(eye.x, eye.y, eye.z, WATCH_DISTANCE, false);
-		float targetYaw;
-		float targetPitch;
+		Vector3f target;
 		if (player != null) {
 			Vec3d d = player.getEyePos().subtract(eye);
-			targetYaw = (float) Math.toDegrees(Math.atan2(-d.x, -d.z));
-			targetPitch = (float) Math.toDegrees(Math.atan2(d.y, Math.sqrt(d.x * d.x + d.z * d.z)));
+			target = new Vector3f((float) d.x, (float) d.y, (float) d.z);
 		} else {
-			targetYaw = time * 2.0f;
-			targetPitch = MathHelper.sin(time * 0.05f) * 10.0f;
+			target = new Vector3f(MathHelper.sin(time * 0.035f), MathHelper.sin(time * 0.05f) * 0.2f, -MathHelper.cos(time * 0.035f));
 		}
-		entity.eyeYaw += MathHelper.wrapDegrees(targetYaw - entity.eyeYaw) * 0.12f;
-		entity.eyePitch += (targetPitch - entity.eyePitch) * 0.12f;
+		if (target.lengthSquared() < 1.0e-4f) {
+			return;
+		}
+		target.normalize();
+		// Never straight up or down, where "upright" is undefined
+		target.y = MathHelper.clamp(target.y, -0.9f, 0.9f);
+		entity.eyeDirection.lerp(target.normalize(), 0.12f).normalize();
 	}
 
 	@Override

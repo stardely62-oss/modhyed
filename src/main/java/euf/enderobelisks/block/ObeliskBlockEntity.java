@@ -10,6 +10,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 /**
  * Lives in the lower half. Keeps a copy of the registry entry's name and tier for rendering (name plate, lit rune
@@ -21,9 +22,8 @@ public class ObeliskBlockEntity extends BlockEntity {
 	private String name = "";
 	private int tier;
 
-	// Client-side animation state, never saved
-	public float eyeYaw;
-	public float eyePitch;
+	/** Client-side animation state, never saved: where the eye's pupil currently points (unit vector). */
+	public final Vector3f eyeDirection = new Vector3f(0, 0, -1);
 
 	public ObeliskBlockEntity(BlockPos pos, BlockState state) {
 		super(EnderObelisks.OBELISK_BLOCK_ENTITY, pos, state);

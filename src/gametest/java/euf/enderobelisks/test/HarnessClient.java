@@ -171,8 +171,11 @@ public class HarnessClient implements ClientModInitializer {
 		step(60, true, c -> {
 			check("teleported_to_village", c.player.getPos().isInRange(Vec3d.ofCenter(village), 4));
 			c.options.hudHidden = true;
-			screenshot(c, "arrived");
+			// Step back a little and face the village obelisk: it should be looking at us
+			tp(c, c.player.getPos().add(c.player.getPos().subtract(Vec3d.ofBottomCenter(village)).normalize().multiply(1.5)),
+					Vec3d.ofBottomCenter(village).add(0, 1.3, 0));
 		});
+		step(30, true, c -> screenshot(c, "arrived"));
 		// Straight back is refused: the cooldown is running. The village is not mine, so no upgrades there either.
 		step(10, false, c -> {
 			c.options.hudHidden = false;
