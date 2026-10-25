@@ -1,8 +1,10 @@
 package euf.modhyed;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
@@ -15,8 +17,11 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-/** A guardian bust on a pedestal (non-cube JSON model) that turns its face toward the player who places it. */
-public class StatueBlock extends Block {
+/**
+ * A guardian bust on a pedestal (non-cube JSON model) that turns its face toward the player who places it.
+ * The floating crystal is drawn separately by a block entity renderer so it can spin.
+ */
+public class StatueBlock extends Block implements BlockEntityProvider {
 	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 	// Pedestal 14x8x14, head 8x8x8 on top; the crystal above the head is decorative only
 	private static final VoxelShape SHAPE = VoxelShapes.union(
@@ -26,6 +31,11 @@ public class StatueBlock extends Block {
 	public StatueBlock(Settings settings) {
 		super(settings);
 		setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH));
+	}
+
+	@Override
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return new StatueBlockEntity(pos, state);
 	}
 
 	@Override

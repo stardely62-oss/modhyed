@@ -1,1 +1,10 @@
-{"parent":"modhyed:block/euf_statue"}
+{
+	"parent": "modhyed:item/euf_statue_template",
+	"textures": {
+		"head_front": "modhyed:block/statue/hand_head_front",
+		"head_side": "modhyed:block/statue/hand_head_side",
+		"head_top": "modhyed:block/statue/hand_head_top",
+		"pedestal_side": "modhyed:block/statue/hand_pedestal_side",
+		"pedestal_top": "modhyed:block/statue/hand_pedestal_top"
+	}
+}

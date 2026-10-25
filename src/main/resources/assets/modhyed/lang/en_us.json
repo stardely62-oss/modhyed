@@ -2,5 +2,8 @@
 	"item.modhyed.euf_gem": "Euf Gem",
 	"block.modhyed.euf_block": "Block of Euf",
 	"block.modhyed.euf_statue": "Guardian Statue (hand-drawn)",
-	"block.modhyed.euf_statue_codex": "Guardian Statue (Codex)"
+	"block.modhyed.euf_statue_codex": "Guardian Statue (Codex)",
+	"item.modhyed.euf_staff": "Euf Staff",
+	"entity.modhyed.euf_golem": "Euf Golem",
+	"item.modhyed.euf_golem_spawn_egg": "Euf Golem Spawn Egg"
 }

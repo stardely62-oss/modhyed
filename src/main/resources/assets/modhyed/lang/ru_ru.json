@@ -2,5 +2,8 @@
 	"item.modhyed.euf_gem": "Эуф-кристалл",
 	"block.modhyed.euf_block": "Эуф-блок",
 	"block.modhyed.euf_statue": "Статуя стража (рисовал Claude)",
-	"block.modhyed.euf_statue_codex": "Статуя стража (Codex)"
+	"block.modhyed.euf_statue_codex": "Статуя стража (Codex)",
+	"item.modhyed.euf_staff": "Эуф-посох",
+	"entity.modhyed.euf_golem": "Эуф-голем",
+	"item.modhyed.euf_golem_spawn_egg": "Яйцо призыва эуф-голема"
 }

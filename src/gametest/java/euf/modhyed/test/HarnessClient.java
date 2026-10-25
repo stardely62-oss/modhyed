@@ -1,5 +1,6 @@
 package euf.modhyed.test;
 
+import euf.modhyed.EufGolemEntity;
 import euf.modhyed.Modhyed;
 import euf.modhyed.StatueBlock;
 import java.io.IOException;
@@ -14,12 +15,15 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.client.util.ScreenshotRecorder;
+import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
@@ -90,6 +94,54 @@ public class HarnessClient implements ClientModInitializer {
 		step(40, true, c -> screenshot(c, "statue_hand"));
 		step(40, false, c -> commands(c, "tp @a 1.5 -59.6 2.0 0 22"));
 		step(40, true, c -> screenshot(c, "statue_codex"));
+		// Two frames 10 ticks apart: the crystal should have turned by 30 degrees
+		step(10, false, c -> screenshot(c, "statue_spin_a"));
+		step(30, false, c -> screenshot(c, "statue_spin_b"));
+
+		// Golem scene, away from the statue row: a still golem facing the player and a wandering one
+		step(40, false, c -> commands(c, "tp @a 8.5 -59.4 2.6 0 10",
+				"summon modhyed:euf_golem 8.5 -60 4.5 {NoAI:1b,Rotation:[180f,0f]}",
+				"summon modhyed:euf_golem 11.5 -60 7.5 {Rotation:[150f,0f]}",
+				"give @a modhyed:euf_staff"));
+		step(40, true, c -> {
+			check("golems_spawned", golems(c).size() == 2);
+			screenshot(c, "golem");
+		});
+		step(40, false, c -> commands(c, "tp @a 10.2 -59.4 2.8 45 10"));
+		step(40, true, c -> screenshot(c, "golem_side"));
+
+		// Staff: first person with the HUD and hand, then a real right click at the still golem
+		step(30, false, c -> {
+			c.options.hudHidden = false;
+			commands(c, "gamemode creative @a", "tp @a 8.5 -60 0.5 0 15");
+		});
+		step(40, true, c -> {
+			check("staff_in_hotbar", select(c, Modhyed.EUF_STAFF));
+			screenshot(c, "staff_held");
+		});
+		step(3, false, c -> check("staff_click_accepted",
+				c.interactionManager.interactItem(c.player, Hand.MAIN_HAND).isAccepted()));
+		// A small fireball starts slow and speeds up: about 10 ticks to reach the golem 3.5 blocks away
+		step(10, false, c -> {
+			check("fireball_spawned", !c.getServer().getOverworld().getEntitiesByClass(SmallFireballEntity.class,
+					new Box(4, -64, -4, 13, -50, 10), e -> true).isEmpty());
+			screenshot(c, "staff_fire");
+		});
+		step(40, false, c -> screenshot(c, "golem_hit"));
+		step(10, false, c -> {
+			EufGolemEntity still = golems(c).stream().filter(EufGolemEntity::isAiDisabled).findFirst().orElse(null);
+			check("fireball_hurt_golem", still != null && still.getHealth() < still.getMaxHealth());
+			c.options.setPerspective(Perspective.THIRD_PERSON_FRONT);
+		});
+		step(30, true, c -> screenshot(c, "staff_thirdperson"));
+
+		// Night: the golem's eyes, core and crystal and the statue crystals glow in the dark
+		step(20, false, c -> {
+			c.options.setPerspective(Perspective.FIRST_PERSON);
+			c.options.hudHidden = true;
+			commands(c, "time set 18000", "gamemode spectator @a", "tp @a 6.0 -59.0 1.2 -40 12");
+		});
+		step(40, true, c -> screenshot(c, "night"));
 		// Screenshots are written on an IO thread: the last wait gives them time before quitting
 		step(0, false, this::finish);
 
@@ -125,6 +177,20 @@ public class HarnessClient implements ClientModInitializer {
 				server.getCommandManager().executeWithPrefix(server.getCommandSource(), command);
 			}
 		});
+	}
+
+	private static List<EufGolemEntity> golems(MinecraftClient client) {
+		return client.getServer().getOverworld().getEntitiesByClass(EufGolemEntity.class, new Box(4, -64, 0, 16, -50, 14), e -> true);
+	}
+
+	private static boolean select(MinecraftClient client, Item item) {
+		for (int i = 0; i < 9; i++) {
+			if (client.player.getInventory().getStack(i).isOf(item)) {
+				client.player.getInventory().selectedSlot = i;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static BlockState blockAt(MinecraftClient client, BlockPos pos) {

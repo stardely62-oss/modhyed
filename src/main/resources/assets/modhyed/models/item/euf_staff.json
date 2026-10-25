@@ -1,0 +1,11 @@
+{
+	"parent": "modhyed:item/euf_staff_base",
+	"overrides": [
+		{
+			"predicate": {
+				"modhyed:cooldown": 0.01
+			},
+			"model": "modhyed:item/euf_staff_cooldown"
+		}
+	]
+}
