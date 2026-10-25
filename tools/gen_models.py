@@ -27,9 +27,9 @@ PARTS = [
     ("corner ne", [13, 2, 1], [15, 4.5, 3], "deepslate", "deepslate"),
     ("corner sw", [1, 2, 13], [3, 4.5, 15], "deepslate", "deepslate"),
     ("corner se", [13, 2, 13], [15, 4.5, 15], "deepslate", "deepslate"),
-    ("shaft lower", [3.5, 3.5, 3.5], [12.5, 16, 12.5], "stone", "stone_top"),
-    ("diamond band", [3, 8.5, 3], [13, 9.5, 13], "diamond", "diamond"),
-    ("shaft upper", [4, 16, 4], [12, 22, 12], "stone", "stone_top"),
+    ("shaft lower", [5, 3.5, 5], [11, 16, 11], "stone", "stone_top"),
+    ("diamond band", [4.5, 8.5, 4.5], [11.5, 9.5, 11.5], "diamond", "diamond"),
+    ("shaft upper", [5.5, 16, 5.5], [10.5, 22, 10.5], "stone", "stone_top"),
     ("diamond collar", [3.5, 22, 3.5], [12.5, 23, 12.5], "diamond", "diamond"),
     ("cage bar nw", [4, 23, 4], [5, 29, 5], "deepslate", "deepslate"),
     ("cage bar ne", [11, 23, 4], [12, 29, 5], "deepslate", "deepslate"),
@@ -44,11 +44,11 @@ PARTS = [
 # Ornament rings, one more per tier, all 3 units tall so the 3-pixel ornament maps 1:1. They stand 0.06 off
 # the shaft: closer than that the two surfaces fight and shimmer at a distance.
 RUNE_BANDS = [
-    ([3.44, 4.5, 3.44], [12.56, 7.5, 12.56]),
-    ([3.44, 10, 3.44], [12.56, 13, 12.56]),
-    ([3.44, 13, 3.44], [12.56, 16, 12.56]),
-    ([3.94, 16, 3.94], [12.06, 19, 12.06]),
-    ([3.94, 19, 3.94], [12.06, 22, 12.06]),
+    ([4.94, 4.5, 4.94], [11.06, 7.5, 11.06]),
+    ([4.94, 10, 4.94], [11.06, 13, 11.06]),
+    ([4.94, 13, 4.94], [11.06, 16, 11.06]),
+    ([5.44, 16, 5.44], [10.56, 19, 10.56]),
+    ([5.44, 19, 5.44], [10.56, 22, 10.56]),
 ]
 
 
