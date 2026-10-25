@@ -29,9 +29,11 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
@@ -359,6 +361,42 @@ public class HarnessClient implements ClientModInitializer {
 			}
 		});
 		step(40, true, c -> screenshot(c, "ruin_restored"));
+
+		// The return shard the way a player uses it: sneak + right click the obelisk to bind, walk off, hold right click
+		step(10, false, c -> {
+			c.options.hudHidden = false;
+			commands(c, "gamemode survival @a", "effect give @a minecraft:resistance 120 4 true", "give @a ender_obelisks:return_shard 1");
+			tp(c, Vec3d.ofBottomCenter(home).add(-2.5, 0, 0.5), Vec3d.ofCenter(home));
+		});
+		step(10, false, c -> {
+			check("shard_in_hotbar", selectItem(c, EnderObelisks.RETURN_SHARD));
+			c.options.sneakKey.setPressed(true);
+		});
+		step(10, false, c -> rightClick(c, home));
+		step(10, false, c -> {
+			c.options.sneakKey.setPressed(false);
+			UUID homeId = onServer(c, s -> ObeliskService.at(s.getOverworld(), home).map(o -> o.id).orElse(null));
+			ItemStack held = c.player.getMainHandStack();
+			NbtCompound bound = held.getSubNbt("Obelisk");
+			LOGGER.info("shard after binding: {} nbt {}", held, held.getNbt());
+			check("shard_bound", bound != null && homeId != null && bound.containsUuid("id") && bound.getUuid("id").equals(homeId));
+		});
+		step(20, true, c -> tp(c, Vec3d.ofBottomCenter(home).add(60.5, 0, 0.5), Vec3d.ofBottomCenter(home).add(60.5, 30, 0.5)));
+		step(10, false, c -> {
+			// A real right click held down: one press, then the key stays down
+			KeyBinding.onKeyPressed(c.options.useKey.getDefaultKey());
+			c.options.useKey.setPressed(true);
+		});
+		step(40, false, c -> {
+			LOGGER.info("shard hold: using={} item={} left={}", c.player.isUsingItem(), c.player.getActiveItem(), c.player.getItemUseTimeLeft());
+			check("shard_channeling", c.player.isUsingItem() && c.player.getActiveItem().isOf(EnderObelisks.RETURN_SHARD));
+		});
+		step(100, false, c -> {
+			c.options.useKey.setPressed(false);
+			LOGGER.info("after the hold: at {} home {} hand {}", c.player.getBlockPos(), home, c.player.getMainHandStack());
+			check("shard_returned_home", c.player.getPos().isInRange(Vec3d.ofCenter(home), 4));
+			check("shard_used_up", !c.player.getInventory().contains(new ItemStack(EnderObelisks.RETURN_SHARD)));
+		});
 		step(40, false, this::finish);
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::tick);
@@ -463,6 +501,16 @@ public class HarnessClient implements ClientModInitializer {
 	private static boolean select(MinecraftClient client) {
 		for (int i = 0; i < 9; i++) {
 			if (client.player.getInventory().getStack(i).isOf(EnderObelisks.OBELISK_ITEM)) {
+				client.player.getInventory().selectedSlot = i;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean selectItem(MinecraftClient client, Item item) {
+		for (int i = 0; i < 9; i++) {
+			if (client.player.getInventory().getStack(i).isOf(item)) {
 				client.player.getInventory().selectedSlot = i;
 				return true;
 			}
