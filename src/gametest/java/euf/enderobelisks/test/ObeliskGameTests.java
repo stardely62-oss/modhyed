@@ -1,6 +1,7 @@
 package euf.enderobelisks.test;
 
 import euf.enderobelisks.EnderObelisks;
+import euf.enderobelisks.ObeliskConfig;
 import euf.enderobelisks.ObeliskInfo;
 import euf.enderobelisks.ObeliskService;
 import euf.enderobelisks.ObeliskService.TeleportResult;
@@ -11,9 +12,13 @@ import java.util.List;
 import java.util.UUID;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FacingBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Recipe;
@@ -24,6 +29,7 @@ import net.minecraft.test.GameTestException;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
 public class ObeliskGameTests implements FabricGameTest {
 	/** Sets both halves the way placing does (upper first, so the lower half never sees air above it). */
@@ -121,6 +127,131 @@ public class ObeliskGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
+	/** A floor of stone under a 3x3 around each spot, so players and pets have somewhere to land. */
+	static void floor(ServerWorld world, BlockPos... spots) {
+		for (BlockPos spot : spots) {
+			for (int x = -1; x <= 1; x++) {
+				for (int z = -1; z <= 1; z++) {
+					world.setBlockState(spot.add(x, -1, z), Blocks.STONE.getDefaultState());
+				}
+			}
+		}
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "warmup", tickLimit = 300)
+	public void warmupChannelsThenJumpsAndMovingCancelsIt(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos a = ctx.getAbsolutePos(new BlockPos(1, 2, 1));
+		BlockPos b = ctx.getAbsolutePos(new BlockPos(6, 2, 6));
+		floor(world, a, b);
+		setObelisk(world, a, Direction.SOUTH);
+		setObelisk(world, b, Direction.NORTH);
+		ObeliskService.register(world, a, null, "A");
+		ObeliskInfo infoB = ObeliskService.register(world, b, null, "B");
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.refreshPositionAndAngles(a.getX() + 0.5, a.getY(), a.getZ() + 1.5, 0, 0);
+		ObeliskService.clearCooldown(player);
+		int warmup = ObeliskConfig.get().warmupSeconds * 20;
+
+		// First try: the player steps away halfway through, so the jump is called off
+		check(ObeliskService.startTeleport(player, a, infoB.id) == TeleportResult.OK, "the warmup should start");
+		check(ObeliskService.isChanneling(player), "the player should be channelling");
+		ctx.waitAndRun(warmup / 2, () -> {
+			player.refreshPositionAndAngles(a.getX() + 0.5, a.getY(), a.getZ() + 2.5, 0, 0);
+			ctx.waitAndRun(2, () -> {
+				check(!ObeliskService.isChanneling(player), "moving should cancel the warmup");
+				check(player.getPos().isInRange(a.toCenterPos(), 3), "the player should still be at A");
+				// Second try: stand still until it fires
+				player.refreshPositionAndAngles(a.getX() + 0.5, a.getY(), a.getZ() + 1.5, 0, 0);
+				check(ObeliskService.startTeleport(player, a, infoB.id) == TeleportResult.OK, "the second warmup should start");
+				ctx.waitAndRun(warmup + 5, () -> {
+					check(player.getPos().isInRange(b.toCenterPos(), 2.5), "after the warmup the player should be at B, is at " + player.getPos());
+					world.removePlayer(player, Entity.RemovalReason.DISCARDED);
+					world.breakBlock(a, false);
+					world.breakBlock(b, false);
+					ctx.complete();
+				});
+			});
+		});
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "pets")
+	public void petsAndLeashedAnimalsComeAlong(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos a = ctx.getAbsolutePos(new BlockPos(1, 2, 1));
+		BlockPos b = ctx.getAbsolutePos(new BlockPos(6, 2, 6));
+		floor(world, a, b);
+		setObelisk(world, a, Direction.SOUTH);
+		setObelisk(world, b, Direction.NORTH);
+		ObeliskService.register(world, a, null, "A");
+		ObeliskInfo infoB = ObeliskService.register(world, b, null, "B");
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.refreshPositionAndAngles(a.getX() + 0.5, a.getY(), a.getZ() + 1.5, 0, 0);
+		ObeliskService.clearCooldown(player);
+
+		WolfEntity wolf = EntityType.WOLF.create(world);
+		wolf.refreshPositionAndAngles(a.getX() + 1.5, a.getY(), a.getZ() + 1.5, 0, 0);
+		wolf.setOwner(player);
+		wolf.setSitting(false);
+		world.spawnEntity(wolf);
+		WolfEntity sitter = EntityType.WOLF.create(world);
+		sitter.refreshPositionAndAngles(a.getX() - 0.5, a.getY(), a.getZ() + 1.5, 0, 0);
+		sitter.setOwner(player);
+		sitter.setSitting(true);
+		world.spawnEntity(sitter);
+		CowEntity cow = EntityType.COW.create(world);
+		cow.refreshPositionAndAngles(a.getX() + 0.5, a.getY(), a.getZ() + 2.5, 0, 0);
+		world.spawnEntity(cow);
+		cow.attachLeash(player, true);
+
+		check(ObeliskService.teleport(player, a, infoB.id) == TeleportResult.OK, "teleport failed");
+		check(wolf.getPos().isInRange(b.toCenterPos(), 3), "a following pet should come along, is at " + wolf.getPos());
+		check(cow.getPos().isInRange(b.toCenterPos(), 3), "an animal on the lead should come along, is at " + cow.getPos());
+		check(sitter.getPos().isInRange(a.toCenterPos(), 3), "a pet told to sit should stay");
+
+		wolf.discard();
+		sitter.discard();
+		cow.discard();
+		world.removePlayer(player, Entity.RemovalReason.DISCARDED);
+		world.breakBlock(a, false);
+		world.breakBlock(b, false);
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void pistonsCannotMoveIt(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos lower = ctx.getAbsolutePos(new BlockPos(4, 2, 3));
+		setObelisk(world, lower, Direction.NORTH);
+		ObeliskService.register(world, lower, null, "Pushed");
+		BlockPos piston = lower.west();
+		world.setBlockState(piston, Blocks.PISTON.getDefaultState().with(FacingBlock.FACING, Direction.EAST));
+		world.setBlockState(piston.west(), Blocks.REDSTONE_BLOCK.getDefaultState());
+		ctx.waitAndRun(10, () -> {
+			check(world.getBlockState(lower).isOf(EnderObelisks.OBELISK) && world.getBlockState(lower.up()).isOf(EnderObelisks.OBELISK),
+					"a piston must not move or break the obelisk");
+			check(ObeliskService.at(world, lower).isPresent(), "the obelisk should still be registered");
+			world.breakBlock(lower, false);
+			ctx.complete();
+		});
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "player")
+	public void strangersCannotBreakItEvenInCreative(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos lower = ctx.getAbsolutePos(new BlockPos(3, 2, 3));
+		setObelisk(world, lower, Direction.NORTH);
+		ObeliskService.register(world, lower, null, "Not yours");
+		ServerPlayerEntity stranger = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		boolean op = stranger.hasPermissionLevel(2);
+		boolean broke = stranger.interactionManager.tryBreakBlock(lower.up());
+		check(broke == op, "a creative stranger broke someone else's obelisk");
+		check(world.getBlockState(lower).isOf(EnderObelisks.OBELISK) || op, "the obelisk should still stand");
+		world.removePlayer(stranger, Entity.RemovalReason.DISCARDED);
+		world.breakBlock(lower, false);
+		ctx.complete();
+	}
+
 	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "player")
 	public void rangeAndAccessRules(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
@@ -141,6 +272,11 @@ public class ObeliskGameTests implements FabricGameTest {
 		check(ObeliskService.check(player, source, far) == TeleportResult.OK, "700 blocks is within tier 1 (1000)");
 		check(ObeliskService.check(player, source, secret) == (op ? TeleportResult.OK : TeleportResult.NO_ACCESS),
 				"someone else's private obelisk is closed");
+		secret.friends.put(player.getUuid(), "me");
+		check(ObeliskService.check(player, source, secret) == TeleportResult.OK, "a friend may use a private obelisk");
+		ObeliskInfo nether = new ObeliskInfo(UUID.randomUUID(), World.NETHER, origin, stranger, "x", "nether", true, 4);
+		check(ObeliskService.check(player, source, nether) == TeleportResult.OTHER_DIMENSION,
+				"jumps between dimensions are off by default");
 
 		// Breaking: only the owner (or an operator)
 		BlockPos lower = ctx.getAbsolutePos(new BlockPos(3, 2, 3));

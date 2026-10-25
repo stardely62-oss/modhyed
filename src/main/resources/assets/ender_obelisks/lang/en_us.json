@@ -28,5 +28,20 @@
 	"ender_obelisks.teleport.too_far": "Too far for this obelisk: upgrade it",
 	"ender_obelisks.teleport.cooldown": "The obelisk is still recharging",
 	"ender_obelisks.teleport.no_space": "No room to land next to that obelisk",
-	"item.ender_obelisks.time_shard": "Time Shard"
+	"item.ender_obelisks.time_shard": "Time Shard",
+	"ender_obelisks.teleport.channeling": "Teleporting in %s… stand still",
+	"ender_obelisks.teleport.interrupted_move": "The jump broke off: you moved",
+	"ender_obelisks.teleport.interrupted_damage": "The jump broke off: you were hurt",
+	"ender_obelisks.teleport.busy": "A jump is already channelling",
+	"ender_obelisks.teleport.other_dimension": "That obelisk is in another dimension",
+	"ender_obelisks.message.not_owner": "Only the owner can break this obelisk",
+	"ender_obelisks.menu.where_dimension": "%s %s %s · %s",
+	"ender_obelisks.menu.status_dimension_off": "Jumps between dimensions are off on this server",
+	"ender_obelisks.menu.status_dimension_tier": "Needs tier %s to jump between dimensions",
+	"ender_obelisks.dim.overworld": "Overworld",
+	"ender_obelisks.dim.the_nether": "Nether",
+	"ender_obelisks.dim.the_end": "The End",
+	"ender_obelisks.tooltip.use": "Right click: a map of your obelisks, and teleport",
+	"ender_obelisks.tooltip.upgrade": "Upgrades raise the range from 500 to 5000 blocks",
+	"ender_obelisks.tooltip.name": "Rename it on an anvil to name the obelisk"
 }

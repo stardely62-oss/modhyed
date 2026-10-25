@@ -28,5 +28,20 @@
 	"ender_obelisks.teleport.too_far": "Слишком далеко для этого обелиска: улучшите его",
 	"ender_obelisks.teleport.cooldown": "Обелиск ещё перезаряжается",
 	"ender_obelisks.teleport.no_space": "Рядом с тем обелиском негде приземлиться",
-	"item.ender_obelisks.time_shard": "Осколок времени"
+	"item.ender_obelisks.time_shard": "Осколок времени",
+	"ender_obelisks.teleport.channeling": "Телепортация через %s… не двигайтесь",
+	"ender_obelisks.teleport.interrupted_move": "Прыжок прерван: вы сдвинулись",
+	"ender_obelisks.teleport.interrupted_damage": "Прыжок прерван: вы получили урон",
+	"ender_obelisks.teleport.busy": "Прыжок уже готовится",
+	"ender_obelisks.teleport.other_dimension": "Этот обелиск в другом измерении",
+	"ender_obelisks.message.not_owner": "Сломать этот обелиск может только владелец",
+	"ender_obelisks.menu.where_dimension": "%s %s %s · %s",
+	"ender_obelisks.menu.status_dimension_off": "Прыжки между измерениями на сервере выключены",
+	"ender_obelisks.menu.status_dimension_tier": "Для прыжка в другое измерение нужен уровень %s",
+	"ender_obelisks.dim.overworld": "Верхний мир",
+	"ender_obelisks.dim.the_nether": "Незер",
+	"ender_obelisks.dim.the_end": "Энд",
+	"ender_obelisks.tooltip.use": "ПКМ: карта ваших обелисков и телепорт",
+	"ender_obelisks.tooltip.upgrade": "Улучшения увеличивают дальность с 500 до 5000 блоков",
+	"ender_obelisks.tooltip.name": "Переименуйте на наковальне, чтобы задать название"
 }

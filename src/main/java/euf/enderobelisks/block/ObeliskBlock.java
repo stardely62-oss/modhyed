@@ -1,5 +1,6 @@
 package euf.enderobelisks.block;
 
+import euf.enderobelisks.ObeliskConfig;
 import euf.enderobelisks.ObeliskInfo;
 import euf.enderobelisks.ObeliskService;
 import java.util.Optional;
@@ -137,7 +138,7 @@ public class ObeliskBlock extends Block implements BlockEntityProvider {
 
 	/** Owner or operator only. The client may not know the owner, so it digs as usual and the server decides. */
 	public static boolean mayBreak(BlockState state, PlayerEntity player, BlockView world, BlockPos pos) {
-		if (!(world instanceof ServerWorld serverWorld)) {
+		if (!(world instanceof ServerWorld serverWorld) || !ObeliskConfig.get().ownerOnlyBreak) {
 			return true;
 		}
 		Optional<ObeliskInfo> info = ObeliskService.at(serverWorld, lowerPos(state, pos));

@@ -3,37 +3,52 @@ package euf.enderobelisks;
 import euf.enderobelisks.block.ObeliskBlock;
 import euf.enderobelisks.block.ObeliskBlockEntity;
 import euf.enderobelisks.net.ObeliskPackets;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.PositionFlag;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 /** Server-side rules: placing, access, teleporting, upgrading, renaming. Every packet handler goes through here. */
 public final class ObeliskService {
-	public static final int COOLDOWN_TICKS = 30 * 20;
 	public static final int MAX_NAME_LENGTH = 32;
 	/** How close a player must stand to an obelisk to work its menu. */
 	public static final double USE_DISTANCE = 6.0;
+	/** Moving further than this from where the warmup started cancels it. */
+	private static final double WARMUP_MOVE_LIMIT = 0.6;
 
-	public enum TeleportResult { OK, NO_SOURCE, NO_TARGET, SAME, NO_ACCESS, TOO_FAR, COOLDOWN, NO_SPACE }
+	public enum TeleportResult { OK, NO_SOURCE, NO_TARGET, SAME, NO_ACCESS, TOO_FAR, COOLDOWN, NO_SPACE, OTHER_DIMENSION, BUSY }
+
+	/** A jump that is still channelling. */
+	private record Pending(ServerPlayerEntity player, BlockPos source, UUID target, long startTick, Vec3d startPos) {}
 
 	private static final Map<UUID, Long> lastTeleport = new HashMap<>();
+	private static final Map<UUID, Pending> pending = new HashMap<>();
 
 	private ObeliskService() {
 	}
@@ -68,9 +83,9 @@ public final class ObeliskService {
 		return info.owner.equals(player.getUuid()) || player.hasPermissionLevel(2);
 	}
 
-	/** Public obelisks are open to everyone; private ones to their owner (and operators). */
+	/** Public obelisks are open to everyone; private ones to their owner, operators and the owner's friends list. */
 	public static boolean canUse(ObeliskInfo info, PlayerEntity player) {
-		return info.isPublic || isOwner(info, player);
+		return info.isPublic || isOwner(info, player) || info.friends.containsKey(player.getUuid());
 	}
 
 	public static int cooldownLeft(ServerPlayerEntity player) {
@@ -78,7 +93,13 @@ public final class ObeliskService {
 		if (last == null) {
 			return 0;
 		}
-		return (int) Math.max(0, last + COOLDOWN_TICKS - player.getServer().getTicks());
+		return (int) Math.max(0, last + ObeliskConfig.get().cooldownSeconds * 20L - player.getServer().getTicks());
+	}
+
+	/** Forgets cooldowns and channelling jumps when a server (or a singleplayer world) stops. */
+	public static void reset() {
+		lastTeleport.clear();
+		pending.clear();
 	}
 
 	/** For tests: lets the next teleport go through at once. */
@@ -91,7 +112,7 @@ public final class ObeliskService {
 	}
 
 	public static TeleportResult check(ServerPlayerEntity player, ObeliskInfo source, @Nullable ObeliskInfo target) {
-		if (target == null || !target.dimension.equals(source.dimension)) {
+		if (target == null) {
 			return TeleportResult.NO_TARGET;
 		}
 		if (target.id.equals(source.id)) {
@@ -100,7 +121,12 @@ public final class ObeliskService {
 		if (!canUse(source, player) || !canUse(target, player)) {
 			return TeleportResult.NO_ACCESS;
 		}
-		if (source.distanceTo(target) > source.range()) {
+		if (!target.dimension.equals(source.dimension)) {
+			ObeliskConfig config = ObeliskConfig.get();
+			if (!config.crossDimension || source.tier < config.crossDimensionMinTier) {
+				return TeleportResult.OTHER_DIMENSION;
+			}
+		} else if (source.distanceTo(target) > source.range()) {
 			return TeleportResult.TOO_FAR;
 		}
 		if (cooldownLeft(player) > 0) {
@@ -109,6 +135,84 @@ public final class ObeliskService {
 		return TeleportResult.OK;
 	}
 
+	/**
+	 * What the menu's Teleport button does: checks the jump, then channels it for the configured warmup (moving or
+	 * taking damage cancels it) and only then teleports. With no warmup it jumps at once.
+	 */
+	public static TeleportResult startTeleport(ServerPlayerEntity player, BlockPos sourcePos, UUID targetId) {
+		if (pending.containsKey(player.getUuid())) {
+			return TeleportResult.BUSY;
+		}
+		Optional<ObeliskInfo> source = at(player.getServerWorld(), sourcePos);
+		if (source.isEmpty() || !isNear(player, sourcePos)) {
+			return TeleportResult.NO_SOURCE;
+		}
+		TeleportResult result = check(player, source.get(), ObeliskRegistry.get(player.getServer()).byId(targetId).orElse(null));
+		if (result != TeleportResult.OK) {
+			return result;
+		}
+		if (ObeliskConfig.get().warmupSeconds <= 0) {
+			return teleport(player, sourcePos, targetId);
+		}
+		pending.put(player.getUuid(), new Pending(player, sourcePos, targetId, player.getServer().getTicks(), player.getPos()));
+		player.getServerWorld().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_PORTAL_TRIGGER,
+				SoundCategory.PLAYERS, 0.35f, 1.6f);
+		return TeleportResult.OK;
+	}
+
+	public static boolean isChanneling(PlayerEntity player) {
+		return pending.containsKey(player.getUuid());
+	}
+
+	/** Called when a player takes damage: a channelling jump is broken off. */
+	public static void onDamaged(ServerPlayerEntity player) {
+		if (pending.remove(player.getUuid()) != null) {
+			player.sendMessage(Text.translatable("ender_obelisks.teleport.interrupted_damage"), true);
+		}
+	}
+
+	/** Every server tick: draws the channelling effect, cancels jumps of players who moved, finishes the rest. */
+	public static void tick(MinecraftServer server) {
+		int warmupTicks = ObeliskConfig.get().warmupSeconds * 20;
+		for (Iterator<Map.Entry<UUID, Pending>> it = pending.entrySet().iterator(); it.hasNext(); ) {
+			Map.Entry<UUID, Pending> entry = it.next();
+			Pending jump = entry.getValue();
+			ServerPlayerEntity player = jump.player();
+			if (player.isRemoved() || !player.isAlive()) {
+				it.remove();
+				continue;
+			}
+			if (player.getPos().squaredDistanceTo(jump.startPos()) > WARMUP_MOVE_LIMIT * WARMUP_MOVE_LIMIT) {
+				it.remove();
+				player.sendMessage(Text.translatable("ender_obelisks.teleport.interrupted_move"), true);
+				continue;
+			}
+			long elapsed = server.getTicks() - jump.startTick();
+			if (elapsed >= warmupTicks) {
+				it.remove();
+				TeleportResult result = teleport(player, jump.source(), jump.target());
+				if (result != TeleportResult.OK) {
+					player.sendMessage(Text.translatable("ender_obelisks.teleport." + result.name().toLowerCase(Locale.ROOT)), true);
+				}
+				continue;
+			}
+			// A spiral of portal particles closing in around the player, thicker as the jump nears
+			ServerWorld world = player.getServerWorld();
+			float progress = (float) elapsed / warmupTicks;
+			for (int i = 0; i < 2 + (int) (progress * 6); i++) {
+				double a = (elapsed * 0.35) + i * Math.PI * 2 / 3;
+				double r = 1.2 - progress * 0.8;
+				world.spawnParticles(ParticleTypes.REVERSE_PORTAL, player.getX() + Math.cos(a) * r, player.getY() + 0.1 + progress * 1.8,
+						player.getZ() + Math.sin(a) * r, 1, 0, 0, 0, 0);
+			}
+			if (elapsed % 20 == 0) {
+				int secondsLeft = MathHelper.ceil((warmupTicks - elapsed) / 20.0f);
+				player.sendMessage(Text.translatable("ender_obelisks.teleport.channeling", secondsLeft), true);
+			}
+		}
+	}
+
+	/** The jump itself, with no warmup: re-checks everything, moves the player and their pets, starts the cooldown. */
 	public static TeleportResult teleport(ServerPlayerEntity player, BlockPos sourcePos, UUID targetId) {
 		ServerWorld world = player.getServerWorld();
 		Optional<ObeliskInfo> source = at(world, sourcePos);
@@ -121,26 +225,42 @@ public final class ObeliskService {
 		if (result != TeleportResult.OK) {
 			return result;
 		}
+		ServerWorld targetWorld = world.getServer().getWorld(target.dimension);
 		// Loads the target chunk; an obelisk destroyed while its chunk was unloaded is dropped from the registry here
-		if (!(world.getBlockState(target.pos).getBlock() instanceof ObeliskBlock)) {
+		if (targetWorld == null || !(targetWorld.getBlockState(target.pos).getBlock() instanceof ObeliskBlock)) {
 			registry.remove(target.id);
 			return TeleportResult.NO_TARGET;
 		}
-		Optional<Vec3d> landing = findLanding(world, target.pos);
+		Optional<Vec3d> landing = findLanding(targetWorld, target.pos);
 		if (landing.isEmpty()) {
 			return TeleportResult.NO_SPACE;
 		}
 
+		List<Entity> companions = ObeliskConfig.get().takePets ? companions(player) : List.of();
 		effects(world, player.getPos());
 		Vec3d spot = landing.get();
 		// Face away from the obelisk you arrive at
 		Vec3d away = spot.subtract(Vec3d.ofBottomCenter(target.pos));
 		float yaw = (float) (Math.atan2(-away.x, away.z) * 180.0 / Math.PI);
-		player.teleport(world, spot.x, spot.y, spot.z, yaw, 0.0f);
+		player.teleport(targetWorld, spot.x, spot.y, spot.z, yaw, 0.0f);
 		player.fallDistance = 0.0f;
-		effects(world, spot);
+		for (int i = 0; i < companions.size(); i++) {
+			// Spread them a little around the landing spot so they don't stack inside each other
+			double a = i * 2.4;
+			companions.get(i).teleport(targetWorld, spot.x + Math.cos(a) * 0.6, spot.y, spot.z + Math.sin(a) * 0.6,
+					EnumSet.noneOf(PositionFlag.class), companions.get(i).getYaw(), companions.get(i).getPitch());
+		}
+		effects(targetWorld, spot);
 		lastTeleport.put(player.getUuid(), (long) world.getServer().getTicks());
 		return TeleportResult.OK;
+	}
+
+	/** Tamed pets of this player that are not told to sit, and any mob on this player's lead. */
+	static List<Entity> companions(ServerPlayerEntity player) {
+		double r = ObeliskConfig.get().petRadius;
+		return player.getServerWorld().getOtherEntities(player, new Box(player.getBlockPos()).expand(r), e ->
+				(e instanceof TameableEntity pet && pet.isTamed() && player.getUuid().equals(pet.getOwnerUuid()) && !pet.isSitting())
+						|| (e instanceof MobEntity mob && mob.getHoldingEntity() == player));
 	}
 
 	/** Two free blocks of height with solid ground, on one of the four sides, a little up or down. */
@@ -175,7 +295,7 @@ public final class ObeliskService {
 		}
 		ObeliskInfo info = found.get();
 		List<ItemStack> cost = ObeliskTiers.upgradeCost(info.tier);
-		if (cost.isEmpty()) {
+		if (info.tier >= ObeliskTiers.MAX_TIER) {
 			return false;
 		}
 		if (!player.getAbilities().creativeMode) {
@@ -229,8 +349,9 @@ public final class ObeliskService {
 	/** Opens (or refreshes) the obelisk menu for a player standing at it. */
 	public static void openMenu(ServerPlayerEntity player, BlockPos sourcePos) {
 		at(player.getServerWorld(), sourcePos).ifPresent(source -> {
+			boolean crossDimension = ObeliskConfig.get().crossDimension;
 			List<ObeliskInfo> visible = ObeliskRegistry.get(player.getServer()).all().stream()
-					.filter(o -> o.dimension.equals(source.dimension) && canUse(o, player))
+					.filter(o -> (crossDimension || o.dimension.equals(source.dimension)) && canUse(o, player))
 					.toList();
 			ObeliskPackets.sendMenu(player, source, isOwner(source, player), cooldownLeft(player), visible);
 		});
@@ -242,7 +363,7 @@ public final class ObeliskService {
 	}
 
 	/** Copies what the renderer needs (name, tier) into the loaded block entity and sends it to clients. */
-	private static void syncBlockEntity(ServerWorld world, ObeliskInfo info) {
+	static void syncBlockEntity(ServerWorld world, ObeliskInfo info) {
 		if (world.isChunkLoaded(info.pos) && world.getBlockEntity(info.pos) instanceof ObeliskBlockEntity entity) {
 			entity.update(info.id, info.name, info.tier);
 		}

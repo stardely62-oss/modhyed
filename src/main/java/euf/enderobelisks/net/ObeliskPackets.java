@@ -31,7 +31,8 @@ public final class ObeliskPackets {
 			BlockPos source = buf.readBlockPos();
 			UUID target = buf.readUuid();
 			server.execute(() -> {
-				TeleportResult result = ObeliskService.teleport(player, source, target);
+				// Starts the warmup (or jumps at once); refusals reopen the menu with the reason in the action bar
+				TeleportResult result = ObeliskService.startTeleport(player, source, target);
 				if (result != TeleportResult.OK) {
 					player.sendMessage(Text.translatable("ender_obelisks.teleport." + result.name().toLowerCase(Locale.ROOT)), true);
 					ObeliskService.openMenu(player, source);

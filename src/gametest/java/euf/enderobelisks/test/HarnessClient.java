@@ -161,15 +161,31 @@ public class HarnessClient implements ClientModInitializer {
 		});
 		step(40, false, c -> check("too_far_refused", c.player.getPos().isInRange(Vec3d.ofCenter(home), 6)));
 
-		// A real jump to the village
+		// Start a jump, then step away during the warmup: it must break off
 		step(10, false, c -> selectByName(c, "Деревня"));
+		step(20, false, c -> {
+			ObeliskScreen screen = screen(c);
+			if (screen != null) {
+				screen.teleportSelected();
+			}
+		});
+		// Checked well after the warmup would have ended (20 + 60 ticks > 3 s), so a jump that wasn't broken off shows
+		step(60, false, c -> tp(c, Vec3d.ofBottomCenter(home).add(-2.5, 0, 2.0), Vec3d.ofCenter(home)));
+		step(10, false, c -> {
+			check("moving_breaks_the_jump", c.player.getPos().isInRange(Vec3d.ofCenter(home), 6));
+			tp(c, Vec3d.ofBottomCenter(home).add(-2.5, 0, 0.5), Vec3d.ofCenter(home));
+		});
+		step(20, false, c -> rightClick(c, home));
+
+		// A real jump to the village: the menu closes, the warmup runs, then the jump
+		step(20, false, c -> selectByName(c, "Деревня"));
 		step(5, false, c -> {
 			ObeliskScreen screen = screen(c);
 			if (screen != null) {
 				screen.teleportSelected();
 			}
 		});
-		step(60, true, c -> {
+		step(100, true, c -> {
 			check("teleported_to_village", c.player.getPos().isInRange(Vec3d.ofCenter(village), 4));
 			c.options.hudHidden = true;
 			// Step back a little and face the village obelisk: it should be looking at us
@@ -212,7 +228,7 @@ public class HarnessClient implements ClientModInitializer {
 				screen.teleportSelected();
 			}
 		});
-		step(60, true, c -> check("teleported_home", c.player.getPos().isInRange(Vec3d.ofCenter(home), 4)));
+		step(100, true, c -> check("teleported_home", c.player.getPos().isInRange(Vec3d.ofCenter(home), 4)));
 
 		// Home is mine: rename, toggle access, upgrade to the top tier (free in creative)
 		step(10, false, c -> look(c, Vec3d.ofCenter(home)));
