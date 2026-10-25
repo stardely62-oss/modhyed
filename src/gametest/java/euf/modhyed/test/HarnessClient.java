@@ -115,10 +115,9 @@ public class HarnessClient implements ClientModInitializer {
 			c.options.hudHidden = false;
 			commands(c, "gamemode creative @a", "tp @a 8.5 -60 0.5 0 15");
 		});
-		step(40, true, c -> {
-			check("staff_in_hotbar", select(c, Modhyed.EUF_STAFF));
-			screenshot(c, "staff_held");
-		});
+		// Switch slots a few ticks before the shot: the hand and hotbar only update on the next frames
+		step(10, true, c -> check("staff_in_hotbar", select(c, Modhyed.EUF_STAFF)));
+		step(10, false, c -> screenshot(c, "staff_held"));
 		step(3, false, c -> check("staff_click_accepted",
 				c.interactionManager.interactItem(c.player, Hand.MAIN_HAND).isAccepted()));
 		// A small fireball starts slow and speeds up: about 10 ticks to reach the golem 3.5 blocks away
@@ -131,6 +130,8 @@ public class HarnessClient implements ClientModInitializer {
 		step(10, false, c -> {
 			EufGolemEntity still = golems(c).stream().filter(EufGolemEntity::isAiDisabled).findFirst().orElse(null);
 			check("fireball_hurt_golem", still != null && still.getHealth() < still.getMaxHealth());
+			// Face north, away from the golems, so the front camera has open space to sit in
+			commands(c, "tp @a 8.5 -60 -6 180 0");
 			c.options.setPerspective(Perspective.THIRD_PERSON_FRONT);
 		});
 		step(30, true, c -> screenshot(c, "staff_thirdperson"));

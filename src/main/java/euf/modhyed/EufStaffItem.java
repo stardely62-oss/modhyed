@@ -26,11 +26,11 @@ public class EufStaffItem extends Item {
 		ItemStack stack = user.getStackInHand(hand);
 		if (!world.isClient()) {
 			Vec3d look = user.getRotationVec(1.0f);
-			Vec3d muzzle = user.getEyePos().add(look);
+			Vec3d muzzle = user.getEyePos().add(look.multiply(1.5));
 			SmallFireballEntity fireball = new SmallFireballEntity(world, user, look.x, look.y, look.z);
 			fireball.setPosition(muzzle);
 			world.spawnEntity(fireball);
-			((ServerWorld) world).spawnParticles(ParticleTypes.WITCH, muzzle.x, muzzle.y, muzzle.z, 12, 0.15, 0.15, 0.15, 0.02);
+			((ServerWorld) world).spawnParticles(ParticleTypes.WITCH, muzzle.x, muzzle.y, muzzle.z, 8, 0.1, 0.1, 0.1, 0.02);
 			world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.PLAYERS, 0.8f, 1.3f);
 		}
 		user.getItemCooldownManager().set(this, COOLDOWN_TICKS);
