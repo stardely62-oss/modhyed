@@ -1,0 +1,243 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"glow": "ender_obelisks:block/obelisk_shard_glow",
+		"particle": "ender_obelisks:block/obelisk_shard_glow"
+	},
+	"elements": [
+		{
+			"name": "shard body",
+			"from": [
+				7.23,
+				5.98,
+				7.23
+			],
+			"to": [
+				8.77,
+				10.02,
+				8.77
+			],
+			"rotation": {
+				"origin": [
+					8,
+					8,
+					8
+				],
+				"axis": "y",
+				"angle": 45
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"south": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"up": {
+					"uv": [
+						6,
+						6,
+						10,
+						10
+					],
+					"texture": "#glow"
+				},
+				"down": {
+					"uv": [
+						6,
+						6,
+						10,
+						10
+					],
+					"texture": "#glow"
+				}
+			}
+		},
+		{
+			"name": "shard top",
+			"from": [
+				7.58,
+				9.98,
+				7.58
+			],
+			"to": [
+				8.42,
+				11.42,
+				8.42
+			],
+			"rotation": {
+				"origin": [
+					8,
+					8,
+					8
+				],
+				"axis": "y",
+				"angle": 45
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"south": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"up": {
+					"uv": [
+						6,
+						6,
+						10,
+						10
+					],
+					"texture": "#glow"
+				},
+				"down": {
+					"uv": [
+						6,
+						6,
+						10,
+						10
+					],
+					"texture": "#glow"
+				}
+			}
+		},
+		{
+			"name": "shard bottom",
+			"from": [
+				7.58,
+				4.58,
+				7.58
+			],
+			"to": [
+				8.42,
+				6.02,
+				8.42
+			],
+			"rotation": {
+				"origin": [
+					8,
+					8,
+					8
+				],
+				"axis": "y",
+				"angle": 45
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"south": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#glow"
+				},
+				"up": {
+					"uv": [
+						6,
+						6,
+						10,
+						10
+					],
+					"texture": "#glow"
+				},
+				"down": {
+					"uv": [
+						6,
+						6,
+						10,
+						10
+					],
+					"texture": "#glow"
+				}
+			}
+		}
+	]
+}

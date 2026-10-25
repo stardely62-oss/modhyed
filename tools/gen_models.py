@@ -1,7 +1,7 @@
 """Writes the obelisk's JSON models and blockstate.
 
 The obelisk is described once in "overall" coordinates (two blocks: y 0..32+), then split into the lower and upper
-block models; the item model shows the whole thing. The eye is a separate model drawn (and
+block models; the item model shows the whole thing. The eye and the orbiting shards are separate models drawn (and
 animated) by ObeliskRenderer.  Run: python3 tools/gen_models.py
 """
 import json
@@ -149,6 +149,22 @@ def eye_elements():
     return out
 
 
+def shard_elements(texture, grow=0.0):
+    """A small obsidian shard centred on (8, 8, 8): a body turned 45 degrees with a point above and below.
+    The glow copy grows a hair so it sits on top of the body."""
+    g = grow
+    shapes = [("shard body", [7.25, 6, 7.25], [8.75, 10, 8.75]),
+              ("shard top", [7.6, 10, 7.6], [8.4, 11.4, 8.4]),
+              ("shard bottom", [7.6, 4.6, 7.6], [8.4, 6, 8.4])]
+    out = []
+    for name, frm, to in shapes:
+        faces = {face: {"uv": [0, 0, 16, 16] if face not in ("up", "down") else [6, 6, 10, 10], "texture": texture}
+                 for face in ("north", "south", "east", "west", "up", "down")}
+        out.append({"name": name, "from": [round(v - g, 3) for v in frm], "to": [round(v + g, 3) for v in to],
+                    "rotation": {"origin": [8, 8, 8], "axis": "y", "angle": 45}, "faces": faces})
+    return out
+
+
 def dump(rel, data):
     path = ASSETS / rel
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -165,6 +181,14 @@ if __name__ == "__main__":
     dump("models/block/obelisk_eye.json", {"ambientocclusion": False,
          "textures": {"eye": "ender_obelisks:block/obelisk_eye", "particle": "ender_obelisks:block/obelisk_eye"},
          "elements": eye_elements()})
+    # Orbiting shards (one per tier), drawn by ObeliskRenderer: the body, and a glowing ember core on top of it
+    dump("models/block/obelisk_shard.json", {"ambientocclusion": False,
+         "textures": {"shard": "minecraft:block/obsidian", "particle": "minecraft:block/obsidian"},
+         "elements": shard_elements("#shard")})
+    dump("models/block/obelisk_shard_glow.json", {"ambientocclusion": False,
+         "textures": {"glow": "ender_obelisks:block/obelisk_shard_glow", "particle": "ender_obelisks:block/obelisk_shard_glow"},
+         "elements": shard_elements("#glow", grow=0.02)})
+
     # Item: the whole obelisk with a still eye in its cage, shifted down to fit -16..32
     item_els = [element(n, f, t, s, e, o[0] if o else None, shift=-6) for n, f, t, s, e, *o in PARTS]
     for el in eye_elements():

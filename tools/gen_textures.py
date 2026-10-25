@@ -86,6 +86,23 @@ def iron():
     return rows
 
 
+# The ember core of an orbiting shard: a forked crack, shown through the obsidian, breathing very dimly
+SHARD_CRACK = [(7, 1), (7, 2), (8, 3), (8, 4), (7, 5), (7, 6), (6, 7), (7, 7), (8, 8), (9, 9), (8, 10), (8, 11),
+               (7, 12), (7, 13), (8, 14), (5, 8), (4, 9), (10, 6), (11, 5)]
+EMBER = (0x9A, 0x26, 0x30)
+EMBER_LEVELS = [0.7, 0.8, 0.9, 1.0]
+EMBER_RHYTHM = [(0, 30), (1, 10), (2, 14), (3, 20), (2, 12), (1, 18), (0, 24), (2, 8), (1, 16)]
+
+
+def shard_glow_frames():
+    out = []
+    for level in EMBER_LEVELS:
+        color = tuple(int(c * level) for c in EMBER) + (255,)
+        for y in range(16):
+            out.append([color if (x, y) in SHARD_CRACK else (0, 0, 0, 0) for x in range(16)])
+    return out
+
+
 def trim():
     """Plain blued metal: rows 0-1 the 2-high band, row 2 the 1-high ring, the rest the top faces."""
     rows = []
@@ -179,6 +196,10 @@ if __name__ == "__main__":
     write_png(block / "obelisk_stone_top.png", obelisk_stone(top=True))
     write_png(block / "obelisk_eye.png", eye_texture())
     write_png(block / "obelisk_trim.png", trim())
+    glow = block / "obelisk_shard_glow.png"
+    write_png(glow, shard_glow_frames())
+    frames = ", ".join('{"index": %d, "time": %d}' % f for f in EMBER_RHYTHM)
+    glow.with_suffix(".png.mcmeta").write_text('{"animation": {"interpolate": true, "frames": [%s]}}\n' % frames)
     write_png(block / "obelisk_iron.png", iron())
     write_png(ASSETS / "textures/item/time_shard.png", TIME_SHARD)
     # Mod icon: the eye front, scaled up

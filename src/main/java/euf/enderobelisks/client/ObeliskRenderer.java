@@ -1,6 +1,7 @@
 package euf.enderobelisks.client;
 
 import euf.enderobelisks.EnderObelisks;
+import euf.enderobelisks.ObeliskTiers;
 import euf.enderobelisks.block.ObeliskBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -26,10 +27,15 @@ import org.joml.Vector3f;
 
 /**
  * The animated parts of an obelisk, drawn from the lower half's block entity: the ender eye floating in the cage
- * (it turns to watch the nearest player, or idly looks around) and the name plate.
+ * (it turns to watch the nearest player, or idly looks around), one orbiting obsidian shard per tier, and the
+ * name plate.
  */
 public class ObeliskRenderer implements BlockEntityRenderer<ObeliskBlockEntity> {
 	public static final Identifier EYE_MODEL = EnderObelisks.id("block/obelisk_eye");
+	public static final Identifier SHARD_MODEL = EnderObelisks.id("block/obelisk_shard");
+	public static final Identifier SHARD_GLOW_MODEL = EnderObelisks.id("block/obelisk_shard_glow");
+	private static final double ORBIT_RADIUS = 0.62;
+	private static final float SHARD_SCALE = 0.85f;
 	private static final double EYE_Y = 26 / 16.0;
 	private static final float EYE_SCALE = 1.3f;
 	private static final double WATCH_DISTANCE = 12.0;
@@ -53,6 +59,25 @@ public class ObeliskRenderer implements BlockEntityRenderer<ObeliskBlockEntity> 
 		BlockModelRenderer renderer = client.getBlockRenderManager().getModelRenderer();
 		VertexConsumer cutout = vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout());
 		float time = entity.getWorld().getTime() + tickDelta;
+
+		// The upgrade tier shows as shards circling the cage: one per tier, each spinning and bobbing in its own rhythm
+		int shards = Math.min(entity.getTier(), ObeliskTiers.MAX_TIER);
+		for (int i = 0; i < shards; i++) {
+			float angle = time * 0.9f + i * 360.0f / shards;
+			double rad = Math.toRadians(angle);
+			matrices.push();
+			matrices.translate(0.5 + Math.cos(rad) * ORBIT_RADIUS, EYE_Y + MathHelper.sin(time * 0.06f + i * 1.7f) * 0.07,
+					0.5 + Math.sin(rad) * ORBIT_RADIUS);
+			matrices.multiply(new Quaternionf().rotationY((float) Math.toRadians(-angle * 2.0f + i * 40.0f)));
+			matrices.scale(SHARD_SCALE, SHARD_SCALE, SHARD_SCALE);
+			matrices.translate(-0.5, -0.5, -0.5);
+			renderer.render(matrices.peek(), cutout, state, models.getModel(SHARD_MODEL), 1.0f, 1.0f, 1.0f, light,
+					OverlayTexture.DEFAULT_UV);
+			// The ember core glows faintly even in the dark
+			renderer.render(matrices.peek(), cutout, state, models.getModel(SHARD_GLOW_MODEL), 1.0f, 1.0f, 1.0f, FULL_BRIGHT,
+					OverlayTexture.DEFAULT_UV);
+			matrices.pop();
+		}
 
 		updateEye(entity, time);
 		matrices.push();

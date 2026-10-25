@@ -14,8 +14,9 @@ public class EnderObelisksClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		BlockEntityRendererFactories.register(EnderObelisks.OBELISK_BLOCK_ENTITY, ObeliskRenderer::new);
-		// The eye model belongs to no blockstate, so it has to be loaded explicitly
-		ModelLoadingPlugin.register(context -> context.addModels(ObeliskRenderer.EYE_MODEL));
+		// The eye and shard models belong to no blockstate, so they have to be loaded explicitly
+		ModelLoadingPlugin.register(context -> context.addModels(ObeliskRenderer.EYE_MODEL, ObeliskRenderer.SHARD_MODEL,
+				ObeliskRenderer.SHARD_GLOW_MODEL));
 
 		MapScanner.register();
 		ClientPlayNetworking.registerGlobalReceiver(ObeliskPackets.MENU, (client, handler, buf, sender) -> {
