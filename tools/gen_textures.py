@@ -60,17 +60,19 @@ def obelisk_stone(top=False):
     return rows
 
 
-# A running wave, 2 pixels tall, period 4: the ornament on every ring
+# One ring = a glowing line with beads hanging under it, drawn at the exact width of each shaft face
 ORNAMENT = [
-    ".oo.",
-    "o..o",
+    "oooooo",  # lower shaft (6 wide)
+    ".o..o.",
+    "ooooo",   # upper shaft (5 wide)
+    ".o.o.",
 ]
 
 
 def ornament():
     rows = []
     for y in range(16):
-        rows.append("".join(ORNAMENT[y][x % 4] if y < len(ORNAMENT) else "." for x in range(16)))
+        rows.append("".join(ORNAMENT[y][x] if y < len(ORNAMENT) and x < len(ORNAMENT[y]) else "." for x in range(16)))
     return rows
 
 

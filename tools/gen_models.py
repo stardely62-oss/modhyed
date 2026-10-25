@@ -117,7 +117,10 @@ def eye_elements():
 
 
 def rune_element(i, frm, to):
-    faces = {face: {"uv": [0, 0, 16, 2], "texture": "#runes"} for face in ("north", "south", "east", "west")}
+    # Mapped pixel for pixel: the 6-wide lower shaft uses rows 0-1 of the texture, the 5-wide upper shaft rows 2-3
+    width = round(to[0] - frm[0])
+    uv = [0, 0, 6, 2] if width >= 6 else [0, 2, 5, 4]
+    faces = {face: {"uv": uv, "texture": "#runes"} for face in ("north", "south", "east", "west")}
     return {"name": f"ornament ring {i}", "from": frm, "to": to, "shade": False, "faces": faces}
 
 

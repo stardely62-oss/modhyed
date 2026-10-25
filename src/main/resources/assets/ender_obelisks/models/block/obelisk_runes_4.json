@@ -22,36 +22,36 @@
 				"north": {
 					"uv": [
 						0,
-						0,
-						16,
-						2
+						2,
+						5,
+						4
 					],
 					"texture": "#runes"
 				},
 				"south": {
 					"uv": [
 						0,
-						0,
-						16,
-						2
+						2,
+						5,
+						4
 					],
 					"texture": "#runes"
 				},
 				"east": {
 					"uv": [
 						0,
-						0,
-						16,
-						2
+						2,
+						5,
+						4
 					],
 					"texture": "#runes"
 				},
 				"west": {
 					"uv": [
 						0,
-						0,
-						16,
-						2
+						2,
+						5,
+						4
 					],
 					"texture": "#runes"
 				}
