@@ -80,5 +80,21 @@
 	"advancements.ender_obelisks.restore_ruin.title": "Утраченное",
 	"advancements.ender_obelisks.restore_ruin.description": "Восстановите разрушенный обелиск осколком времени",
 	"advancements.ender_obelisks.return_home.title": "Туда и обратно",
-	"advancements.ender_obelisks.return_home.description": "Воспользуйтесь осколком возвращения"
+	"advancements.ender_obelisks.return_home.description": "Воспользуйтесь осколком возвращения",
+	"ender_obelisks.lore.obelisk.1": "Первый такой камень поднял маг, чьё имя",
+	"ender_obelisks.lore.obelisk.2": "забыли раньше, чем были построены первые города.",
+	"ender_obelisks.lore.obelisk.3": "Око в клетке видело его лицо — и до сих пор",
+	"ender_obelisks.lore.obelisk.4": "ищет его в каждом, кто подходит слишком близко.",
+	"ender_obelisks.lore.ruined_obelisk.1": "Не все обелиски пережили своего создателя.",
+	"ender_obelisks.lore.ruined_obelisk.2": "Этот спит, расколотый и забытый,",
+	"ender_obelisks.lore.ruined_obelisk.3": "но в трещинах ещё тлеет искра —",
+	"ender_obelisks.lore.ruined_obelisk.4": "дай ей время, и она вспомнит, кем была.",
+	"ender_obelisks.lore.time_shard.1": "Красный камень помнит каждый импульс,",
+	"ender_obelisks.lore.time_shard.2": "изумруд — каждую сделку.",
+	"ender_obelisks.lore.time_shard.3": "Сплавленные вместе, они застывают мгновением,",
+	"ender_obelisks.lore.time_shard.4": "которое отказалось проходить.",
+	"ender_obelisks.lore.return_shard.1": "Осколок времени, которому показали дом.",
+	"ender_obelisks.lore.return_shard.2": "Он не знает дороги — он просто помнит,",
+	"ender_obelisks.lore.return_shard.3": "где был, и тянет тебя назад,",
+	"ender_obelisks.lore.return_shard.4": "как старая клятва тянет к тому, кто её дал."
 }

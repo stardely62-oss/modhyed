@@ -28,11 +28,17 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.util.ScreenshotRecorder;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -92,7 +98,15 @@ public class HarnessClient implements ClientModInitializer {
 			c.player.getAbilities().flying = false;
 			tp(c, Vec3d.ofBottomCenter(home).add(-2.5, 0, 0), Vec3d.ofCenter(home));
 		});
-		step(20, false, c -> check("obelisk_item_in_hotbar", select(c)));
+		step(20, false, c -> {
+			check("obelisk_item_in_hotbar", select(c));
+			for (Item item : List.of(EnderObelisks.OBELISK_ITEM, EnderObelisks.RUINED_OBELISK_ITEM, EnderObelisks.TIME_SHARD, EnderObelisks.RETURN_SHARD)) {
+				List<Text> tooltip = new ItemStack(item).getTooltip(c.player, TooltipContext.BASIC);
+				String key = "ender_obelisks.lore." + Registries.ITEM.getId(item).getPath() + ".1";
+				check("lore_" + Registries.ITEM.getId(item).getPath(), tooltip.size() > 1
+						&& tooltip.get(1).getContent() instanceof TranslatableTextContent t && t.getKey().equals(key));
+			}
+		});
 		step(20, false, c -> {
 			BlockPos ground = home.down();
 			BlockHitResult hit = new BlockHitResult(Vec3d.ofCenter(ground).add(0, 0.5, 0), Direction.UP, ground, false);

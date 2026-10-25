@@ -80,5 +80,21 @@
 	"advancements.ender_obelisks.restore_ruin.title": "What Was Lost",
 	"advancements.ender_obelisks.restore_ruin.description": "Restore a ruined obelisk with a time shard",
 	"advancements.ender_obelisks.return_home.title": "There and Back Again",
-	"advancements.ender_obelisks.return_home.description": "Use a return shard"
+	"advancements.ender_obelisks.return_home.description": "Use a return shard",
+	"ender_obelisks.lore.obelisk.1": "The first of these stones was raised by a mage",
+	"ender_obelisks.lore.obelisk.2": "whose name was forgotten before the first cities stood.",
+	"ender_obelisks.lore.obelisk.3": "The eye in the cage saw his face, and still",
+	"ender_obelisks.lore.obelisk.4": "searches for it in everyone who comes too close.",
+	"ender_obelisks.lore.ruined_obelisk.1": "Not every obelisk outlived its maker.",
+	"ender_obelisks.lore.ruined_obelisk.2": "This one sleeps, broken and forgotten,",
+	"ender_obelisks.lore.ruined_obelisk.3": "but a spark still smoulders in the cracks:",
+	"ender_obelisks.lore.ruined_obelisk.4": "give it time, and it will remember what it was.",
+	"ender_obelisks.lore.time_shard.1": "Redstone remembers every pulse,",
+	"ender_obelisks.lore.time_shard.2": "emerald every bargain.",
+	"ender_obelisks.lore.time_shard.3": "Fused together, they harden into a moment",
+	"ender_obelisks.lore.time_shard.4": "that refused to pass.",
+	"ender_obelisks.lore.return_shard.1": "A time shard that was shown a home.",
+	"ender_obelisks.lore.return_shard.2": "It does not know the way. It only remembers",
+	"ender_obelisks.lore.return_shard.3": "where it has been, and pulls you back",
+	"ender_obelisks.lore.return_shard.4": "the way an old oath pulls at the one who swore it."
 }
