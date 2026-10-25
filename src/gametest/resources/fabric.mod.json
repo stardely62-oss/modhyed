@@ -1,0 +1,15 @@
+{
+	"schemaVersion": 1,
+	"id": "modhyed-test",
+	"version": "1.0.0",
+	"name": "Modhyed tests",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-gametest": ["euf.modhyed.test.ModhyedGameTests"],
+		"client": ["euf.modhyed.test.HarnessClient"],
+		"server": ["euf.modhyed.test.GenWorldServer"]
+	},
+	"depends": {
+		"modhyed": "*"
+	}
+}

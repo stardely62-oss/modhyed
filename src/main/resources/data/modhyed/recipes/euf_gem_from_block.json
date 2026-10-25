@@ -1,0 +1,6 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [{"item": "modhyed:euf_block"}],
+	"result": {"item": "modhyed:euf_gem", "count": 9}
+}

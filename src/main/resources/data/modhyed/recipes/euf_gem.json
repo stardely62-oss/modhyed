@@ -1,0 +1,9 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		{"item": "minecraft:emerald"},
+		{"item": "minecraft:amethyst_shard"}
+	],
+	"result": {"item": "modhyed:euf_gem", "count": 2}
+}

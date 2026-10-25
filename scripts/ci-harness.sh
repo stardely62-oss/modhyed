@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Runs the scripted client scenario (CI, Linux with Xvfb): generate a flat world with the dedicated
+# server, copy it into the client's saves, play the scenario, then demand a PASS and a fresh screenshot.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+SERVER=build/harness-server
+CLIENT=build/harness-client
+
+rm -rf "$SERVER" "$CLIENT/saves/harness" "$CLIENT/screenshots" "$CLIENT/harness-result.txt"
+mkdir -p "$SERVER" "$CLIENT/saves"
+
+echo 'eula=true' > "$SERVER/eula.txt"
+cat > "$SERVER/server.properties" <<'EOF'
+level-name=world
+level-type=minecraft\:flat
+level-seed=12345
+generate-structures=false
+online-mode=false
+spawn-protection=0
+spawn-monsters=false
+spawn-animals=false
+EOF
+
+timeout 300 ./gradlew runGenworld --stacktrace
+test -f "$SERVER/world/level.dat" || { echo 'genworld did not create a world'; exit 1; }
+cp -r "$SERVER/world" "$CLIENT/saves/harness"
+
+# Skip first-launch screens and keep running without window focus
+cat > "$CLIENT/options.txt" <<'EOF'
+onboardAccessibility:false
+tutorialStep:none
+skipMultiplayerWarning:true
+joinedFirstServer:true
+pauseOnLostFocus:false
+soundCategory_master:0.0
+lang:ru_ru
+EOF
+
+timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' ./gradlew runHarness --stacktrace || true
+
+echo '--- harness result ---'
+cat "$CLIENT/harness-result.txt" 2>/dev/null || echo '(no result file: the client crashed or never reached the world)'
+test -s "$CLIENT/screenshots/harness.png" || { echo 'no screenshot was written'; exit 1; }
+grep -qx 'RESULT PASS' "$CLIENT/harness-result.txt"
