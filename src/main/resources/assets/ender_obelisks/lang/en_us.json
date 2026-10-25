@@ -50,5 +50,21 @@
 	"ender_obelisks.friends.name": "Player name",
 	"ender_obelisks.friends.add": "Add",
 	"ender_obelisks.friends.none": "Nobody yet",
-	"ender_obelisks.message.friend_unknown": "No player called %s has been on this server"
+	"ender_obelisks.message.friend_unknown": "No player called %s has been on this server",
+	"subtitles.ender_obelisks.obelisk.hum": "Obelisk hums",
+	"subtitles.ender_obelisks.obelisk.place": "Obelisk awakens",
+	"subtitles.ender_obelisks.obelisk.channel": "Teleport gathers",
+	"subtitles.ender_obelisks.obelisk.teleport": "Someone teleports",
+	"subtitles.ender_obelisks.obelisk.cancel": "Teleport breaks off",
+	"subtitles.ender_obelisks.obelisk.upgrade": "Obelisk grows stronger",
+	"advancements.ender_obelisks.root.title": "Ender Obelisks",
+	"advancements.ender_obelisks.root.description": "Get a time shard or an obelisk",
+	"advancements.ender_obelisks.place_obelisk.title": "A Stone That Remembers",
+	"advancements.ender_obelisks.place_obelisk.description": "Place an ender obelisk",
+	"advancements.ender_obelisks.first_jump.title": "Through the Void",
+	"advancements.ender_obelisks.first_jump.description": "Teleport from one obelisk to another",
+	"advancements.ender_obelisks.far_jump.title": "Half the World Away",
+	"advancements.ender_obelisks.far_jump.description": "Teleport at least 3000 blocks in one jump",
+	"advancements.ender_obelisks.max_tier.title": "The Eye Sees All",
+	"advancements.ender_obelisks.max_tier.description": "Upgrade an obelisk to the highest tier"
 }

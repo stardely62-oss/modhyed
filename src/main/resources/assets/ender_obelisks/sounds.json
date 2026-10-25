@@ -1,0 +1,87 @@
+{
+	"obelisk.hum": {
+		"subtitle": "subtitles.ender_obelisks.obelisk.hum",
+		"sounds": [
+			{
+				"name": "minecraft:block/beacon/ambient",
+				"pitch": 0.55,
+				"volume": 0.6
+			}
+		]
+	},
+	"obelisk.place": {
+		"subtitle": "subtitles.ender_obelisks.obelisk.place",
+		"sounds": [
+			{
+				"name": "minecraft:block/end_portal/eyeplace1",
+				"pitch": 0.75,
+				"volume": 1.0
+			},
+			{
+				"name": "minecraft:block/end_portal/eyeplace2",
+				"pitch": 0.75,
+				"volume": 1.0
+			},
+			{
+				"name": "minecraft:block/end_portal/eyeplace3",
+				"pitch": 0.75,
+				"volume": 1.0
+			}
+		]
+	},
+	"obelisk.channel": {
+		"subtitle": "subtitles.ender_obelisks.obelisk.channel",
+		"sounds": [
+			{
+				"name": "minecraft:block/portal/trigger",
+				"pitch": 1.5,
+				"volume": 0.5
+			}
+		]
+	},
+	"obelisk.teleport": {
+		"subtitle": "subtitles.ender_obelisks.obelisk.teleport",
+		"sounds": [
+			{
+				"name": "minecraft:mob/endermen/portal",
+				"pitch": 0.7,
+				"volume": 1.0
+			},
+			{
+				"name": "minecraft:mob/endermen/portal2",
+				"pitch": 0.7,
+				"volume": 1.0
+			}
+		]
+	},
+	"obelisk.cancel": {
+		"subtitle": "subtitles.ender_obelisks.obelisk.cancel",
+		"sounds": [
+			{
+				"name": "minecraft:block/beacon/deactivate",
+				"pitch": 1.4,
+				"volume": 0.7
+			}
+		]
+	},
+	"obelisk.upgrade": {
+		"subtitle": "subtitles.ender_obelisks.obelisk.upgrade",
+		"sounds": [
+			{
+				"name": "minecraft:block/respawn_anchor/charge1",
+				"pitch": 0.8,
+				"volume": 1.0
+			},
+			{
+				"name": "minecraft:block/respawn_anchor/charge2",
+				"pitch": 0.8,
+				"volume": 1.0
+			},
+			{
+				"name": "minecraft:block/respawn_anchor/charge3",
+				"pitch": 0.8,
+				"volume": 1.0
+			}
+		]
+	}
+}

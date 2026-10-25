@@ -27,7 +27,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -161,8 +160,8 @@ public final class ObeliskService {
 			return teleport(player, sourcePos, targetId);
 		}
 		pending.put(player.getUuid(), new Pending(player, sourcePos, targetId, player.getServer().getTicks(), player.getPos()));
-		player.getServerWorld().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_PORTAL_TRIGGER,
-				SoundCategory.PLAYERS, 0.35f, 1.6f);
+		player.getServerWorld().playSound(null, player.getX(), player.getY(), player.getZ(), ObeliskSounds.CHANNEL,
+				SoundCategory.PLAYERS, 0.6f, 1.0f);
 		return TeleportResult.OK;
 	}
 
@@ -173,7 +172,7 @@ public final class ObeliskService {
 	/** Called when a player takes damage: a channelling jump is broken off. */
 	public static void onDamaged(ServerPlayerEntity player) {
 		if (pending.remove(player.getUuid()) != null) {
-			player.sendMessage(Text.translatable("ender_obelisks.teleport.interrupted_damage"), true);
+			cancelled(player, "ender_obelisks.teleport.interrupted_damage");
 		}
 	}
 
@@ -190,7 +189,7 @@ public final class ObeliskService {
 			}
 			if (player.getPos().squaredDistanceTo(jump.startPos()) > WARMUP_MOVE_LIMIT * WARMUP_MOVE_LIMIT) {
 				it.remove();
-				player.sendMessage(Text.translatable("ender_obelisks.teleport.interrupted_move"), true);
+				cancelled(player, "ender_obelisks.teleport.interrupted_move");
 				continue;
 			}
 			long elapsed = server.getTicks() - jump.startTick();
@@ -216,6 +215,12 @@ public final class ObeliskService {
 				player.sendMessage(Text.translatable("ender_obelisks.teleport.channeling", secondsLeft), true);
 			}
 		}
+	}
+
+	private static void cancelled(ServerPlayerEntity player, String message) {
+		player.sendMessage(Text.translatable(message), true);
+		player.getServerWorld().playSound(null, player.getX(), player.getY(), player.getZ(), ObeliskSounds.CANCEL,
+				SoundCategory.PLAYERS, 0.6f, 1.0f);
 	}
 
 	/** The jump itself, with no warmup: re-checks everything, moves the player and their pets, starts the cooldown. */
@@ -259,6 +264,7 @@ public final class ObeliskService {
 		}
 		effects(targetWorld, spot);
 		lastTeleport.put(player.getUuid(), (long) world.getServer().getTicks());
+		ObeliskCriteria.TELEPORTED.trigger(player, target.dimension.equals(source.get().dimension) ? source.get().distanceTo(target) : 0);
 		return TeleportResult.OK;
 	}
 
@@ -290,7 +296,7 @@ public final class ObeliskService {
 
 	private static void effects(ServerWorld world, Vec3d at) {
 		world.spawnParticles(ParticleTypes.PORTAL, at.x, at.y + 1.0, at.z, 60, 0.4, 0.8, 0.4, 0.6);
-		world.playSound(null, at.x, at.y, at.z, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0f, 1.0f);
+		world.playSound(null, at.x, at.y, at.z, ObeliskSounds.TELEPORT, SoundCategory.PLAYERS, 1.0f, 1.0f);
 	}
 
 	/** Consumes the next tier's cost (free in creative) and raises the tier. Owner only. */
@@ -314,7 +320,8 @@ public final class ObeliskService {
 		}
 		info.tier++;
 		changed(world.getServer(), world, info);
-		world.playSound(null, sourcePos, SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 1.0f, 1.2f);
+		world.playSound(null, sourcePos, ObeliskSounds.UPGRADE, SoundCategory.BLOCKS, 1.0f, 1.0f);
+		ObeliskCriteria.UPGRADED.trigger(player, info.tier);
 		return true;
 	}
 

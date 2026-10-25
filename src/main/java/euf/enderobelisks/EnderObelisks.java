@@ -52,6 +52,8 @@ public class EnderObelisks implements ModInitializer {
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> entries.add(OBELISK_ITEM));
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> entries.add(TIME_SHARD));
 		ObeliskConfig.load(FabricLoader.getInstance().getConfigDir().resolve(MOD_ID + ".json"));
+		ObeliskSounds.init();
+		ObeliskCriteria.init();
 		ObeliskPackets.registerServerReceivers();
 		ServerTickEvents.END_SERVER_TICK.register(ObeliskService::tick);
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> ObeliskService.reset());

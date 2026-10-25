@@ -50,5 +50,21 @@
 	"ender_obelisks.friends.name": "Ник игрока",
 	"ender_obelisks.friends.add": "Добавить",
 	"ender_obelisks.friends.none": "Пока никого",
-	"ender_obelisks.message.friend_unknown": "Игрок %s ни разу не заходил на этот сервер"
+	"ender_obelisks.message.friend_unknown": "Игрок %s ни разу не заходил на этот сервер",
+	"subtitles.ender_obelisks.obelisk.hum": "Гудит обелиск",
+	"subtitles.ender_obelisks.obelisk.place": "Обелиск пробуждается",
+	"subtitles.ender_obelisks.obelisk.channel": "Собирается телепорт",
+	"subtitles.ender_obelisks.obelisk.teleport": "Кто-то телепортируется",
+	"subtitles.ender_obelisks.obelisk.cancel": "Телепорт срывается",
+	"subtitles.ender_obelisks.obelisk.upgrade": "Обелиск набирает силу",
+	"advancements.ender_obelisks.root.title": "Эндер-обелиски",
+	"advancements.ender_obelisks.root.description": "Добудьте осколок времени или обелиск",
+	"advancements.ender_obelisks.place_obelisk.title": "Камень, что помнит дорогу",
+	"advancements.ender_obelisks.place_obelisk.description": "Поставьте эндер-обелиск",
+	"advancements.ender_obelisks.first_jump.title": "Сквозь пустоту",
+	"advancements.ender_obelisks.first_jump.description": "Телепортируйтесь от одного обелиска к другому",
+	"advancements.ender_obelisks.far_jump.title": "На другой конец мира",
+	"advancements.ender_obelisks.far_jump.description": "Прыгните хотя бы на 3000 блоков за раз",
+	"advancements.ender_obelisks.max_tier.title": "Око видит всё",
+	"advancements.ender_obelisks.max_tier.description": "Улучшите обелиск до высшего уровня"
 }

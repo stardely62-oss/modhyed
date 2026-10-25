@@ -3,6 +3,7 @@ package euf.enderobelisks.block;
 import euf.enderobelisks.ObeliskConfig;
 import euf.enderobelisks.ObeliskInfo;
 import euf.enderobelisks.ObeliskService;
+import euf.enderobelisks.ObeliskSounds;
 import java.util.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -18,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -93,6 +95,7 @@ public class ObeliskBlock extends Block implements BlockEntityProvider {
 	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		world.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER), Block.NOTIFY_ALL);
 		if (world instanceof ServerWorld serverWorld) {
+			world.playSound(null, pos, ObeliskSounds.PLACE, SoundCategory.BLOCKS, 1.0f, 1.0f);
 			String name = stack.hasCustomName() ? stack.getName().getString() : null;
 			ObeliskService.register(serverWorld, pos, placer instanceof PlayerEntity player ? player : null, name);
 		}
@@ -170,11 +173,16 @@ public class ObeliskBlock extends Block implements BlockEntityProvider {
 		return state.get(HALF) == DoubleBlockHalf.LOWER ? LOWER_SHAPE : UPPER_SHAPE;
 	}
 
-	/** Idle animation: pale enchanting glyphs drawn into the cage from all sides. */
+	/** Idle animation: pale enchanting glyphs drawn into the cage from all sides, and a low hum. */
 	@Override
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
 		if (state.get(HALF) != DoubleBlockHalf.UPPER) {
 			return;
+		}
+		// A low hum now and then, heard only close by
+		if (random.nextInt(8) == 0) {
+			world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, ObeliskSounds.HUM, SoundCategory.BLOCKS,
+					0.35f, 0.9f + random.nextFloat() * 0.2f, false);
 		}
 		for (int i = 0; i < 3; i++) {
 			// ENCHANT particles fly from (pos + velocity) back to pos, so this pulls them into the eye

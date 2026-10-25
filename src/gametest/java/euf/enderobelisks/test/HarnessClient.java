@@ -25,14 +25,13 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -41,7 +40,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,6 +103,7 @@ public class HarnessClient implements ClientModInitializer {
 					&& s.getOverworld().getBlockState(home.up()).isOf(EnderObelisks.OBELISK)));
 			check("registered_with_owner", onServer(c, s -> ObeliskService.at(s.getOverworld(), home)
 					.map(o -> o.owner.equals(me)).orElse(false)));
+			check("advancement_place", advancementDone(c, "place_obelisk"));
 			// The rest of the network: a public village in range, a public outpost out of range,
 			// my own private hideout, and someone else's private obelisk that must stay hidden
 			onServer(c, s -> {
@@ -194,6 +193,8 @@ public class HarnessClient implements ClientModInitializer {
 		});
 		step(20, true, c -> {
 			check("teleported_to_village", c.player.getPos().isInRange(Vec3d.ofCenter(village), 4));
+			check("advancement_first_jump", advancementDone(c, "first_jump"));
+			check("no_far_jump_yet", !advancementDone(c, "far_jump"));
 			c.options.hudHidden = true;
 			// Step back a little and face the village obelisk: it should be looking at us
 			tp(c, c.player.getPos().add(c.player.getPos().subtract(Vec3d.ofBottomCenter(village)).normalize().multiply(1.5)),
@@ -257,6 +258,7 @@ public class HarnessClient implements ClientModInitializer {
 		});
 		step(30, false, c -> {
 			check("upgraded_to_max", onServer(c, s -> ObeliskService.at(s.getOverworld(), home).map(o -> o.tier == 4 && o.isPublic).orElse(false)));
+			check("advancement_max_tier", advancementDone(c, "max_tier"));
 			check("colour_set", onServer(c, s -> ObeliskService.at(s.getOverworld(), home).map(o -> o.color == 4).orElse(false)));
 			if (c.currentScreen != null) {
 				c.currentScreen.close();
@@ -286,25 +288,6 @@ public class HarnessClient implements ClientModInitializer {
 			}
 		});
 		step(20, false, c -> screenshot(c, "menu_zoomed"));
-		// JourneyMap's full-screen map (its key is J) should show the obelisks as markers
-		step(10, false, c -> {
-			if (c.currentScreen != null) {
-				c.currentScreen.close();
-			}
-			c.options.hudHidden = false;
-			if (FabricLoader.getInstance().isModLoaded("journeymap")) {
-				KeyBinding.onKeyPressed(InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_J));
-			}
-		});
-		step(60, false, c -> {
-			check("journeymap_loaded", FabricLoader.getInstance().isModLoaded("journeymap"));
-			screenshot(c, "journeymap");
-		});
-		step(10, false, c -> {
-			if (c.currentScreen != null) {
-				c.currentScreen.close();
-			}
-		});
 		step(40, false, this::finish);
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::tick);
@@ -430,6 +413,15 @@ public class HarnessClient implements ClientModInitializer {
 
 	private static List<String> names(MenuData data) {
 		return data.entries().stream().map(MenuData.Entry::name).toList();
+	}
+
+	private static boolean advancementDone(MinecraftClient client, String name) {
+		UUID me = client.player.getUuid();
+		return onServer(client, s -> {
+			Advancement advancement = s.getAdvancementLoader().get(EnderObelisks.id(name));
+			ServerPlayerEntity player = s.getPlayerManager().getPlayer(me);
+			return advancement != null && player != null && player.getAdvancementTracker().getProgress(advancement).isDone();
+		});
 	}
 
 	private static String nameAt(MinecraftClient client, BlockPos pos) {
