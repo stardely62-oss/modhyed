@@ -6,14 +6,15 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
-/** The owner's list of players let into a private obelisk: add by name, remove with the cross. */
+/** The owner's list of players let into a private obelisk: add by name, remove with the cross. Same obsidian look as the menu. */
 public class FriendsScreen extends Screen {
 	private static final int W = 220;
+	private static final int ROW = 18;
 	private final ObeliskScreen parent;
 	private TextFieldWidget nameField;
 
@@ -34,19 +35,25 @@ public class FriendsScreen extends Screen {
 	@Override
 	protected void init() {
 		int x = (width - W) / 2;
-		int y = 40;
+		int y = 46;
 		String typed = nameField != null ? nameField.getText() : "";
-		nameField = addDrawableChild(new TextFieldWidget(textRenderer, x, y, W - 74, 18, Text.translatable("ender_obelisks.friends.name")));
+		nameField = addDrawableChild(new TextFieldWidget(textRenderer, x + 5, y + 5, W - 80, 10, Text.translatable("ender_obelisks.friends.name")));
 		nameField.setMaxLength(16);
+		nameField.setDrawsBackground(false);
+		nameField.setEditableColor(ObeliskUi.TEXT);
 		nameField.setText(typed);
-		addDrawableChild(ButtonWidget.builder(Text.translatable("ender_obelisks.friends.add"), b -> add()).dimensions(x + W - 70, y, 70, 18).build());
+		addDrawableChild(new RuneButton(x + W - 68, y, 68, 19, Text.translatable("ender_obelisks.friends.add"), ObeliskUi.ICON_FRIENDS, b -> add()));
 		int row = y + 30;
 		for (MenuData.Friend friend : parent.getData().friends()) {
-			addDrawableChild(ButtonWidget.builder(Text.literal("✕"), b -> remove(friend)).dimensions(x + W - 20, row, 20, 16).build());
-			row += 20;
+			addDrawableChild(new RuneButton(x + W - 18, row - 4, 16, 16, Text.literal("✕"), null, b -> remove(friend)));
+			row += ROW;
 		}
-		addDrawableChild(ButtonWidget.builder(Text.translatable("gui.back"), b -> close()).dimensions(x, height - 30, W, 20).build());
+		addDrawableChild(new RuneButton(x, panelBottom() - 26, W, 20, Text.translatable("gui.back"), null, b -> close()));
 		setInitialFocus(nameField);
+	}
+
+	private int panelBottom() {
+		return Math.min(height - 12, 76 + Math.max(1, parent.getData().friends().size()) * ROW + 40);
 	}
 
 	private void add() {
@@ -69,17 +76,22 @@ public class FriendsScreen extends Screen {
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-		renderBackground(context);
+		ObeliskUi.background(context, width, height);
 		int x = (width - W) / 2;
-		context.drawCenteredTextWithShadow(textRenderer, Text.translatable("ender_obelisks.friends.title"), width / 2, 14, 0xFFE6E8EA);
-		context.drawCenteredTextWithShadow(textRenderer, Text.translatable("ender_obelisks.friends.hint"), width / 2, 26, 0xFF9AA0A8);
-		int row = 74;
+		ObeliskUi.panel(context, x - 10, 8, x + W + 10, panelBottom());
+		context.drawCenteredTextWithShadow(textRenderer, Text.translatable("ender_obelisks.friends.title"), width / 2, 16, ObeliskUi.VIOLET);
+		context.drawCenteredTextWithShadow(textRenderer, Text.translatable("ender_obelisks.friends.hint"), width / 2, 28, ObeliskUi.MUTED);
+		context.fill(x, 46, x + W - 72, 65, 0xFF030205);
+		ObeliskUi.outline(context, x, 46, x + W - 72, 65, nameField.isFocused() ? ObeliskUi.TEAL : ObeliskUi.OBSIDIAN_LIGHT);
+		ObeliskUi.divider(context, x, x + W, 70);
+		int row = 76;
 		if (parent.getData().friends().isEmpty()) {
-			context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.friends.none"), x, row, 0xFF9AA0A8);
+			context.drawCenteredTextWithShadow(textRenderer, Text.translatable("ender_obelisks.friends.none").formatted(Formatting.ITALIC), width / 2, row, ObeliskUi.MUTED);
 		}
 		for (MenuData.Friend friend : parent.getData().friends()) {
-			context.drawTextWithShadow(textRenderer, friend.name(), x, row, 0xFFE6E8EA);
-			row += 20;
+			ObeliskUi.diamond(context, x + 4, row + 3, 2, ObeliskUi.TEAL);
+			context.drawTextWithShadow(textRenderer, friend.name(), x + 12, row, ObeliskUi.TEXT);
+			row += ROW;
 		}
 		super.render(context, mouseX, mouseY, delta);
 	}

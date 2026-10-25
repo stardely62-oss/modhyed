@@ -8,7 +8,7 @@
 	"ender_obelisks.menu.access_public": "Доступ: для всех",
 	"ender_obelisks.menu.access_private": "Доступ: только я",
 	"ender_obelisks.menu.next_tier": "Улучшить до %s блоков:",
-	"ender_obelisks.menu.max_tier": "Максимальный уровень",
+	"ender_obelisks.menu.max_tier": "Предел силы",
 	"ender_obelisks.menu.upgrade": "Улучшить",
 	"ender_obelisks.menu.pick": "Выберите обелиск на карте",
 	"ender_obelisks.menu.teleport": "Телепортироваться",
@@ -96,5 +96,13 @@
 	"ender_obelisks.lore.return_shard.1": "Осколок времени, которому показали дом.",
 	"ender_obelisks.lore.return_shard.2": "Он не знает дороги — он просто помнит,",
 	"ender_obelisks.lore.return_shard.3": "где был, и тянет тебя назад,",
-	"ender_obelisks.lore.return_shard.4": "как старая клятва тянет к тому, кто её дал."
+	"ender_obelisks.lore.return_shard.4": "как старая клятва тянет к тому, кто её дал.",
+	"ender_obelisks.menu.range": "%s бл.",
+	"ender_obelisks.menu.metres": "%s м",
+	"ender_obelisks.menu.rename": "Сохранить название",
+	"ender_obelisks.menu.color": "Цвет метки на карте",
+	"ender_obelisks.menu.pill_far": "Слишком далеко",
+	"ender_obelisks.menu.pill_dimension": "Другое измерение",
+	"ender_obelisks.menu.pill_cooldown": "Перезарядка %s с",
+	"ender_obelisks.tooltip.more": "Shift — как пользоваться"
 }

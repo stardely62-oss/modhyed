@@ -10,16 +10,19 @@ import euf.enderobelisks.net.ObeliskSync;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Language;
 
@@ -46,10 +49,25 @@ public class EnderObelisksClient implements ClientModInitializer {
 		if (lore.isEmpty()) {
 			return;
 		}
+		hideHints(lines);
 		if (lines.size() > 1) {
 			lore.add(Text.empty());
 		}
 		lines.addAll(1, lore);
+	}
+
+	/** How-to hints the items add: shown only while Shift is held, so the tooltip is the name and the story. */
+	private static final Set<String> HINTS = Set.of("ender_obelisks.tooltip.use", "ender_obelisks.tooltip.upgrade", "ender_obelisks.tooltip.name",
+			"ender_obelisks.return.tooltip_use", "ender_obelisks.return.tooltip_unbound");
+
+	private static void hideHints(List<Text> lines) {
+		if (Screen.hasShiftDown()) {
+			return;
+		}
+		boolean removed = lines.removeIf(line -> line.getContent() instanceof TranslatableTextContent t && HINTS.contains(t.getKey()));
+		if (removed) {
+			lines.add(Text.translatable("ender_obelisks.tooltip.more").formatted(Formatting.DARK_GRAY));
+		}
 	}
 
 	@Override

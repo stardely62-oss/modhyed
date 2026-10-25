@@ -8,7 +8,7 @@
 	"ender_obelisks.menu.access_public": "Access: everyone",
 	"ender_obelisks.menu.access_private": "Access: only me",
 	"ender_obelisks.menu.next_tier": "Upgrade to %s blocks:",
-	"ender_obelisks.menu.max_tier": "Maximum tier reached",
+	"ender_obelisks.menu.max_tier": "Full power",
 	"ender_obelisks.menu.upgrade": "Upgrade",
 	"ender_obelisks.menu.pick": "Pick an obelisk on the map",
 	"ender_obelisks.menu.teleport": "Teleport",
@@ -96,5 +96,13 @@
 	"ender_obelisks.lore.return_shard.1": "A time shard that was shown a home.",
 	"ender_obelisks.lore.return_shard.2": "It does not know the way. It only remembers",
 	"ender_obelisks.lore.return_shard.3": "where it has been, and pulls you back",
-	"ender_obelisks.lore.return_shard.4": "the way an old oath pulls at the one who swore it."
+	"ender_obelisks.lore.return_shard.4": "the way an old oath pulls at the one who swore it.",
+	"ender_obelisks.menu.range": "%s bl.",
+	"ender_obelisks.menu.metres": "%s m",
+	"ender_obelisks.menu.rename": "Save the name",
+	"ender_obelisks.menu.color": "Marker colour on the map",
+	"ender_obelisks.menu.pill_far": "Too far",
+	"ender_obelisks.menu.pill_dimension": "Another dimension",
+	"ender_obelisks.menu.pill_cooldown": "Recharging %s s",
+	"ender_obelisks.tooltip.more": "Shift: how to use"
 }
