@@ -90,7 +90,7 @@ public class ObeliskRenderer implements BlockEntityRenderer<ObeliskBlockEntity> 
 			matrices.scale(-0.025f, -0.025f, 0.025f);
 			Matrix4f matrix = matrices.peek().getPositionMatrix();
 			int background = (int) (client.options.getTextBackgroundOpacity(0.25f) * 255.0f) << 24;
-			textRenderer.draw(name, -textRenderer.getWidth(name) / 2.0f, 0, 0xFFE6CCFF, false, matrix, vertexConsumers,
+			textRenderer.draw(name, -textRenderer.getWidth(name) / 2.0f, 0, 0xFFE6E8EA, false, matrix, vertexConsumers,
 					TextRenderer.TextLayerType.NORMAL, background, FULL_BRIGHT);
 			matrices.pop();
 		}

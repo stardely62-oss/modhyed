@@ -2,7 +2,6 @@
 
 Run: python3 tools/gen_textures.py
 """
-import math
 import struct
 import zlib
 from pathlib import Path
@@ -12,12 +11,13 @@ ASSETS = ROOT / "src/main/resources/assets/ender_obelisks"
 
 PALETTE = {
     ".": (0, 0, 0, 0),
-    # obelisk stone: purple-black, a little lighter than obsidian so the carving reads
-    "a": (0x16, 0x10, 0x1E, 255),
-    "b": (0x20, 0x17, 0x2C, 255),
-    "c": (0x2B, 0x1F, 0x3B, 255),
-    "e": (0x3A, 0x2A, 0x50, 255),
-    "p": (0x6B, 0x3F, 0x9E, 255),  # violet glint
+    # obelisk stone: neutral dark slate, like polished deepslate
+    "a": (0x1E, 0x20, 0x24, 255),  # joint
+    "b": (0x2C, 0x2F, 0x34, 255),
+    "c": (0x34, 0x37, 0x3D, 255),
+    "e": (0x44, 0x48, 0x4F, 255),  # edge highlight
+    # ornament glow: ender teal, in tone with the eye and the diamond
+    "o": (0x8A, 0xF5, 0xDC, 255),
     # ender eye
     "k": (0x05, 0x0A, 0x08, 255),  # pupil
     "g": (0x0F, 0x3A, 0x2C, 255),  # rim
@@ -37,60 +37,42 @@ def speckle(x, y, seed, chars):
 
 
 def obelisk_stone(top=False):
+    """Two courses of dressed stone: dark joints, a lit top-left edge on each block, faint even texture."""
     rows = []
     for y in range(16):
         row = ""
         for x in range(16):
-            ch = speckle(x, y, 2 if top else 1, "bbbcca")
-            if not top and x in (5, 10):
-                ch = "a"  # carved vertical grooves
-            if not top and x in (6, 11) and speckle(x, y, 3, "ab") == "b":
-                ch = "e"  # groove highlight
-            if speckle(x, y, 4, "................p") == "p":
-                ch = "p"
+            ch = "b" if (x + y) % 3 else "c"  # a regular, low-contrast tooling pattern
+            if top:
+                if x in (0, 15) or y in (0, 15):
+                    ch = "a"
+                elif x in (1, 14) or y in (1, 14):
+                    ch = "e"
+            else:
+                course = y // 8
+                joint_x = 0 if course == 0 else 8  # staggered vertical joints
+                if y % 8 == 7 or x == joint_x:
+                    ch = "a"
+                elif y % 8 == 0 or x == (joint_x + 1) % 16:
+                    ch = "e"
             row += ch
         rows.append(row)
-    if top:
-        rows = ["e" + r[1:15] + "a" for r in rows]
-        rows[0] = "e" * 16
-        rows[15] = "a" * 16
     return rows
 
 
-GLYPHS = [
-    ["###", "#.#", "#.."],
-    ["#.#", ".#.", "#.#"],
-    [".#.", "###", ".#."],
-    ["##.", ".#.", ".##"],
-    ["#..", "###", "..#"],
-    ["###", "..#", "###"],
+# A chain of diamonds, 3 pixels tall, period 4: the ornament on every ring
+ORNAMENT = [
+    ".o..",
+    "o.oo",
+    ".o..",
 ]
 
 
-def rune_mask():
-    """16x16 of glyph pixels: a 3x3 glyph in each 4x4 cell, chosen by position."""
-    mask = [[False] * 16 for _ in range(16)]
-    for cy in range(4):
-        for cx in range(4):
-            glyph = GLYPHS[(cx * 7 + cy * 3 + cx * cy) % len(GLYPHS)]
-            for gy in range(3):
-                for gx in range(3):
-                    if glyph[gy][gx] == "#":
-                        mask[cy * 4 + gy][cx * 4 + gx] = True
-    return mask
-
-
-def rune_frames(frames=8):
-    """An animated strip: the glyphs pulse from dim violet to bright magenta-white and back."""
-    mask = rune_mask()
-    lo, hi = (0x7A, 0x3C, 0xC8), (0xF2, 0xA8, 0xFF)
-    out = []
-    for f in range(frames):
-        k = 0.5 - 0.5 * math.cos(f / frames * 2 * math.pi)  # 0 -> 1 -> 0
-        color = tuple(int(lo[i] + (hi[i] - lo[i]) * k) for i in range(3)) + (255,)
-        for y in range(16):
-            out.append([color if mask[y][x] else (0, 0, 0, 0) for x in range(16)])
-    return out
+def ornament():
+    rows = []
+    for y in range(16):
+        rows.append("".join(ORNAMENT[y][x % 4] if y < 3 else "." for x in range(16)))
+    return rows
 
 
 EYE_FRONT = [
@@ -150,8 +132,7 @@ if __name__ == "__main__":
     write_png(block / "obelisk_stone.png", obelisk_stone())
     write_png(block / "obelisk_stone_top.png", obelisk_stone(top=True))
     write_png(block / "obelisk_eye.png", eye_texture())
-    runes = block / "obelisk_runes.png"
-    write_png(runes, rune_frames())
-    runes.with_suffix(".png.mcmeta").write_text('{"animation": {"frametime": 3, "interpolate": true}}\n')
+    # Steady glow, no animation: the pulsing read as flicker
+    write_png(block / "obelisk_runes.png", ornament())
     # Mod icon: the eye front, scaled up
     write_png(ASSETS / "icon.png", EYE_FRONT, scale=16)

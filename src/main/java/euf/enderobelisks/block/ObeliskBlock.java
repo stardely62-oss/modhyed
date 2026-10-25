@@ -166,15 +166,15 @@ public class ObeliskBlock extends Block implements BlockEntityProvider {
 		return state.get(HALF) == DoubleBlockHalf.LOWER ? LOWER_SHAPE : UPPER_SHAPE;
 	}
 
-	/** Idle animation: portal particles drawn into the cage from all sides. */
+	/** Idle animation: pale enchanting glyphs drawn into the cage from all sides. */
 	@Override
 	public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
 		if (state.get(HALF) != DoubleBlockHalf.UPPER) {
 			return;
 		}
 		for (int i = 0; i < 3; i++) {
-			// PORTAL particles fly from (pos + velocity) back to pos, so this pulls them into the eye
-			world.addParticle(ParticleTypes.PORTAL, pos.getX() + 0.5, pos.getY() + 0.6, pos.getZ() + 0.5,
+			// ENCHANT particles fly from (pos + velocity) back to pos, so this pulls them into the eye
+			world.addParticle(ParticleTypes.ENCHANT, pos.getX() + 0.5, pos.getY() + 0.6, pos.getZ() + 0.5,
 					(random.nextDouble() - 0.5) * 2.0, (random.nextDouble() - 0.3) * 1.5, (random.nextDouble() - 0.5) * 2.0);
 		}
 	}

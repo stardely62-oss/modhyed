@@ -40,10 +40,13 @@ public class ObeliskScreen extends Screen {
 	private static final double MAX_SCALE = 8.0;
 
 	private static final int COLOR_CURRENT = 0xFFFFD24A;
-	private static final int COLOR_OWN = 0xFFC07CFF;
-	private static final int COLOR_PUBLIC = 0xFF4FE3C1;
-	private static final int COLOR_FAR = 0xFF6E6A7E;
-	private static final int COLOR_RANGE = 0xC0B46CFF;
+	private static final int COLOR_OWN = 0xFF5FD3A0;
+	private static final int COLOR_PUBLIC = 0xFF7DBEFF;
+	private static final int COLOR_FAR = 0xFF6C7078;
+	private static final int COLOR_RANGE = 0xA07FE0C8;
+	private static final int COLOR_LINE = 0xFF3A3F46;
+	private static final int COLOR_MUTED = 0xFF9AA0A8;
+	private static final int COLOR_TITLE = 0xFFE6E8EA;
 
 	private MenuData data;
 	private long dataTime;
@@ -269,10 +272,10 @@ public class ObeliskScreen extends Screen {
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
 		renderBackground(context);
 		context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.title").append(": ").append(data.name()),
-				mapX0, 6, 0xFFE6CCFF);
+				mapX0, 6, COLOR_TITLE);
 
-		context.fill(mapX0 - 1, mapY0 - 1, mapX1 + 1, mapY1 + 1, 0xFF3A2A55);
-		context.fill(mapX0, mapY0, mapX1, mapY1, 0xFF0D0A14);
+		context.fill(mapX0 - 1, mapY0 - 1, mapX1 + 1, mapY1 + 1, COLOR_LINE);
+		context.fill(mapX0, mapY0, mapX1, mapY1, 0xFF0C0E10);
 		context.enableScissor(mapX0, mapY0, mapX1, mapY1);
 		drawTiles(context);
 		drawRangeCircle(context);
@@ -283,7 +286,7 @@ public class ObeliskScreen extends Screen {
 			double wx = centerX + (mouseX - mapCenterX()) / scale;
 			double wz = centerZ + (mouseY - mapCenterY()) / scale;
 			context.drawTextWithShadow(textRenderer, String.format("X %d  Z %d", (int) Math.floor(wx), (int) Math.floor(wz)),
-					mapX0 + 4, mapY1 - 12, 0xFFBBB3CC);
+					mapX0 + 4, mapY1 - 12, COLOR_MUTED);
 		}
 
 		drawPanel(context, mouseX, mouseY);
@@ -345,19 +348,25 @@ public class ObeliskScreen extends Screen {
 			}
 			int color = colorOf(entry);
 			boolean isSelected = entry.id().equals(selected);
+			// A small diamond with a dark outline; the obelisk you stand at is a size larger
+			int r = entry.id().equals(data.sourceId()) ? 4 : 3;
 			if (isSelected) {
-				context.fill(x - 5, y - 9, x + 5, y + 7, 0xFFFFFFFF);
+				diamond(context, x, y, r + 2, 0xFFFFFFFF);
 			}
-			// A tiny obelisk: dark outline, shaft, wide base
-			context.fill(x - 3, y - 8, x + 3, y + 4, 0xFF000000);
-			context.fill(x - 4, y + 3, x + 4, y + 6, 0xFF000000);
-			context.fill(x - 2, y - 7, x + 2, y + 3, color);
-			context.fill(x - 3, y + 4, x + 3, y + 5, color);
-			context.fill(x - 1, y - 6, x + 1, y - 4, 0xFF103020);
+			diamond(context, x, y, r + 1, 0xFF000000);
+			diamond(context, x, y, r, color);
+			context.fill(x, y - r + 1, x + 1, y - r + 2, 0x80FFFFFF);
 			boolean label = isSelected || entry == hovered || entry.id().equals(data.sourceId()) || scale >= 0.12;
 			if (label) {
-				context.drawCenteredTextWithShadow(textRenderer, entry.name(), x, y + 8, color);
+				context.drawCenteredTextWithShadow(textRenderer, entry.name(), x, y + 7, color);
 			}
+		}
+	}
+
+	private static void diamond(DrawContext context, int x, int y, int r, int color) {
+		for (int dy = -r; dy <= r; dy++) {
+			int half = r - Math.abs(dy);
+			context.fill(x - half, y + dy, x + half + 1, y + dy + 1, color);
 		}
 	}
 
@@ -367,18 +376,18 @@ public class ObeliskScreen extends Screen {
 		}
 		int x = toScreenX(client.player.getX());
 		int y = toScreenY(client.player.getZ());
-		context.fill(x - 3, y - 3, x + 3, y + 3, 0xFF000000);
-		context.fill(x - 2, y - 2, x + 2, y + 2, 0xFFFFFFFF);
+		context.fill(x - 2, y - 2, x + 3, y + 3, 0xFF000000);
+		context.fill(x - 1, y - 1, x + 2, y + 2, 0xFFFFFFFF);
 	}
 
 	private void drawPanel(DrawContext context, int mouseX, int mouseY) {
 		int x = panelX + PAD;
 		int right = width - PAD;
-		context.fill(panelX, 0, width, height, 0xD0120E1A);
-		context.fill(panelX, 0, panelX + 1, height, 0xFF3A2A55);
+		context.fill(panelX, 0, width, height, 0xD0101214);
+		context.fill(panelX, 0, panelX + 1, height, COLOR_LINE);
 
-		context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.this_obelisk").formatted(Formatting.LIGHT_PURPLE), x, 8, 0xFFFFFFFF);
-		context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.name"), x, 20, 0xFF9C94AE);
+		context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.this_obelisk").formatted(Formatting.AQUA), x, 8, 0xFFFFFFFF);
+		context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.name"), x, 20, COLOR_MUTED);
 		context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.tier", data.tier(), ObeliskTiers.range(data.tier())),
 				x, 52, 0xFFFFFFFF);
 
@@ -387,7 +396,7 @@ public class ObeliskScreen extends Screen {
 			context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.max_tier"), x, 88, 0xFFFFD24A);
 		} else {
 			context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.next_tier", ObeliskTiers.range(data.tier() + 1)),
-					x, 88, 0xFF9C94AE);
+					x, 88, COLOR_MUTED);
 			int ix = x;
 			for (ItemStack stack : cost) {
 				context.drawItem(stack, ix, 100);
@@ -402,10 +411,10 @@ public class ObeliskScreen extends Screen {
 			}
 		}
 
-		context.fill(x, 144, right, 145, 0xFF3A2A55);
+		context.fill(x, 144, right, 145, COLOR_LINE);
 		Entry target = selectedEntry();
 		if (target == null) {
-			context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.pick"), x, 152, 0xFF9C94AE);
+			context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.pick"), x, 152, COLOR_MUTED);
 		} else {
 			List<Text> lines = describe(target);
 			for (int i = 0; i < lines.size() && i < 5; i++) {
@@ -413,7 +422,7 @@ public class ObeliskScreen extends Screen {
 			}
 		}
 
-		context.fill(x, listY - 6, right, listY - 5, 0xFF3A2A55);
+		context.fill(x, listY - 6, right, listY - 5, COLOR_LINE);
 		List<Entry> entries = sortedEntries();
 		int rows = Math.max(0, (height - PAD - listY) / ROW_H);
 		listScroll = MathHelper.clamp(listScroll, 0, Math.max(0, entries.size() - rows));
@@ -426,7 +435,7 @@ public class ObeliskScreen extends Screen {
 			String dist = (int) distance(entry) + "m";
 			context.drawTextWithShadow(textRenderer, textRenderer.trimToWidth(entry.name(), right - x - textRenderer.getWidth(dist) - 6),
 					x, y, colorOf(entry));
-			context.drawTextWithShadow(textRenderer, dist, right - textRenderer.getWidth(dist), y, 0xFF9C94AE);
+			context.drawTextWithShadow(textRenderer, dist, right - textRenderer.getWidth(dist), y, COLOR_MUTED);
 		}
 	}
 

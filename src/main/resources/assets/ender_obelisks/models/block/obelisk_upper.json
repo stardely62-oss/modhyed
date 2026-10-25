@@ -1,12 +1,11 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"obsidian": "minecraft:block/obsidian",
-		"crying": "minecraft:block/crying_obsidian",
+		"deepslate": "minecraft:block/polished_deepslate",
 		"diamond": "minecraft:block/diamond_block",
 		"stone": "ender_obelisks:block/obelisk_stone",
 		"stone_top": "ender_obelisks:block/obelisk_stone_top",
-		"particle": "minecraft:block/obsidian"
+		"particle": "minecraft:block/polished_deepslate"
 	},
 	"elements": [
 		{
@@ -18,14 +17,14 @@
 			],
 			"to": [
 				12,
-				5,
+				6,
 				12
 			],
 			"faces": {
 				"north": {
 					"uv": [
 						4,
-						11,
+						10,
 						12,
 						16.0
 					],
@@ -34,7 +33,7 @@
 				"south": {
 					"uv": [
 						4,
-						11,
+						10,
 						12,
 						16.0
 					],
@@ -43,7 +42,7 @@
 				"east": {
 					"uv": [
 						4,
-						11,
+						10,
 						12,
 						16.0
 					],
@@ -52,7 +51,7 @@
 				"west": {
 					"uv": [
 						4,
-						11,
+						10,
 						12,
 						16.0
 					],
@@ -82,7 +81,7 @@
 			"name": "diamond collar",
 			"from": [
 				3.5,
-				5,
+				6,
 				3.5
 			],
 			"to": [
@@ -96,7 +95,7 @@
 						3.5,
 						9,
 						12.5,
-						11
+						10
 					],
 					"texture": "#diamond"
 				},
@@ -105,7 +104,7 @@
 						3.5,
 						9,
 						12.5,
-						11
+						10
 					],
 					"texture": "#diamond"
 				},
@@ -114,7 +113,7 @@
 						3.5,
 						9,
 						12.5,
-						11
+						10
 					],
 					"texture": "#diamond"
 				},
@@ -123,7 +122,7 @@
 						3.5,
 						9,
 						12.5,
-						11
+						10
 					],
 					"texture": "#diamond"
 				},
@@ -167,7 +166,7 @@
 						5,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -176,7 +175,7 @@
 						5,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -185,7 +184,7 @@
 						5,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -194,7 +193,7 @@
 						5,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -203,7 +202,7 @@
 						5,
 						5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -212,7 +211,7 @@
 						5,
 						5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -236,7 +235,7 @@
 						12,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -245,7 +244,7 @@
 						12,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -254,7 +253,7 @@
 						5,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -263,7 +262,7 @@
 						5,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -272,7 +271,7 @@
 						12,
 						5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -281,7 +280,7 @@
 						12,
 						5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -305,7 +304,7 @@
 						5,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -314,7 +313,7 @@
 						5,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -323,7 +322,7 @@
 						12,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -332,7 +331,7 @@
 						12,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -341,7 +340,7 @@
 						5,
 						12
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -350,7 +349,7 @@
 						5,
 						12
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -374,7 +373,7 @@
 						12,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -383,7 +382,7 @@
 						12,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -392,7 +391,7 @@
 						12,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -401,7 +400,7 @@
 						12,
 						9
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -410,7 +409,7 @@
 						12,
 						12
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -419,7 +418,7 @@
 						12,
 						12
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -512,7 +511,7 @@
 						11,
 						2
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -521,7 +520,7 @@
 						11,
 						2
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -530,7 +529,7 @@
 						11,
 						2
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -539,7 +538,7 @@
 						11,
 						2
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -548,7 +547,7 @@
 						11,
 						11
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -557,7 +556,7 @@
 						11,
 						11
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -581,7 +580,7 @@
 						9.5,
 						1
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -590,7 +589,7 @@
 						9.5,
 						1
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -599,7 +598,7 @@
 						9.5,
 						1
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -608,7 +607,7 @@
 						9.5,
 						1
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -617,7 +616,7 @@
 						9.5,
 						9.5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -626,7 +625,7 @@
 						9.5,
 						9.5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -650,7 +649,7 @@
 						8.75,
 						0.0
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				},
 				"south": {
 					"uv": [
@@ -659,7 +658,7 @@
 						8.75,
 						0.0
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				},
 				"east": {
 					"uv": [
@@ -668,7 +667,7 @@
 						8.75,
 						0.0
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				},
 				"west": {
 					"uv": [
@@ -677,7 +676,7 @@
 						8.75,
 						0.0
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				},
 				"up": {
 					"uv": [
@@ -686,7 +685,7 @@
 						8.75,
 						8.75
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				},
 				"down": {
 					"uv": [
@@ -695,7 +694,7 @@
 						8.75,
 						8.75
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				}
 			}
 		}

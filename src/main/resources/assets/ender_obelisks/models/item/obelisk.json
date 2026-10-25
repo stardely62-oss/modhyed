@@ -2,11 +2,11 @@
 	"parent": "minecraft:block/block",
 	"textures": {
 		"obsidian": "minecraft:block/obsidian",
-		"crying": "minecraft:block/crying_obsidian",
+		"deepslate": "minecraft:block/polished_deepslate",
 		"diamond": "minecraft:block/diamond_block",
 		"stone": "ender_obelisks:block/obelisk_stone",
 		"stone_top": "ender_obelisks:block/obelisk_stone_top",
-		"particle": "minecraft:block/obsidian",
+		"particle": "minecraft:block/polished_deepslate",
 		"eye": "ender_obelisks:block/obelisk_eye",
 		"runes": "ender_obelisks:block/obelisk_runes"
 	},
@@ -150,7 +150,7 @@
 			}
 		},
 		{
-			"name": "crying corner nw",
+			"name": "corner nw",
 			"from": [
 				1,
 				-4,
@@ -169,7 +169,7 @@
 						3,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -178,7 +178,7 @@
 						3,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -187,7 +187,7 @@
 						3,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -196,7 +196,7 @@
 						3,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -205,7 +205,7 @@
 						3,
 						3
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -214,12 +214,12 @@
 						3,
 						3
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				}
 			}
 		},
 		{
-			"name": "crying corner ne",
+			"name": "corner ne",
 			"from": [
 				13,
 				-4,
@@ -238,7 +238,7 @@
 						15,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -247,7 +247,7 @@
 						15,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -256,7 +256,7 @@
 						3,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -265,7 +265,7 @@
 						3,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -274,7 +274,7 @@
 						15,
 						3
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -283,12 +283,12 @@
 						15,
 						3
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				}
 			}
 		},
 		{
-			"name": "crying corner sw",
+			"name": "corner sw",
 			"from": [
 				1,
 				-4,
@@ -307,7 +307,7 @@
 						3,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -316,7 +316,7 @@
 						3,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -325,7 +325,7 @@
 						15,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -334,7 +334,7 @@
 						15,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -343,7 +343,7 @@
 						3,
 						15
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -352,12 +352,12 @@
 						3,
 						15
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				}
 			}
 		},
 		{
-			"name": "crying corner se",
+			"name": "corner se",
 			"from": [
 				13,
 				-4,
@@ -376,7 +376,7 @@
 						15,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -385,7 +385,7 @@
 						15,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -394,7 +394,7 @@
 						15,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -403,7 +403,7 @@
 						15,
 						4
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -412,7 +412,7 @@
 						15,
 						15
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -421,7 +421,7 @@
 						15,
 						15
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -572,14 +572,14 @@
 			],
 			"to": [
 				12,
-				15,
+				16,
 				12
 			],
 			"faces": {
 				"north": {
 					"uv": [
 						4,
-						1,
+						0.0,
 						12,
 						6
 					],
@@ -588,7 +588,7 @@
 				"south": {
 					"uv": [
 						4,
-						1,
+						0.0,
 						12,
 						6
 					],
@@ -597,7 +597,7 @@
 				"east": {
 					"uv": [
 						4,
-						1,
+						0.0,
 						12,
 						6
 					],
@@ -606,7 +606,7 @@
 				"west": {
 					"uv": [
 						4,
-						1,
+						0.0,
 						12,
 						6
 					],
@@ -636,7 +636,7 @@
 			"name": "diamond collar",
 			"from": [
 				3.5,
-				15,
+				16,
 				3.5
 			],
 			"to": [
@@ -650,7 +650,7 @@
 						3.5,
 						15,
 						12.5,
-						1
+						0.0
 					],
 					"texture": "#diamond"
 				},
@@ -659,7 +659,7 @@
 						3.5,
 						15,
 						12.5,
-						1
+						0.0
 					],
 					"texture": "#diamond"
 				},
@@ -668,7 +668,7 @@
 						3.5,
 						15,
 						12.5,
-						1
+						0.0
 					],
 					"texture": "#diamond"
 				},
@@ -677,7 +677,7 @@
 						3.5,
 						15,
 						12.5,
-						1
+						0.0
 					],
 					"texture": "#diamond"
 				},
@@ -721,7 +721,7 @@
 						5,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -730,7 +730,7 @@
 						5,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -739,7 +739,7 @@
 						5,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -748,7 +748,7 @@
 						5,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -757,7 +757,7 @@
 						5,
 						5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -766,7 +766,7 @@
 						5,
 						5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -790,7 +790,7 @@
 						12,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -799,7 +799,7 @@
 						12,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -808,7 +808,7 @@
 						5,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -817,7 +817,7 @@
 						5,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -826,7 +826,7 @@
 						12,
 						5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -835,7 +835,7 @@
 						12,
 						5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -859,7 +859,7 @@
 						5,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -868,7 +868,7 @@
 						5,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -877,7 +877,7 @@
 						12,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -886,7 +886,7 @@
 						12,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -895,7 +895,7 @@
 						5,
 						12
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -904,7 +904,7 @@
 						5,
 						12
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -928,7 +928,7 @@
 						12,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -937,7 +937,7 @@
 						12,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -946,7 +946,7 @@
 						12,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -955,7 +955,7 @@
 						12,
 						15
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -964,7 +964,7 @@
 						12,
 						12
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -973,7 +973,7 @@
 						12,
 						12
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -1066,7 +1066,7 @@
 						11,
 						8
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -1075,7 +1075,7 @@
 						11,
 						8
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -1084,7 +1084,7 @@
 						11,
 						8
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -1093,7 +1093,7 @@
 						11,
 						8
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -1102,7 +1102,7 @@
 						11,
 						11
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -1111,7 +1111,7 @@
 						11,
 						11
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -1135,7 +1135,7 @@
 						9.5,
 						7
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -1144,7 +1144,7 @@
 						9.5,
 						7
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -1153,7 +1153,7 @@
 						9.5,
 						7
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -1162,7 +1162,7 @@
 						9.5,
 						7
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -1171,7 +1171,7 @@
 						9.5,
 						9.5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -1180,7 +1180,7 @@
 						9.5,
 						9.5
 					],
-					"texture": "#obsidian"
+					"texture": "#deepslate"
 				}
 			}
 		},
@@ -1204,7 +1204,7 @@
 						8.75,
 						6
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				},
 				"south": {
 					"uv": [
@@ -1213,7 +1213,7 @@
 						8.75,
 						6
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				},
 				"east": {
 					"uv": [
@@ -1222,7 +1222,7 @@
 						8.75,
 						6
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				},
 				"west": {
 					"uv": [
@@ -1231,7 +1231,7 @@
 						8.75,
 						6
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				},
 				"up": {
 					"uv": [
@@ -1240,7 +1240,7 @@
 						8.75,
 						8.75
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				},
 				"down": {
 					"uv": [
@@ -1249,7 +1249,7 @@
 						8.75,
 						8.75
 					],
-					"texture": "#crying"
+					"texture": "#diamond"
 				}
 			}
 		},
@@ -1530,52 +1530,52 @@
 			}
 		},
 		{
-			"name": "rune ring 0",
+			"name": "ornament ring 0",
 			"from": [
-				3.48,
+				3.44,
 				-1.5,
-				3.48
+				3.44
 			],
 			"to": [
-				12.52,
-				1,
-				12.52
+				12.56,
+				1.5,
+				12.56
 			],
 			"shade": false,
 			"faces": {
 				"north": {
 					"uv": [
 						0,
-						0.0,
+						0,
 						16,
-						2.5
+						3
 					],
 					"texture": "#runes"
 				},
 				"south": {
 					"uv": [
 						0,
-						0.0,
+						0,
 						16,
-						2.5
+						3
 					],
 					"texture": "#runes"
 				},
 				"east": {
 					"uv": [
 						0,
-						0.0,
+						0,
 						16,
-						2.5
+						3
 					],
 					"texture": "#runes"
 				},
 				"west": {
 					"uv": [
 						0,
-						0.0,
+						0,
 						16,
-						2.5
+						3
 					],
 					"texture": "#runes"
 				}

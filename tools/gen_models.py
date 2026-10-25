@@ -12,41 +12,43 @@ ASSETS = ROOT / "src/main/resources/assets/ender_obelisks"
 
 TEXTURES = {
     "obsidian": "minecraft:block/obsidian",
-    "crying": "minecraft:block/crying_obsidian",
+    "deepslate": "minecraft:block/polished_deepslate",
     "diamond": "minecraft:block/diamond_block",
     "stone": "ender_obelisks:block/obelisk_stone",
     "stone_top": "ender_obelisks:block/obelisk_stone_top",
 }
 
-# (name, from, to, side texture, top/bottom texture)
+# (name, from, to, side texture, top/bottom texture). Every crafting material shows: obsidian plinth,
+# polished deepslate corners/cage/cap, diamond bands and tip, and the ender eye (from the pearl) in the cage.
 PARTS = [
     ("plinth", [0.5, 0, 0.5], [15.5, 2, 15.5], "obsidian", "obsidian"),
     ("step", [1.5, 2, 1.5], [14.5, 3.5, 14.5], "obsidian", "obsidian"),
-    ("crying corner nw", [1, 2, 1], [3, 4.5, 3], "crying", "crying"),
-    ("crying corner ne", [13, 2, 1], [15, 4.5, 3], "crying", "crying"),
-    ("crying corner sw", [1, 2, 13], [3, 4.5, 15], "crying", "crying"),
-    ("crying corner se", [13, 2, 13], [15, 4.5, 15], "crying", "crying"),
+    ("corner nw", [1, 2, 1], [3, 4.5, 3], "deepslate", "deepslate"),
+    ("corner ne", [13, 2, 1], [15, 4.5, 3], "deepslate", "deepslate"),
+    ("corner sw", [1, 2, 13], [3, 4.5, 15], "deepslate", "deepslate"),
+    ("corner se", [13, 2, 13], [15, 4.5, 15], "deepslate", "deepslate"),
     ("shaft lower", [3.5, 3.5, 3.5], [12.5, 16, 12.5], "stone", "stone_top"),
     ("diamond band", [3, 8.5, 3], [13, 9.5, 13], "diamond", "diamond"),
-    ("shaft upper", [4, 16, 4], [12, 21, 12], "stone", "stone_top"),
-    ("diamond collar", [3.5, 21, 3.5], [12.5, 23, 12.5], "diamond", "diamond"),
-    ("cage bar nw", [4, 23, 4], [5, 29, 5], "obsidian", "obsidian"),
-    ("cage bar ne", [11, 23, 4], [12, 29, 5], "obsidian", "obsidian"),
-    ("cage bar sw", [4, 23, 11], [5, 29, 12], "obsidian", "obsidian"),
-    ("cage bar se", [11, 23, 11], [12, 29, 12], "obsidian", "obsidian"),
+    ("shaft upper", [4, 16, 4], [12, 22, 12], "stone", "stone_top"),
+    ("diamond collar", [3.5, 22, 3.5], [12.5, 23, 12.5], "diamond", "diamond"),
+    ("cage bar nw", [4, 23, 4], [5, 29, 5], "deepslate", "deepslate"),
+    ("cage bar ne", [11, 23, 4], [12, 29, 5], "deepslate", "deepslate"),
+    ("cage bar sw", [4, 23, 11], [5, 29, 12], "deepslate", "deepslate"),
+    ("cage bar se", [11, 23, 11], [12, 29, 12], "deepslate", "deepslate"),
     ("diamond ring", [3.5, 29, 3.5], [12.5, 30, 12.5], "diamond", "diamond"),
-    ("cap", [5, 30, 5], [11, 31, 11], "obsidian", "obsidian"),
-    ("cap top", [6.5, 31, 6.5], [9.5, 32, 9.5], "obsidian", "obsidian"),
-    ("tip", [7.25, 32, 7.25], [8.75, 34, 8.75], "crying", "crying"),
+    ("cap", [5, 30, 5], [11, 31, 11], "deepslate", "deepslate"),
+    ("cap top", [6.5, 31, 6.5], [9.5, 32, 9.5], "deepslate", "deepslate"),
+    ("tip", [7.25, 32, 7.25], [8.75, 34, 8.75], "diamond", "diamond"),
 ]
 
-# Rune rings around the shaft, one per tier (overall coordinates; drawn relative to the lower block)
+# Ornament rings, one more per tier, all 3 units tall so the 3-pixel ornament maps 1:1. They stand 0.06 off
+# the shaft: closer than that the two surfaces fight and shimmer at a distance.
 RUNE_BANDS = [
-    ([3.48, 4.5, 3.48], [12.52, 7, 12.52]),
-    ([3.48, 10.5, 3.48], [12.52, 12.5, 12.52]),
-    ([3.48, 13.5, 3.48], [12.52, 15.5, 12.52]),
-    ([3.98, 16.5, 3.98], [12.02, 18.5, 12.02]),
-    ([3.98, 19, 3.98], [12.02, 20.5, 12.02]),
+    ([3.44, 4.5, 3.44], [12.56, 7.5, 12.56]),
+    ([3.44, 10, 3.44], [12.56, 13, 12.56]),
+    ([3.44, 13, 3.44], [12.56, 16, 12.56]),
+    ([3.94, 16, 3.94], [12.06, 19, 12.06]),
+    ([3.94, 19, 3.94], [12.06, 22, 12.06]),
 ]
 
 
@@ -89,7 +91,7 @@ def split(lower):
 
 def textures(used):
     t = {k: v for k, v in TEXTURES.items() if k in used}
-    t["particle"] = TEXTURES["obsidian"]
+    t["particle"] = TEXTURES["deepslate"]
     return t
 
 
@@ -115,10 +117,8 @@ def eye_elements():
 
 
 def rune_element(i, frm, to):
-    h = to[1] - frm[1]
-    v0 = (i * 3) % (16 - h)
-    faces = {face: {"uv": [0, v0, 16, v0 + h], "texture": "#runes"} for face in ("north", "south", "east", "west")}
-    return {"name": f"rune ring {i}", "from": frm, "to": to, "shade": False, "faces": faces}
+    faces = {face: {"uv": [0, 0, 16, 3], "texture": "#runes"} for face in ("north", "south", "east", "west")}
+    return {"name": f"ornament ring {i}", "from": frm, "to": to, "shade": False, "faces": faces}
 
 
 def dump(rel, data):

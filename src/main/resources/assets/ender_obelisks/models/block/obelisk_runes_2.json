@@ -6,52 +6,52 @@
 	},
 	"elements": [
 		{
-			"name": "rune ring 2",
+			"name": "ornament ring 2",
 			"from": [
-				3.48,
-				13.5,
-				3.48
+				3.44,
+				13,
+				3.44
 			],
 			"to": [
-				12.52,
-				15.5,
-				12.52
+				12.56,
+				16,
+				12.56
 			],
 			"shade": false,
 			"faces": {
 				"north": {
 					"uv": [
 						0,
-						6.0,
+						0,
 						16,
-						8.0
+						3
 					],
 					"texture": "#runes"
 				},
 				"south": {
 					"uv": [
 						0,
-						6.0,
+						0,
 						16,
-						8.0
+						3
 					],
 					"texture": "#runes"
 				},
 				"east": {
 					"uv": [
 						0,
-						6.0,
+						0,
 						16,
-						8.0
+						3
 					],
 					"texture": "#runes"
 				},
 				"west": {
 					"uv": [
 						0,
-						6.0,
+						0,
 						16,
-						8.0
+						3
 					],
 					"texture": "#runes"
 				}

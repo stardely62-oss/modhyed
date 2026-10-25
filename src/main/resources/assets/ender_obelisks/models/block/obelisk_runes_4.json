@@ -6,52 +6,52 @@
 	},
 	"elements": [
 		{
-			"name": "rune ring 4",
+			"name": "ornament ring 4",
 			"from": [
-				3.98,
+				3.94,
 				19,
-				3.98
+				3.94
 			],
 			"to": [
-				12.02,
-				20.5,
-				12.02
+				12.06,
+				22,
+				12.06
 			],
 			"shade": false,
 			"faces": {
 				"north": {
 					"uv": [
 						0,
-						12.0,
+						0,
 						16,
-						13.5
+						3
 					],
 					"texture": "#runes"
 				},
 				"south": {
 					"uv": [
 						0,
-						12.0,
+						0,
 						16,
-						13.5
+						3
 					],
 					"texture": "#runes"
 				},
 				"east": {
 					"uv": [
 						0,
-						12.0,
+						0,
 						16,
-						13.5
+						3
 					],
 					"texture": "#runes"
 				},
 				"west": {
 					"uv": [
 						0,
-						12.0,
+						0,
 						16,
-						13.5
+						3
 					],
 					"texture": "#runes"
 				}

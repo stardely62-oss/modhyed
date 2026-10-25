@@ -2,11 +2,11 @@
 	"ambientocclusion": false,
 	"textures": {
 		"obsidian": "minecraft:block/obsidian",
-		"crying": "minecraft:block/crying_obsidian",
+		"deepslate": "minecraft:block/polished_deepslate",
 		"diamond": "minecraft:block/diamond_block",
 		"stone": "ender_obelisks:block/obelisk_stone",
 		"stone_top": "ender_obelisks:block/obelisk_stone_top",
-		"particle": "minecraft:block/obsidian"
+		"particle": "minecraft:block/polished_deepslate"
 	},
 	"elements": [
 		{
@@ -149,7 +149,7 @@
 			}
 		},
 		{
-			"name": "crying corner nw",
+			"name": "corner nw",
 			"from": [
 				1,
 				2.0,
@@ -168,7 +168,7 @@
 						3,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -177,7 +177,7 @@
 						3,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -186,7 +186,7 @@
 						3,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -195,7 +195,7 @@
 						3,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -204,7 +204,7 @@
 						3,
 						3
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -213,12 +213,12 @@
 						3,
 						3
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				}
 			}
 		},
 		{
-			"name": "crying corner ne",
+			"name": "corner ne",
 			"from": [
 				13,
 				2.0,
@@ -237,7 +237,7 @@
 						15,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -246,7 +246,7 @@
 						15,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -255,7 +255,7 @@
 						3,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -264,7 +264,7 @@
 						3,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -273,7 +273,7 @@
 						15,
 						3
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -282,12 +282,12 @@
 						15,
 						3
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				}
 			}
 		},
 		{
-			"name": "crying corner sw",
+			"name": "corner sw",
 			"from": [
 				1,
 				2.0,
@@ -306,7 +306,7 @@
 						3,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -315,7 +315,7 @@
 						3,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -324,7 +324,7 @@
 						15,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -333,7 +333,7 @@
 						15,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -342,7 +342,7 @@
 						3,
 						15
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -351,12 +351,12 @@
 						3,
 						15
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				}
 			}
 		},
 		{
-			"name": "crying corner se",
+			"name": "corner se",
 			"from": [
 				13,
 				2.0,
@@ -375,7 +375,7 @@
 						15,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"south": {
 					"uv": [
@@ -384,7 +384,7 @@
 						15,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"east": {
 					"uv": [
@@ -393,7 +393,7 @@
 						15,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"west": {
 					"uv": [
@@ -402,7 +402,7 @@
 						15,
 						14.0
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"up": {
 					"uv": [
@@ -411,7 +411,7 @@
 						15,
 						15
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				},
 				"down": {
 					"uv": [
@@ -420,7 +420,7 @@
 						15,
 						15
 					],
-					"texture": "#crying"
+					"texture": "#deepslate"
 				}
 			}
 		},

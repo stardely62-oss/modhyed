@@ -3,7 +3,7 @@
 	"category": "misc",
 	"pattern": [
 		" P ",
-		"ODO",
+		"SDS",
 		"OOO"
 	],
 	"key": {
@@ -15,6 +15,9 @@
 		},
 		"O": {
 			"item": "minecraft:obsidian"
+		},
+		"S": {
+			"item": "minecraft:polished_deepslate"
 		}
 	},
 	"result": {
