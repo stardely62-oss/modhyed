@@ -177,15 +177,16 @@ public class HarnessClient implements ClientModInitializer {
 		});
 		step(20, false, c -> rightClick(c, home));
 
-		// A real jump to the village: the menu closes, the warmup runs, then the jump
+		// A real jump to the village: the menu closes, the warmup runs (3 s), then the jump.
+		// (A step's wait comes after its action, so the wait for the jump sits on the step that starts it.)
 		step(20, false, c -> selectByName(c, "Деревня"));
-		step(5, false, c -> {
+		step(100, false, c -> {
 			ObeliskScreen screen = screen(c);
 			if (screen != null) {
 				screen.teleportSelected();
 			}
 		});
-		step(100, true, c -> {
+		step(20, true, c -> {
 			check("teleported_to_village", c.player.getPos().isInRange(Vec3d.ofCenter(village), 4));
 			c.options.hudHidden = true;
 			// Step back a little and face the village obelisk: it should be looking at us
@@ -221,14 +222,14 @@ public class HarnessClient implements ClientModInitializer {
 				return null;
 			});
 		});
-		step(10, false, c -> {
+		step(100, false, c -> {
 			ObeliskScreen screen = screen(c);
 			if (screen != null) {
 				selectByName(c, nameAt(c, home));
 				screen.teleportSelected();
 			}
 		});
-		step(100, true, c -> check("teleported_home", c.player.getPos().isInRange(Vec3d.ofCenter(home), 4)));
+		step(20, true, c -> check("teleported_home", c.player.getPos().isInRange(Vec3d.ofCenter(home), 4)));
 
 		// Home is mine: rename, toggle access, upgrade to the top tier (free in creative)
 		step(10, false, c -> look(c, Vec3d.ofCenter(home)));
