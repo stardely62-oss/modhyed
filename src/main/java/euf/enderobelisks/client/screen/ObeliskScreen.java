@@ -24,6 +24,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Language;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
@@ -669,7 +670,7 @@ public class ObeliskScreen extends Screen {
 		}
 		int color = colorOf(target);
 		ObeliskUi.pixels(context, MARKER, x + 1, Y_CARD + 1, color, 0xFFFFFFFF, 0xFF000000);
-		context.drawTextWithShadow(textRenderer, textRenderer.trimToWidth(Text.literal(target.name()).formatted(Formatting.BOLD), right - x - 12),
+		context.drawTextWithShadow(textRenderer, Language.getInstance().reorder(textRenderer.trimToWidth(Text.literal(target.name()).formatted(Formatting.BOLD), right - x - 12)),
 				x + 12, Y_CARD + 1, color);
 
 		ObeliskUi.smallIcon(context, target.isPublic() ? ObeliskUi.ICON_PUBLIC : ObeliskUi.ICON_PRIVATE, x + 1, Y_CARD + 13);
