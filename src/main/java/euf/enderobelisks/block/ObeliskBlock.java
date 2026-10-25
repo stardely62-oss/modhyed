@@ -46,10 +46,13 @@ public class ObeliskBlock extends Block implements BlockEntityProvider {
 	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 	public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
 
-	// Plinth and slim shaft below; slimmer shaft and the cage above (the cap above the cage is decoration only)
+	// A stepped plinth and the shaft below; the slimmer shaft and the cage above (the cap is decoration only)
 	private static final VoxelShape LOWER_SHAPE = VoxelShapes.union(
-			Block.createCuboidShape(0.5, 0, 0.5, 15.5, 3.5, 15.5),
-			Block.createCuboidShape(5, 3.5, 5, 11, 16, 11));
+			Block.createCuboidShape(0.5, 0, 0.5, 15.5, 2.5, 15.5),
+			Block.createCuboidShape(2.5, 2.5, 2.5, 13.5, 4, 13.5),
+			Block.createCuboidShape(3.5, 4, 3.5, 12.5, 6.5, 12.5),
+			Block.createCuboidShape(4.5, 6.5, 4.5, 11.5, 7.5, 11.5),
+			Block.createCuboidShape(5, 7.5, 5, 11, 16, 11));
 	private static final VoxelShape UPPER_SHAPE = VoxelShapes.union(
 			Block.createCuboidShape(5.5, 0, 5.5, 10.5, 7, 10.5),
 			Block.createCuboidShape(3.5, 7, 3.5, 12.5, 16, 12.5));

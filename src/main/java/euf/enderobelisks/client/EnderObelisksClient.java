@@ -17,8 +17,8 @@ public class EnderObelisksClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		BlockEntityRendererFactories.register(EnderObelisks.OBELISK_BLOCK_ENTITY, ObeliskRenderer::new);
-		// The eye and rune models belong to no blockstate, so they have to be loaded explicitly
-		List<Identifier> extraModels = new ArrayList<>(List.of(ObeliskRenderer.RUNE_MODELS));
+		// The eye and blood models belong to no blockstate, so they have to be loaded explicitly
+		List<Identifier> extraModels = new ArrayList<>(List.of(ObeliskRenderer.BLOOD_MODELS));
 		extraModels.add(ObeliskRenderer.EYE_MODEL);
 		ModelLoadingPlugin.register(context -> context.addModels(extraModels));
 

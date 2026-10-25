@@ -16,6 +16,10 @@ PALETTE = {
     "b": (0x1F, 0x21, 0x26, 255),
     "c": (0x27, 0x2A, 0x30, 255),
     "e": (0x36, 0x3A, 0x42, 255),  # lit edge of a carving
+    # blood: wet at the source, dark and dried at the tips
+    "H": (0x9C, 0x1C, 0x24, 255),
+    "B": (0x6A, 0x0C, 0x14, 255),
+    "T": (0x3E, 0x06, 0x0C, 255),
     # dark trim (blued metal)
     "k": (0x2A, 0x2D, 0x33, 255),
     "K": (0x41, 0x46, 0x4E, 255),
@@ -99,27 +103,30 @@ def iron():
     return rows
 
 
-# One ring = a glowing line with beads hanging under it, drawn at the exact width of each shaft face
-ORNAMENT = [
-    "oooooo",  # lower shaft (6 wide)
-    ".o..o.",
-    "ooooo",   # upper shaft (5 wide)
-    ".o.o.",
-]
-# Very dim "breathing": brightness levels and an uneven rhythm (ticks per level), as if power seeps through
-GLOW_LEVELS = [0.84, 0.9, 0.95, 1.0]
-GLOW_RHYTHM = [(0, 40), (1, 12), (2, 10), (3, 18), (2, 14), (1, 22), (0, 30), (1, 8), (2, 26), (1, 16)]
-GLOW = (0x8A, 0xF5, 0xDC)
+# Blood running down the shaft, one overlay per tier. Columns 0-5 / rows 0-8 cover a lower shaft face, columns
+# 6-10 / rows 0-4 an upper one; blood seeps from the top of each (under the cage, and the joint) and runs down.
+# Each drip: (column, length, wide source?) - "H" wet highlight at the source, "B" blood, "T" the dried tip, "o" a drop.
+BLOOD = {
+    1: {"lower": [(2, 4, False)], "upper": [(8, 3, False)]},
+    2: {"lower": [(4, 6, True)], "upper": [(6, 4, False)], "drops": [(4, 8)]},
+    3: {"lower": [(0, 3, False), (3, 7, False)], "upper": [(10, 5, True)]},
+    4: {"lower": [(1, 9, True), (5, 4, False)], "upper": [(7, 5, False), (9, 2, False)]},
+}
 
 
-def ornament_frames():
-    out = []
-    for level in GLOW_LEVELS:
-        color = tuple(int(c * level) for c in GLOW) + (255,)
-        for y in range(16):
-            out.append([color if y < len(ORNAMENT) and x < len(ORNAMENT[y]) and ORNAMENT[y][x] == "o" else (0, 0, 0, 0)
-                        for x in range(16)])
-    return out
+def blood(level):
+    rows = [["." for _ in range(16)] for _ in range(16)]
+    spec = BLOOD[level]
+    for section, offset, height in (("lower", 0, 9), ("upper", 6, 5)):
+        for col, length, wide in spec.get(section, []):
+            for y in range(min(length, height)):
+                rows[y][col] = "H" if y == 0 else ("T" if y == length - 1 else "B")
+            if wide and col + 1 < offset + (6 if section == "lower" else 5):
+                rows[0][col + 1] = "B"
+                rows[1][col + 1] = "T"
+    for col, y in spec.get("drops", []):
+        rows[y][col] = "T"
+    return ["".join(r) for r in rows]
 
 
 def trim():
@@ -214,10 +221,8 @@ if __name__ == "__main__":
     write_png(block / "obelisk_stone.png", obelisk_stone())
     write_png(block / "obelisk_stone_top.png", obelisk_stone(top=True))
     write_png(block / "obelisk_eye.png", eye_texture())
-    runes = block / "obelisk_runes.png"
-    write_png(runes, ornament_frames())
-    frames = ", ".join('{"index": %d, "time": %d}' % f for f in GLOW_RHYTHM)
-    runes.with_suffix(".png.mcmeta").write_text('{"animation": {"interpolate": true, "frames": [%s]}}\n' % frames)
+    for level in BLOOD:
+        write_png(block / f"obelisk_blood_{level}.png", blood(level))
     write_png(block / "obelisk_trim.png", trim())
     write_png(block / "obelisk_iron.png", iron())
     write_png(ASSETS / "textures/item/time_shard.png", TIME_SHARD)
