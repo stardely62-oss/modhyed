@@ -1,6 +1,7 @@
 package euf.enderobelisks.block;
 
 import euf.enderobelisks.EnderObelisks;
+import euf.enderobelisks.ObeliskCriteria;
 import euf.enderobelisks.ObeliskService;
 import euf.enderobelisks.ObeliskSounds;
 import net.minecraft.block.Block;
@@ -10,6 +11,7 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -71,6 +73,9 @@ public class RuinedObeliskBlock extends Block {
 		world.playSound(null, pos, ObeliskSounds.UPGRADE, SoundCategory.BLOCKS, 1.0f, 0.8f);
 		world.playSound(null, pos, ObeliskSounds.PLACE, SoundCategory.BLOCKS, 1.0f, 0.7f);
 		player.sendMessage(Text.translatable("ender_obelisks.ruin.restored"), true);
+		if (player instanceof ServerPlayerEntity serverPlayer) {
+			ObeliskCriteria.RESTORED.trigger(serverPlayer, 1);
+		}
 		return true;
 	}
 

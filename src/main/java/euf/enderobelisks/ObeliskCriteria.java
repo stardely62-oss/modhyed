@@ -19,6 +19,8 @@ public final class ObeliskCriteria {
 	public static final NumberCriterion TELEPORTED = CriterionRegistry.register(new NumberCriterion(EnderObelisks.id("teleported"), "min_distance"));
 	public static final NumberCriterion UPGRADED = CriterionRegistry.register(new NumberCriterion(EnderObelisks.id("upgraded"), "min_tier"));
 	public static final NumberCriterion RETURNED = CriterionRegistry.register(new NumberCriterion(EnderObelisks.id("returned"), "min_distance"));
+	/** Fired when a ruin is restored (vanilla's item_used_on_block sees the block only after it became an obelisk). */
+	public static final NumberCriterion RESTORED = CriterionRegistry.register(new NumberCriterion(EnderObelisks.id("restored"), "min_count"));
 
 	private ObeliskCriteria() {
 	}

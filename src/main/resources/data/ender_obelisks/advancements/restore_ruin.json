@@ -17,29 +17,7 @@
 	},
 	"criteria": {
 		"restored": {
-			"trigger": "minecraft:item_used_on_block",
-			"conditions": {
-				"location": [
-					{
-						"condition": "minecraft:location_check",
-						"predicate": {
-							"block": {
-								"blocks": [
-									"ender_obelisks:ruined_obelisk"
-								]
-							}
-						}
-					},
-					{
-						"condition": "minecraft:match_tool",
-						"predicate": {
-							"items": [
-								"ender_obelisks:time_shard"
-							]
-						}
-					}
-				]
-			}
+			"trigger": "ender_obelisks:restored"
 		}
 	}
 }
