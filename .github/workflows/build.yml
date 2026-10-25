@@ -48,7 +48,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: modhyed-build-${{ github.run_number }}
+          name: ender-obelisks-build-${{ github.run_number }}
           if-no-files-found: ignore
           path: |
             build/libs/*.jar
@@ -65,20 +65,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          JAR=$(ls build/libs/modhyed-*.jar | grep -v -- '-sources' | head -1)
-          cp build/harness-client/screenshots/overview.png screenshot.png
-          zip -j modhyed-updater.zip tools/update-modhyed.bat tools/update-modhyed.ps1
+          JAR=$(ls build/libs/ender-obelisks-*.jar | grep -v -- '-sources' | head -1)
+          cp build/harness-client/screenshots/menu_tier4.png screenshot.png
+          zip -j ender-obelisks-updater.zip tools/update-ender-obelisks.bat tools/update-ender-obelisks.ps1
           gh release delete dev --yes --cleanup-tag || true
-          gh release create dev "$JAR" screenshot.png build/harness-client/screenshots/*.png modhyed-updater.zip \
+          gh release create dev "$JAR" screenshot.png build/harness-client/screenshots/*.png ender-obelisks-updater.zip \
             --prerelease --target "$GITHUB_SHA" \
             --title "Dev build ${{ github.run_number }}" \
-            --notes "Свежая сборка из main (коммит ${GITHUB_SHA::7}). Поставить: скачай modhyed-updater.zip, распакуй и запусти update-modhyed.bat. Тесты: GameTest + клиент, скриншот приложен."
+            --notes "Свежая сборка из main (коммит ${GITHUB_SHA::7}). Поставить: скачай ender-obelisks-updater.zip, распакуй и запусти update-ender-obelisks.bat. Тесты: GameTest + клиент, скриншот приложен."
 
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          JAR=$(ls build/libs/modhyed-*.jar | grep -v -- '-sources' | head -1)
-          zip -j modhyed-updater.zip tools/update-modhyed.bat tools/update-modhyed.ps1
-          gh release create "$GITHUB_REF_NAME" "$JAR" build/harness-client/screenshots/*.png modhyed-updater.zip --generate-notes
+          JAR=$(ls build/libs/ender-obelisks-*.jar | grep -v -- '-sources' | head -1)
+          zip -j ender-obelisks-updater.zip tools/update-ender-obelisks.bat tools/update-ender-obelisks.ps1
+          gh release create "$GITHUB_REF_NAME" "$JAR" build/harness-client/screenshots/*.png ender-obelisks-updater.zip --generate-notes

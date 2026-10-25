@@ -1,0 +1,61 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"runes": "ender_obelisks:block/obelisk_runes",
+		"particle": "ender_obelisks:block/obelisk_runes"
+	},
+	"elements": [
+		{
+			"name": "rune ring 4",
+			"from": [
+				3.98,
+				19,
+				3.98
+			],
+			"to": [
+				12.02,
+				20.5,
+				12.02
+			],
+			"shade": false,
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						12.0,
+						16,
+						13.5
+					],
+					"texture": "#runes"
+				},
+				"south": {
+					"uv": [
+						0,
+						12.0,
+						16,
+						13.5
+					],
+					"texture": "#runes"
+				},
+				"east": {
+					"uv": [
+						0,
+						12.0,
+						16,
+						13.5
+					],
+					"texture": "#runes"
+				},
+				"west": {
+					"uv": [
+						0,
+						12.0,
+						16,
+						13.5
+					],
+					"texture": "#runes"
+				}
+			}
+		}
+	]
+}

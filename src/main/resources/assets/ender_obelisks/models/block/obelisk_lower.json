@@ -1,0 +1,566 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"obsidian": "minecraft:block/obsidian",
+		"crying": "minecraft:block/crying_obsidian",
+		"diamond": "minecraft:block/diamond_block",
+		"stone": "ender_obelisks:block/obelisk_stone",
+		"stone_top": "ender_obelisks:block/obelisk_stone_top",
+		"particle": "minecraft:block/obsidian"
+	},
+	"elements": [
+		{
+			"name": "plinth",
+			"from": [
+				0.5,
+				0.0,
+				0.5
+			],
+			"to": [
+				15.5,
+				2.0,
+				15.5
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						0.5,
+						14.0,
+						15.5,
+						16.0
+					],
+					"texture": "#obsidian"
+				},
+				"south": {
+					"uv": [
+						0.5,
+						14.0,
+						15.5,
+						16.0
+					],
+					"texture": "#obsidian"
+				},
+				"east": {
+					"uv": [
+						0.5,
+						14.0,
+						15.5,
+						16.0
+					],
+					"texture": "#obsidian"
+				},
+				"west": {
+					"uv": [
+						0.5,
+						14.0,
+						15.5,
+						16.0
+					],
+					"texture": "#obsidian"
+				},
+				"up": {
+					"uv": [
+						0.5,
+						0.5,
+						15.5,
+						15.5
+					],
+					"texture": "#obsidian"
+				},
+				"down": {
+					"uv": [
+						0.5,
+						0.5,
+						15.5,
+						15.5
+					],
+					"texture": "#obsidian",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"name": "step",
+			"from": [
+				1.5,
+				2.0,
+				1.5
+			],
+			"to": [
+				14.5,
+				3.5,
+				14.5
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						1.5,
+						12.5,
+						14.5,
+						14.0
+					],
+					"texture": "#obsidian"
+				},
+				"south": {
+					"uv": [
+						1.5,
+						12.5,
+						14.5,
+						14.0
+					],
+					"texture": "#obsidian"
+				},
+				"east": {
+					"uv": [
+						1.5,
+						12.5,
+						14.5,
+						14.0
+					],
+					"texture": "#obsidian"
+				},
+				"west": {
+					"uv": [
+						1.5,
+						12.5,
+						14.5,
+						14.0
+					],
+					"texture": "#obsidian"
+				},
+				"up": {
+					"uv": [
+						1.5,
+						1.5,
+						14.5,
+						14.5
+					],
+					"texture": "#obsidian"
+				},
+				"down": {
+					"uv": [
+						1.5,
+						1.5,
+						14.5,
+						14.5
+					],
+					"texture": "#obsidian"
+				}
+			}
+		},
+		{
+			"name": "crying corner nw",
+			"from": [
+				1,
+				2.0,
+				1
+			],
+			"to": [
+				3,
+				4.5,
+				3
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						1,
+						11.5,
+						3,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"south": {
+					"uv": [
+						1,
+						11.5,
+						3,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"east": {
+					"uv": [
+						1,
+						11.5,
+						3,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"west": {
+					"uv": [
+						1,
+						11.5,
+						3,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"up": {
+					"uv": [
+						1,
+						1,
+						3,
+						3
+					],
+					"texture": "#crying"
+				},
+				"down": {
+					"uv": [
+						1,
+						1,
+						3,
+						3
+					],
+					"texture": "#crying"
+				}
+			}
+		},
+		{
+			"name": "crying corner ne",
+			"from": [
+				13,
+				2.0,
+				1
+			],
+			"to": [
+				15,
+				4.5,
+				3
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						13,
+						11.5,
+						15,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"south": {
+					"uv": [
+						13,
+						11.5,
+						15,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"east": {
+					"uv": [
+						1,
+						11.5,
+						3,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"west": {
+					"uv": [
+						1,
+						11.5,
+						3,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"up": {
+					"uv": [
+						13,
+						1,
+						15,
+						3
+					],
+					"texture": "#crying"
+				},
+				"down": {
+					"uv": [
+						13,
+						1,
+						15,
+						3
+					],
+					"texture": "#crying"
+				}
+			}
+		},
+		{
+			"name": "crying corner sw",
+			"from": [
+				1,
+				2.0,
+				13
+			],
+			"to": [
+				3,
+				4.5,
+				15
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						1,
+						11.5,
+						3,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"south": {
+					"uv": [
+						1,
+						11.5,
+						3,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"east": {
+					"uv": [
+						13,
+						11.5,
+						15,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"west": {
+					"uv": [
+						13,
+						11.5,
+						15,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"up": {
+					"uv": [
+						1,
+						13,
+						3,
+						15
+					],
+					"texture": "#crying"
+				},
+				"down": {
+					"uv": [
+						1,
+						13,
+						3,
+						15
+					],
+					"texture": "#crying"
+				}
+			}
+		},
+		{
+			"name": "crying corner se",
+			"from": [
+				13,
+				2.0,
+				13
+			],
+			"to": [
+				15,
+				4.5,
+				15
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						13,
+						11.5,
+						15,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"south": {
+					"uv": [
+						13,
+						11.5,
+						15,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"east": {
+					"uv": [
+						13,
+						11.5,
+						15,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"west": {
+					"uv": [
+						13,
+						11.5,
+						15,
+						14.0
+					],
+					"texture": "#crying"
+				},
+				"up": {
+					"uv": [
+						13,
+						13,
+						15,
+						15
+					],
+					"texture": "#crying"
+				},
+				"down": {
+					"uv": [
+						13,
+						13,
+						15,
+						15
+					],
+					"texture": "#crying"
+				}
+			}
+		},
+		{
+			"name": "shaft lower",
+			"from": [
+				3.5,
+				3.5,
+				3.5
+			],
+			"to": [
+				12.5,
+				16.0,
+				12.5
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						3.5,
+						0.0,
+						12.5,
+						12.5
+					],
+					"texture": "#stone"
+				},
+				"south": {
+					"uv": [
+						3.5,
+						0.0,
+						12.5,
+						12.5
+					],
+					"texture": "#stone"
+				},
+				"east": {
+					"uv": [
+						3.5,
+						0.0,
+						12.5,
+						12.5
+					],
+					"texture": "#stone"
+				},
+				"west": {
+					"uv": [
+						3.5,
+						0.0,
+						12.5,
+						12.5
+					],
+					"texture": "#stone"
+				},
+				"up": {
+					"uv": [
+						3.5,
+						3.5,
+						12.5,
+						12.5
+					],
+					"texture": "#stone_top"
+				},
+				"down": {
+					"uv": [
+						3.5,
+						3.5,
+						12.5,
+						12.5
+					],
+					"texture": "#stone_top"
+				}
+			}
+		},
+		{
+			"name": "diamond band",
+			"from": [
+				3,
+				8.5,
+				3
+			],
+			"to": [
+				13,
+				9.5,
+				13
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						3,
+						6.5,
+						13,
+						7.5
+					],
+					"texture": "#diamond"
+				},
+				"south": {
+					"uv": [
+						3,
+						6.5,
+						13,
+						7.5
+					],
+					"texture": "#diamond"
+				},
+				"east": {
+					"uv": [
+						3,
+						6.5,
+						13,
+						7.5
+					],
+					"texture": "#diamond"
+				},
+				"west": {
+					"uv": [
+						3,
+						6.5,
+						13,
+						7.5
+					],
+					"texture": "#diamond"
+				},
+				"up": {
+					"uv": [
+						3,
+						3,
+						13,
+						13
+					],
+					"texture": "#diamond"
+				},
+				"down": {
+					"uv": [
+						3,
+						3,
+						13,
+						13
+					],
+					"texture": "#diamond"
+				}
+			}
+		}
+	]
+}

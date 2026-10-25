@@ -1,7 +1,0 @@
-{
-	"type": "minecraft:crafting_shaped",
-	"category": "building",
-	"pattern": ["###", "###", "###"],
-	"key": {"#": {"item": "modhyed:euf_gem"}},
-	"result": {"item": "modhyed:euf_block"}
-}

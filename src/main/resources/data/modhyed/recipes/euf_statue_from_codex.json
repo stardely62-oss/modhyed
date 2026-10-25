@@ -1,6 +1,0 @@
-{
-	"type": "minecraft:crafting_shapeless",
-	"category": "building",
-	"ingredients": [{"item": "modhyed:euf_statue_codex"}],
-	"result": {"item": "modhyed:euf_statue"}
-}

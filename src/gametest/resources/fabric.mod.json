@@ -1,15 +1,15 @@
 {
 	"schemaVersion": 1,
-	"id": "modhyed-test",
+	"id": "ender_obelisks_test",
 	"version": "1.0.0",
-	"name": "Modhyed tests",
+	"name": "Ender Obelisks tests",
 	"environment": "*",
 	"entrypoints": {
-		"fabric-gametest": ["euf.modhyed.test.ModhyedGameTests"],
-		"client": ["euf.modhyed.test.HarnessClient"],
-		"server": ["euf.modhyed.test.GenWorldServer"]
+		"fabric-gametest": ["euf.enderobelisks.test.ObeliskGameTests"],
+		"client": ["euf.enderobelisks.test.HarnessClient"],
+		"server": ["euf.enderobelisks.test.GenWorldServer"]
 	},
 	"depends": {
-		"modhyed": "*"
+		"ender_obelisks": "*"
 	}
 }

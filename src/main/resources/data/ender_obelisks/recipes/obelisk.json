@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" P ",
+		"ODO",
+		"OOO"
+	],
+	"key": {
+		"P": {
+			"item": "minecraft:ender_pearl"
+		},
+		"D": {
+			"item": "minecraft:diamond"
+		},
+		"O": {
+			"item": "minecraft:obsidian"
+		}
+	},
+	"result": {
+		"item": "ender_obelisks:obelisk"
+	}
+}

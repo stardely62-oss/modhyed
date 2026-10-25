@@ -1,8 +1,0 @@
-{
-	"variants": {
-		"facing=north": {"model": "modhyed:block/euf_statue_codex"},
-		"facing=east": {"model": "modhyed:block/euf_statue_codex", "y": 90},
-		"facing=south": {"model": "modhyed:block/euf_statue_codex", "y": 180},
-		"facing=west": {"model": "modhyed:block/euf_statue_codex", "y": 270}
-	}
-}

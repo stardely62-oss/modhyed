@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs the scripted client scenario (CI, Linux with Xvfb): generate a flat world with the dedicated
+# Runs the scripted client scenario (CI, Linux with Xvfb): generate a world with the dedicated
 # server, copy it into the client's saves, play the scenario, then demand a PASS and a fresh screenshot.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -13,9 +13,9 @@ mkdir -p "$SERVER" "$CLIENT/saves"
 echo 'eula=true' > "$SERVER/eula.txt"
 cat > "$SERVER/server.properties" <<'EOF'
 level-name=world
-level-type=minecraft\:flat
-level-seed=12345
-generate-structures=false
+level-type=minecraft\:normal
+level-seed=20261025
+generate-structures=true
 online-mode=false
 spawn-protection=0
 spawn-monsters=false
@@ -35,14 +35,16 @@ joinedFirstServer:true
 pauseOnLostFocus:false
 soundCategory_master:0.0
 lang:ru_ru
+renderDistance:8
+guiScale:2
 EOF
 
 timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' ./gradlew runHarness --stacktrace || true
 
 echo '--- harness result ---'
 cat "$CLIENT/harness-result.txt" 2>/dev/null || echo '(no result file: the client crashed or never reached the world)'
-for shot in overview angle statue_hand statue_codex statue_spin_a statue_spin_b golem golem_side \
-            staff_held staff_fire golem_hit staff_thirdperson night; do
+for shot in obelisk_front obelisk_cage obelisk_eye_follows obelisk_night menu menu_selected arrived \
+            obelisk_tier4 menu_tier4 menu_zoomed; do
   test -s "$CLIENT/screenshots/$shot.png" || { echo "screenshot $shot.png was not written"; exit 1; }
 done
 grep -qx 'RESULT PASS' "$CLIENT/harness-result.txt"

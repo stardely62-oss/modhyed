@@ -1,26 +1,20 @@
 {
 	"schemaVersion": 1,
-	"id": "modhyed",
+	"id": "ender_obelisks",
 	"version": "${version}",
-	"name": "Modhyed",
-	"description": "Euf gems, blocks, a guardian statue, a fireball staff and a little euf golem. A test mod by euf.",
-	"authors": [
-		"euf"
-	],
+	"name": "Ender Obelisks",
+	"description": "Obelisks you teleport between through a map of the world. Upgrades raise their range from 500 to 5000 blocks.",
+	"authors": ["euf"],
 	"contact": {
 		"sources": "https://github.com/stardely62-oss/modhyed",
 		"issues": "https://github.com/stardely62-oss/modhyed/issues"
 	},
 	"license": "MIT",
-	"icon": "assets/modhyed/icon.png",
+	"icon": "assets/ender_obelisks/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [
-			"euf.modhyed.Modhyed"
-		],
-		"client": [
-			"euf.modhyed.client.ModhyedClient"
-		]
+		"main": ["euf.enderobelisks.EnderObelisks"],
+		"client": ["euf.enderobelisks.client.EnderObelisksClient"]
 	},
 	"depends": {
 		"fabricloader": ">=0.14.21",

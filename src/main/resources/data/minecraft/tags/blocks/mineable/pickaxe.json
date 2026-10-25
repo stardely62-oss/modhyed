@@ -1,1 +1,6 @@
-{"replace":false,"values":["modhyed:euf_block","modhyed:euf_statue","modhyed:euf_statue_codex"]}
+{
+	"replace": false,
+	"values": [
+		"ender_obelisks:obelisk"
+	]
+}
