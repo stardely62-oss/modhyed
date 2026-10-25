@@ -6,11 +6,14 @@ import euf.enderobelisks.ObeliskInfo;
 import euf.enderobelisks.ObeliskService;
 import euf.enderobelisks.ObeliskService.TeleportResult;
 import euf.enderobelisks.ObeliskTiers;
+import euf.enderobelisks.ReturnShardItem;
 import euf.enderobelisks.block.ObeliskBlock;
 import euf.enderobelisks.block.ObeliskBlockEntity;
+import euf.enderobelisks.block.RuinedObeliskBlock;
 import java.util.List;
 import java.util.UUID;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FacingBlock;
 import net.minecraft.block.Blocks;
@@ -22,13 +25,18 @@ import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.GameTestException;
 import net.minecraft.test.TestContext;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 public class ObeliskGameTests implements FabricGameTest {
@@ -267,6 +275,61 @@ public class ObeliskGameTests implements FabricGameTest {
 		check(info.friends.isEmpty(), "nobody should have been added");
 		world.removePlayer(owner, Entity.RemovalReason.DISCARDED);
 		world.breakBlock(lower, false);
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "player")
+	public void returnShardBringsYouBackToItsObelisk(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos home = ctx.getAbsolutePos(new BlockPos(1, 2, 1));
+		floor(world, home);
+		setObelisk(world, home, Direction.SOUTH);
+		ObeliskInfo info = ObeliskService.register(world, home, null, "Home");
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.refreshPositionAndAngles(home.getX() + 6.5, home.getY(), home.getZ() + 6.5, 0, 0);
+
+		ItemStack unbound = new ItemStack(EnderObelisks.RETURN_SHARD);
+		check(ReturnShardItem.goHome(player, unbound) == TeleportResult.NO_TARGET, "an unbound shard goes nowhere");
+		ItemStack shard = new ItemStack(EnderObelisks.RETURN_SHARD);
+		ReturnShardItem.bind(shard, info);
+		check(ReturnShardItem.goHome(player, shard) == TeleportResult.OK, "the bound shard should bring the player back");
+		check(player.getPos().isInRange(home.toCenterPos(), 2.5), "the player should be next to home, is at " + player.getPos());
+
+		world.removePlayer(player, Entity.RemovalReason.DISCARDED);
+		world.breakBlock(home, false);
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void ruinTemplateLoadsAndIsRegisteredForWorldGeneration(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		Identifier id = EnderObelisks.id("ruined_obelisk");
+		check(world.getRegistryManager().get(RegistryKeys.STRUCTURE).containsId(id), "the ruin structure is not registered");
+		StructureTemplate template = world.getStructureTemplateManager().getTemplate(id)
+				.orElseThrow(() -> new GameTestException("the ruin template did not load"));
+		check(template.getSize().equals(new Vec3i(7, 5, 7)), "the ruin should be 7x5x7, is " + template.getSize());
+		BlockPos origin = ctx.getAbsolutePos(new BlockPos(0, 1, 0));
+		template.place(world, origin, origin, new StructurePlacementData(), world.getRandom(), Block.NOTIFY_LISTENERS);
+		check(world.getBlockState(origin.add(3, 1, 3)).isOf(EnderObelisks.RUINED_OBELISK), "the ruin should have its ruined obelisk");
+		check(world.getBlockState(origin.add(1, 0, 1)).isOf(Blocks.CHEST), "the ruin should have its chest");
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "player")
+	public void aTimeShardRestoresARuin(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos ruin = ctx.getAbsolutePos(new BlockPos(3, 2, 3));
+		world.setBlockState(ruin, EnderObelisks.RUINED_OBELISK.getDefaultState());
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.refreshPositionAndAngles(ruin.getX() + 0.5, ruin.getY(), ruin.getZ() - 1.5, 0, 0);
+		ItemStack shard = new ItemStack(EnderObelisks.TIME_SHARD);
+		check(RuinedObeliskBlock.restore(world, ruin, player, shard), "the restoration failed");
+		check(world.getBlockState(ruin).isOf(EnderObelisks.OBELISK) && world.getBlockState(ruin.up()).isOf(EnderObelisks.OBELISK),
+				"the ruin should now be a two-block obelisk");
+		check(ObeliskService.at(world, ruin).map(o -> o.owner.equals(player.getUuid())).orElse(false),
+				"the restored obelisk should belong to the player");
+		world.removePlayer(player, Entity.RemovalReason.DISCARDED);
+		world.breakBlock(ruin, false);
 		ctx.complete();
 	}
 

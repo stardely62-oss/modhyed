@@ -43,6 +43,10 @@ public class ObeliskConfig {
 	/** Tamed pets that are not sitting, and animals on your lead, jump with you. */
 	public boolean takePets = true;
 	public int petRadius = 12;
+	/** Return shard: how long to hold it, its cooldown, and whether it may cross dimensions. */
+	public int returnShardSeconds = 5;
+	public int returnShardCooldownSeconds = 60;
+	public boolean returnShardCrossDimension = true;
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static ObeliskConfig instance = new ObeliskConfig();
@@ -85,6 +89,8 @@ public class ObeliskConfig {
 		warmupSeconds = Math.max(0, warmupSeconds);
 		crossDimensionMinTier = Math.max(0, Math.min(ObeliskTiers.MAX_TIER, crossDimensionMinTier));
 		petRadius = Math.max(0, Math.min(32, petRadius));
+		returnShardSeconds = Math.max(1, returnShardSeconds);
+		returnShardCooldownSeconds = Math.max(0, returnShardCooldownSeconds);
 		return this;
 	}
 }

@@ -12,12 +12,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 
 /**
- * Advancement triggers: "ender_obelisks:teleported" (optional "min_distance" in blocks) and "ender_obelisks:upgraded"
- * (optional "min_tier").
+ * Advancement triggers: "ender_obelisks:teleported" and "ender_obelisks:returned" (return shard), both with an
+ * optional "min_distance" in blocks, and "ender_obelisks:upgraded" (optional "min_tier").
  */
 public final class ObeliskCriteria {
 	public static final NumberCriterion TELEPORTED = CriterionRegistry.register(new NumberCriterion(EnderObelisks.id("teleported"), "min_distance"));
 	public static final NumberCriterion UPGRADED = CriterionRegistry.register(new NumberCriterion(EnderObelisks.id("upgraded"), "min_tier"));
+	public static final NumberCriterion RETURNED = CriterionRegistry.register(new NumberCriterion(EnderObelisks.id("returned"), "min_distance"));
 
 	private ObeliskCriteria() {
 	}

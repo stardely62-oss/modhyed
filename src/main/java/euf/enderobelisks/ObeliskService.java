@@ -236,10 +236,24 @@ public final class ObeliskService {
 		if (result != TeleportResult.OK) {
 			return result;
 		}
+		TeleportResult arrived = arrive(player, target);
+		if (arrived == TeleportResult.OK) {
+			lastTeleport.put(player.getUuid(), (long) world.getServer().getTicks());
+			ObeliskCriteria.TELEPORTED.trigger(player, target.dimension.equals(source.get().dimension) ? source.get().distanceTo(target) : 0);
+		}
+		return arrived;
+	}
+
+	/**
+	 * Moves the player (and their pets) next to an obelisk, with no range or cooldown checks: the end of an obelisk
+	 * jump, and what a return shard does.
+	 */
+	public static TeleportResult arrive(ServerPlayerEntity player, ObeliskInfo target) {
+		ServerWorld world = player.getServerWorld();
 		ServerWorld targetWorld = world.getServer().getWorld(target.dimension);
 		// Loads the target chunk; an obelisk destroyed while its chunk was unloaded is dropped from the registry here
 		if (targetWorld == null || !(targetWorld.getBlockState(target.pos).getBlock() instanceof ObeliskBlock)) {
-			registry.remove(target.id);
+			ObeliskRegistry.get(world.getServer()).remove(target.id);
 			ObeliskSync.broadcast(world.getServer());
 			return TeleportResult.NO_TARGET;
 		}
@@ -263,8 +277,6 @@ public final class ObeliskService {
 					EnumSet.noneOf(PositionFlag.class), companions.get(i).getYaw(), companions.get(i).getPitch());
 		}
 		effects(targetWorld, spot);
-		lastTeleport.put(player.getUuid(), (long) world.getServer().getTicks());
-		ObeliskCriteria.TELEPORTED.trigger(player, target.dimension.equals(source.get().dimension) ? source.get().distanceTo(target) : 0);
 		return TeleportResult.OK;
 	}
 

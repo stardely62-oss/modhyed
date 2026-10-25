@@ -33,7 +33,7 @@
 		"subtitle": "subtitles.ender_obelisks.obelisk.channel",
 		"sounds": [
 			{
-				"name": "minecraft:block/portal/trigger",
+				"name": "minecraft:portal/trigger",
 				"pitch": 1.5,
 				"volume": 0.5
 			}

@@ -223,6 +223,9 @@ if __name__ == "__main__":
     glow.with_suffix(".png.mcmeta").write_text('{"animation": {"interpolate": true, "frames": [%s]}}\n' % frames)
     write_png(block / "obelisk_iron.png", iron())
     write_png(ASSETS / "textures/item/time_shard.png", TIME_SHARD)
+    # The return shard: the same crystals, in the ender eye's green
+    green = str.maketrans({"d": "g", "D": "G", "W": "L", "X": "w"})
+    write_png(ASSETS / "textures/item/return_shard.png", [row.translate(green) for row in TIME_SHARD])
     write_png(ASSETS / "textures/gui/map_marker.png", MAP_MARKER)
     # Mod icon: the eye front, scaled up
     write_png(ASSETS / "icon.png", EYE_FRONT, scale=16)

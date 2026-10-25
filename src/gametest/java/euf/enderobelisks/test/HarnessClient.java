@@ -65,6 +65,7 @@ public class HarnessClient implements ClientModInitializer {
 	private volatile BlockPos outpost;
 	private volatile BlockPos hideout;
 	private volatile BlockPos secret;
+	private volatile BlockPos ruin;
 
 	@Override
 	public void onInitializeClient() {
@@ -288,6 +289,61 @@ public class HarnessClient implements ClientModInitializer {
 			}
 		});
 		step(20, false, c -> screenshot(c, "menu_zoomed"));
+		// A ruin, placed the way world generation would; find its ruined obelisk, photograph it, restore it with a real click
+		step(10, false, c -> {
+			if (c.currentScreen != null) {
+				c.currentScreen.close();
+			}
+			BlockPos at = home.add(14, 0, 10);
+			commands(c, "place structure ender_obelisks:ruined_obelisk " + at.getX() + " " + at.getY() + " " + at.getZ(),
+					"give @a ender_obelisks:time_shard 2");
+		});
+		step(20, false, c -> {
+			ruin = onServer(c, s -> {
+				for (BlockPos p : BlockPos.iterate(home.add(4, -12, 0), home.add(24, 12, 20))) {
+					if (s.getOverworld().getBlockState(p).isOf(EnderObelisks.RUINED_OBELISK)) {
+						return p.toImmutable();
+					}
+				}
+				return null;
+			});
+			check("ruin_placed", ruin != null);
+			if (ruin != null) {
+				c.options.hudHidden = true;
+				tp(c, Vec3d.ofBottomCenter(ruin).add(-3.5, 0.5, -2.5), Vec3d.ofCenter(ruin));
+			}
+		});
+		step(40, true, c -> screenshot(c, "ruin"));
+		step(10, false, c -> {
+			if (ruin == null) {
+				return;
+			}
+			c.options.hudHidden = false;
+			tp(c, Vec3d.ofBottomCenter(ruin).add(-2.0, 0, 0.5), Vec3d.ofCenter(ruin));
+		});
+		step(20, false, c -> {
+			for (int i = 0; i < 9; i++) {
+				if (c.player.getInventory().getStack(i).isOf(EnderObelisks.TIME_SHARD)) {
+					c.player.getInventory().selectedSlot = i;
+				}
+			}
+		});
+		step(10, false, c -> {
+			if (ruin != null) {
+				rightClick(c, ruin);
+			}
+		});
+		step(30, false, c -> {
+			UUID me = c.player.getUuid();
+			check("ruin_restored", ruin != null && onServer(c, s -> s.getOverworld().getBlockState(ruin).isOf(EnderObelisks.OBELISK)
+					&& ObeliskService.at(s.getOverworld(), ruin).map(o -> o.owner.equals(me)).orElse(false)));
+			check("advancement_restore_ruin", advancementDone(c, "restore_ruin"));
+			c.options.hudHidden = true;
+			if (ruin != null) {
+				tp(c, Vec3d.ofBottomCenter(ruin).add(-3.5, 0.5, -2.5), Vec3d.ofBottomCenter(ruin).add(0, 1.2, 0));
+			}
+		});
+		step(40, true, c -> screenshot(c, "ruin_restored"));
 		step(40, false, this::finish);
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::tick);

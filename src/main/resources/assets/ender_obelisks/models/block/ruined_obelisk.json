@@ -1,0 +1,514 @@
+{
+	"textures": {
+		"obsidian": "minecraft:block/obsidian",
+		"deepslate": "minecraft:block/polished_deepslate",
+		"stone": "ender_obelisks:block/obelisk_stone",
+		"stone_top": "ender_obelisks:block/obelisk_stone_top",
+		"iron": "ender_obelisks:block/obelisk_iron_codex",
+		"particle": "minecraft:block/polished_deepslate"
+	},
+	"elements": [
+		{
+			"name": "plinth",
+			"from": [
+				0.5,
+				0.0,
+				0.5
+			],
+			"to": [
+				15.5,
+				2.5,
+				15.5
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						0.5,
+						13.5,
+						15.5,
+						16.0
+					],
+					"texture": "#obsidian"
+				},
+				"south": {
+					"uv": [
+						0.5,
+						13.5,
+						15.5,
+						16.0
+					],
+					"texture": "#obsidian"
+				},
+				"east": {
+					"uv": [
+						0.5,
+						13.5,
+						15.5,
+						16.0
+					],
+					"texture": "#obsidian"
+				},
+				"west": {
+					"uv": [
+						0.5,
+						13.5,
+						15.5,
+						16.0
+					],
+					"texture": "#obsidian"
+				},
+				"up": {
+					"uv": [
+						0.5,
+						0.5,
+						15.5,
+						15.5
+					],
+					"texture": "#obsidian"
+				},
+				"down": {
+					"uv": [
+						0.5,
+						0.5,
+						15.5,
+						15.5
+					],
+					"texture": "#obsidian",
+					"cullface": "down"
+				}
+			}
+		},
+		{
+			"name": "plinth step",
+			"from": [
+				2.5,
+				2.5,
+				2.5
+			],
+			"to": [
+				13.5,
+				4.0,
+				13.5
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						2.5,
+						12.0,
+						13.5,
+						13.5
+					],
+					"texture": "#obsidian"
+				},
+				"south": {
+					"uv": [
+						2.5,
+						12.0,
+						13.5,
+						13.5
+					],
+					"texture": "#obsidian"
+				},
+				"east": {
+					"uv": [
+						2.5,
+						12.0,
+						13.5,
+						13.5
+					],
+					"texture": "#obsidian"
+				},
+				"west": {
+					"uv": [
+						2.5,
+						12.0,
+						13.5,
+						13.5
+					],
+					"texture": "#obsidian"
+				},
+				"up": {
+					"uv": [
+						2.5,
+						2.5,
+						13.5,
+						13.5
+					],
+					"texture": "#obsidian"
+				},
+				"down": {
+					"uv": [
+						2.5,
+						2.5,
+						13.5,
+						13.5
+					],
+					"texture": "#obsidian"
+				}
+			}
+		},
+		{
+			"name": "stump",
+			"from": [
+				5,
+				4.0,
+				5
+			],
+			"to": [
+				11,
+				9.0,
+				11
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						5,
+						7.0,
+						11,
+						12.0
+					],
+					"texture": "#stone"
+				},
+				"south": {
+					"uv": [
+						5,
+						7.0,
+						11,
+						12.0
+					],
+					"texture": "#stone"
+				},
+				"east": {
+					"uv": [
+						5,
+						7.0,
+						11,
+						12.0
+					],
+					"texture": "#stone"
+				},
+				"west": {
+					"uv": [
+						5,
+						7.0,
+						11,
+						12.0
+					],
+					"texture": "#stone"
+				},
+				"up": {
+					"uv": [
+						5,
+						5,
+						11,
+						11
+					],
+					"texture": "#stone_top"
+				},
+				"down": {
+					"uv": [
+						5,
+						5,
+						11,
+						11
+					],
+					"texture": "#stone_top"
+				}
+			}
+		},
+		{
+			"name": "jag high",
+			"from": [
+				5,
+				9.0,
+				5
+			],
+			"to": [
+				8,
+				11.5,
+				8
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						5,
+						4.5,
+						8,
+						7.0
+					],
+					"texture": "#stone"
+				},
+				"south": {
+					"uv": [
+						5,
+						4.5,
+						8,
+						7.0
+					],
+					"texture": "#stone"
+				},
+				"east": {
+					"uv": [
+						5,
+						4.5,
+						8,
+						7.0
+					],
+					"texture": "#stone"
+				},
+				"west": {
+					"uv": [
+						5,
+						4.5,
+						8,
+						7.0
+					],
+					"texture": "#stone"
+				},
+				"up": {
+					"uv": [
+						5,
+						5,
+						8,
+						8
+					],
+					"texture": "#stone_top"
+				},
+				"down": {
+					"uv": [
+						5,
+						5,
+						8,
+						8
+					],
+					"texture": "#stone_top"
+				}
+			}
+		},
+		{
+			"name": "jag low",
+			"from": [
+				8,
+				9.0,
+				7
+			],
+			"to": [
+				11,
+				10.0,
+				11
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						8,
+						6.0,
+						11,
+						7.0
+					],
+					"texture": "#stone"
+				},
+				"south": {
+					"uv": [
+						8,
+						6.0,
+						11,
+						7.0
+					],
+					"texture": "#stone"
+				},
+				"east": {
+					"uv": [
+						7,
+						6.0,
+						11,
+						7.0
+					],
+					"texture": "#stone"
+				},
+				"west": {
+					"uv": [
+						7,
+						6.0,
+						11,
+						7.0
+					],
+					"texture": "#stone"
+				},
+				"up": {
+					"uv": [
+						8,
+						7,
+						11,
+						11
+					],
+					"texture": "#stone_top"
+				},
+				"down": {
+					"uv": [
+						8,
+						7,
+						11,
+						11
+					],
+					"texture": "#stone_top"
+				}
+			}
+		},
+		{
+			"name": "fallen piece",
+			"from": [
+				11.5,
+				2.5,
+				1
+			],
+			"to": [
+				14.5,
+				5.0,
+				4
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						11.5,
+						11.0,
+						14.5,
+						13.5
+					],
+					"texture": "#deepslate"
+				},
+				"south": {
+					"uv": [
+						11.5,
+						11.0,
+						14.5,
+						13.5
+					],
+					"texture": "#deepslate"
+				},
+				"east": {
+					"uv": [
+						1,
+						11.0,
+						4,
+						13.5
+					],
+					"texture": "#deepslate"
+				},
+				"west": {
+					"uv": [
+						1,
+						11.0,
+						4,
+						13.5
+					],
+					"texture": "#deepslate"
+				},
+				"up": {
+					"uv": [
+						11.5,
+						1,
+						14.5,
+						4
+					],
+					"texture": "#deepslate"
+				},
+				"down": {
+					"uv": [
+						11.5,
+						1,
+						14.5,
+						4
+					],
+					"texture": "#deepslate"
+				}
+			},
+			"rotation": {
+				"origin": [
+					13,
+					2.5,
+					2.5
+				],
+				"axis": "y",
+				"angle": 22.5
+			}
+		},
+		{
+			"name": "fallen talon",
+			"from": [
+				1.5,
+				2.5,
+				11.5
+			],
+			"to": [
+				2.5,
+				5.0,
+				12.5
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						1.5,
+						11.0,
+						2.5,
+						13.5
+					],
+					"texture": "#iron"
+				},
+				"south": {
+					"uv": [
+						1.5,
+						11.0,
+						2.5,
+						13.5
+					],
+					"texture": "#iron"
+				},
+				"east": {
+					"uv": [
+						11.5,
+						11.0,
+						12.5,
+						13.5
+					],
+					"texture": "#iron"
+				},
+				"west": {
+					"uv": [
+						11.5,
+						11.0,
+						12.5,
+						13.5
+					],
+					"texture": "#iron"
+				},
+				"up": {
+					"uv": [
+						1.5,
+						11.5,
+						2.5,
+						12.5
+					],
+					"texture": "#iron"
+				},
+				"down": {
+					"uv": [
+						1.5,
+						11.5,
+						2.5,
+						12.5
+					],
+					"texture": "#iron"
+				}
+			},
+			"rotation": {
+				"origin": [
+					2,
+					2.5,
+					12
+				],
+				"axis": "z",
+				"angle": 45
+			}
+		}
+	]
+}

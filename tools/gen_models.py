@@ -213,6 +213,20 @@ if __name__ == "__main__":
         },
     })
 
+    # The ruined obelisk: the stepped plinth with a broken, jagged stump of the shaft and fallen pieces
+    ruin = [
+        element("plinth", [0.5, 0, 0.5], [15.5, 2.5, 15.5], "obsidian", "obsidian", cull_down=True),
+        element("plinth step", [2.5, 2.5, 2.5], [13.5, 4, 13.5], "obsidian", "obsidian"),
+        element("stump", [5, 4, 5], [11, 9, 11], "stone", "stone_top"),
+        element("jag high", [5, 9, 5], [8, 11.5, 8], "stone", "stone_top"),
+        element("jag low", [8, 9, 7], [11, 10, 11], "stone", "stone_top"),
+        element("fallen piece", [11.5, 2.5, 1], [14.5, 5, 4], "deepslate", "deepslate", {"origin": [13, 2.5, 2.5], "axis": "y", "angle": 22.5}),
+        element("fallen talon", [1.5, 2.5, 11.5], [2.5, 5, 12.5], "iron", "iron", {"origin": [2, 2.5, 12], "axis": "z", "angle": 45}),
+    ]
+    dump("models/block/ruined_obelisk.json", {"textures": textures(used_textures(ruin)), "elements": ruin})
+    dump("models/item/ruined_obelisk.json", {"parent": "ender_obelisks:block/ruined_obelisk"})
+    dump("blockstates/ruined_obelisk.json", {"variants": {"": {"model": "ender_obelisks:block/ruined_obelisk"}}})
+
     rot = {"north": 0, "east": 90, "south": 180, "west": 270}
     dump("blockstates/obelisk.json", {"variants": {
         f"facing={f},half={h}": {"model": f"ender_obelisks:block/obelisk_{h}", **({"y": r} if r else {})}

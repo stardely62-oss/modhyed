@@ -18,7 +18,12 @@
 		"placed": {
 			"trigger": "minecraft:placed_block",
 			"conditions": {
-				"block": "ender_obelisks:obelisk"
+				"location": [
+					{
+						"condition": "minecraft:block_state_property",
+						"block": "ender_obelisks:obelisk"
+					}
+				]
 			}
 		}
 	},

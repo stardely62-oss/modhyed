@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"ender_obelisks:obelisk"
+		"ender_obelisks:obelisk",
+		"ender_obelisks:ruined_obelisk"
 	]
 }

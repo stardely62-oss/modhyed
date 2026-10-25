@@ -2,6 +2,7 @@ package euf.enderobelisks;
 
 import euf.enderobelisks.block.ObeliskBlock;
 import euf.enderobelisks.block.ObeliskBlockEntity;
+import euf.enderobelisks.block.RuinedObeliskBlock;
 import euf.enderobelisks.net.ObeliskPackets;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -17,6 +18,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
@@ -40,8 +42,15 @@ public class EnderObelisks implements ModInitializer {
 	public static final BlockEntityType<ObeliskBlockEntity> OBELISK_BLOCK_ENTITY = Registry.register(
 			Registries.BLOCK_ENTITY_TYPE, id("obelisk"), FabricBlockEntityTypeBuilder.create(ObeliskBlockEntity::new, OBELISK).build());
 
-	/** Crafted from redstone and emeralds; the crystal on top of every obelisk. */
+	/** Crafted from redstone and emeralds; part of every obelisk, and it restores ruined ones. */
 	public static final Item TIME_SHARD = Registry.register(Registries.ITEM, id("time_shard"), new Item(new Item.Settings()));
+	public static final Item RETURN_SHARD = Registry.register(Registries.ITEM, id("return_shard"),
+			new ReturnShardItem(new Item.Settings().maxCount(16)));
+
+	public static final Block RUINED_OBELISK = Registry.register(Registries.BLOCK, id("ruined_obelisk"),
+			new RuinedObeliskBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).nonOpaque().pistonBehavior(PistonBehavior.BLOCK)));
+	public static final Item RUINED_OBELISK_ITEM = Registry.register(Registries.ITEM, id("ruined_obelisk"),
+			new BlockItem(RUINED_OBELISK, new Item.Settings()));
 
 	public static Identifier id(String path) {
 		return new Identifier(MOD_ID, path);
@@ -49,8 +58,12 @@ public class EnderObelisks implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> entries.add(OBELISK_ITEM));
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> {
+			entries.add(OBELISK_ITEM);
+			entries.add(RUINED_OBELISK_ITEM);
+		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> entries.add(TIME_SHARD));
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> entries.add(RETURN_SHARD));
 		ObeliskConfig.load(FabricLoader.getInstance().getConfigDir().resolve(MOD_ID + ".json"));
 		ObeliskSounds.init();
 		ObeliskCriteria.init();

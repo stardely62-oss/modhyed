@@ -66,5 +66,19 @@
 	"advancements.ender_obelisks.far_jump.title": "На другой конец мира",
 	"advancements.ender_obelisks.far_jump.description": "Прыгните хотя бы на 3000 блоков за раз",
 	"advancements.ender_obelisks.max_tier.title": "Око видит всё",
-	"advancements.ender_obelisks.max_tier.description": "Улучшите обелиск до высшего уровня"
+	"advancements.ender_obelisks.max_tier.description": "Улучшите обелиск до высшего уровня",
+	"block.ender_obelisks.ruined_obelisk": "Разрушенный обелиск",
+	"item.ender_obelisks.return_shard": "Осколок возвращения",
+	"ender_obelisks.return.bound": "Осколок запомнил: %s",
+	"ender_obelisks.return.unbound": "Сначала привяжите осколок: Shift + ПКМ по обелиску",
+	"ender_obelisks.return.tooltip_unbound": "Shift + ПКМ по обелиску, чтобы привязать",
+	"ender_obelisks.return.tooltip_bound": "Вернёт к: %s",
+	"ender_obelisks.return.tooltip_use": "Зажмите ПКМ на %s с, чтобы вернуться. Исчезает после прыжка",
+	"ender_obelisks.ruin.hint": "В нём ещё теплится сила... осколок времени мог бы её пробудить",
+	"ender_obelisks.ruin.no_space": "Обелиску нужно место сверху, чтобы подняться",
+	"ender_obelisks.ruin.restored": "Обелиск восстал из руин. Теперь он ваш",
+	"advancements.ender_obelisks.restore_ruin.title": "Утраченное",
+	"advancements.ender_obelisks.restore_ruin.description": "Восстановите разрушенный обелиск осколком времени",
+	"advancements.ender_obelisks.return_home.title": "Туда и обратно",
+	"advancements.ender_obelisks.return_home.description": "Воспользуйтесь осколком возвращения"
 }

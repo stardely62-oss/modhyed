@@ -66,5 +66,19 @@
 	"advancements.ender_obelisks.far_jump.title": "Half the World Away",
 	"advancements.ender_obelisks.far_jump.description": "Teleport at least 3000 blocks in one jump",
 	"advancements.ender_obelisks.max_tier.title": "The Eye Sees All",
-	"advancements.ender_obelisks.max_tier.description": "Upgrade an obelisk to the highest tier"
+	"advancements.ender_obelisks.max_tier.description": "Upgrade an obelisk to the highest tier",
+	"block.ender_obelisks.ruined_obelisk": "Ruined Obelisk",
+	"item.ender_obelisks.return_shard": "Return Shard",
+	"ender_obelisks.return.bound": "The shard now remembers %s",
+	"ender_obelisks.return.unbound": "Sneak and right click an obelisk to bind the shard first",
+	"ender_obelisks.return.tooltip_unbound": "Sneak + right click an obelisk to bind it",
+	"ender_obelisks.return.tooltip_bound": "Returns to: %s",
+	"ender_obelisks.return.tooltip_use": "Hold right click for %s s to go back. Used up on arrival",
+	"ender_obelisks.ruin.hint": "Something is still alive in it... a time shard might wake it",
+	"ender_obelisks.ruin.no_space": "The obelisk needs room above to rise",
+	"ender_obelisks.ruin.restored": "The obelisk rises again. It is yours now",
+	"advancements.ender_obelisks.restore_ruin.title": "What Was Lost",
+	"advancements.ender_obelisks.restore_ruin.description": "Restore a ruined obelisk with a time shard",
+	"advancements.ender_obelisks.return_home.title": "There and Back Again",
+	"advancements.ender_obelisks.return_home.description": "Use a return shard"
 }
