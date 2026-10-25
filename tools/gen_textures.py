@@ -11,14 +11,15 @@ ASSETS = ROOT / "src/main/resources/assets/ender_obelisks"
 
 PALETTE = {
     ".": (0, 0, 0, 0),
-    # obelisk stone: neutral dark slate, like polished deepslate
-    "a": (0x1E, 0x20, 0x24, 255),  # joint
-    "b": (0x2C, 0x2F, 0x34, 255),
-    "c": (0x34, 0x37, 0x3D, 255),
-    "e": (0x44, 0x48, 0x4F, 255),  # edge highlight
+    # obelisk stone: black basalt with a cold tint
+    "a": (0x10, 0x11, 0x14, 255),  # carved groove / crack
+    "b": (0x1F, 0x21, 0x26, 255),
+    "c": (0x27, 0x2A, 0x30, 255),
+    "e": (0x36, 0x3A, 0x42, 255),  # lit edge of a carving
     # dark trim (blued metal)
     "k": (0x2A, 0x2D, 0x33, 255),
     "K": (0x41, 0x46, 0x4E, 255),
+    "u": (0x4A, 0x2E, 0x22, 255),  # dull rust
     "j": (0x17, 0x19, 0x1C, 255),
     # dark burgundy: the drips on the stone and the time crystal
     "R": (0x62, 0x16, 0x26, 255),
@@ -45,40 +46,57 @@ def speckle(x, y, seed, chars):
     return chars[(n >> 8) % len(chars)]
 
 
-# Burgundy seeping out of the joints, a few uneven drips (pixel by pixel; "r" is the thin end or a falling drop).
-# Only columns 5-10 show on the narrow shaft faces.
-DRIPS = {
-    (6, 8): "R", (6, 9): "R", (7, 10): "R", (7, 11): "r", (7, 13): "r",
-    (9, 0): "R", (9, 1): "R", (9, 2): "r", (10, 3): "r",
-    (8, 8): "R", (8, 9): "r",
-}
+# Sigils carved down the middle of the shaft (columns 6-9 show on both shaft widths), one every 5 rows
+SIGILS = [
+    ["aaaa", "a..a", "a.a."],
+    [".aa.", "aaaa", ".aa."],
+    ["a..a", ".aa.", "a..a"],
+]
+# Hairline cracks and two thin burgundy drips, placed by hand (x, y): grim, but not noisy
+CRACKS = [(5, 2), (5, 3), (6, 4), (10, 9), (10, 10), (11, 11), (5, 13), (6, 14)]
+DRIPS = {(7, 13): "R", (7, 14): "R", (8, 15): "r", (9, 5): "R", (9, 6): "r"}
 
 
 def obelisk_stone(top=False):
-    """Two courses of dressed stone: dark joints, a lit top-left edge on each block, faint even texture."""
+    """Black basalt: a quiet two-tone surface; the shaft faces carry a column of carved sigils."""
+    rows = [["b" if (x * 3 + y * 5) % 7 else "c" for x in range(16)] for y in range(16)]
+    if top:
+        for i in range(16):
+            for x, y in ((i, 0), (i, 15), (0, i), (15, i)):
+                rows[y][x] = "a"
+            for x, y in ((i, 1), (1, i)):
+                if 0 < i < 15:
+                    rows[y][x] = "e"
+    else:
+        for n, top_row in enumerate(range(1, 16, 5)):
+            glyph = SIGILS[n % len(SIGILS)]
+            for gy, line in enumerate(glyph):
+                for gx, ch in enumerate(line):
+                    if ch == "a" and top_row + gy < 16:
+                        rows[top_row + gy][6 + gx] = "a"
+                        if top_row + gy + 1 < 16 and glyph[gy + 1][gx] != "a" if gy + 1 < len(glyph) else top_row + gy + 1 < 16:
+                            rows[top_row + gy + 1][6 + gx] = "e"  # light catches the lower lip of the groove
+        for x, y in CRACKS:
+            rows[y][x] = "a"
+        for (x, y), ch in DRIPS.items():
+            rows[y][x] = ch
+    return ["".join(r) for r in rows]
+
+
+def iron():
+    """Blackened wrought iron: hammered plate, rivets along the top and bottom, dull rust at the edges."""
     rows = []
     for y in range(16):
         row = ""
         for x in range(16):
-            ch = "b" if (x + y) % 3 else "c"  # a regular, low-contrast tooling pattern
-            if top:
-                if x in (0, 15) or y in (0, 15):
-                    ch = "a"
-                elif x in (1, 14) or y in (1, 14):
-                    ch = "e"
-            else:
-                course = y // 8
-                joint_x = 0 if course == 0 else 8  # staggered vertical joints
-                if y % 8 == 7 or x == joint_x:
-                    ch = "a"
-                elif y % 8 == 0 or x == (joint_x + 1) % 16:
-                    ch = "e"
+            ch = "k" if (x // 2 + y // 3) % 3 else "j"
+            if y in (1, 14) and x % 5 == 2:
+                ch = "K"  # rivet
+            if (x in (0, 15) or y in (0, 15)) and (x + y) % 3 == 0:
+                ch = "u"  # rust
             row += ch
-        rows.append(list(row))
-    if not top:
-        for (x, y), ch in DRIPS.items():
-            rows[y][x] = ch
-    return ["".join(r) for r in rows]
+        rows.append(row)
+    return rows
 
 
 # One ring = a glowing line with beads hanging under it, drawn at the exact width of each shaft face
@@ -114,25 +132,6 @@ def trim():
             rows.append("".join("k" if x % 4 else "j" for x in range(16)))
         else:
             rows.append("".join("K" if x in (0, 15) or y in (3, 15) else "k" for x in range(16)))
-    return rows
-
-
-def crystal():
-    """Time crystal facets: left 8x16 for the sides (diagonal facets), right 8x8 for the ends."""
-    rows = []
-    for y in range(16):
-        row = ""
-        for x in range(16):
-            if x < 8:
-                v = (x + y // 2) % 6
-                ch = "W" if v == 0 else ("D" if v < 4 else "d")
-                if (x, y) in ((1, 3), (5, 10), (2, 13)):
-                    ch = "X"
-            else:
-                cx, cy = abs(x - 11.5), abs(y % 8 - 3.5)
-                ch = "W" if cx + cy < 2 else ("D" if cx + cy < 4 else "d")
-            row += ch
-        rows.append(row)
     return rows
 
 
@@ -220,7 +219,7 @@ if __name__ == "__main__":
     frames = ", ".join('{"index": %d, "time": %d}' % f for f in GLOW_RHYTHM)
     runes.with_suffix(".png.mcmeta").write_text('{"animation": {"interpolate": true, "frames": [%s]}}\n' % frames)
     write_png(block / "obelisk_trim.png", trim())
-    write_png(block / "obelisk_crystal.png", crystal())
+    write_png(block / "obelisk_iron.png", iron())
     write_png(ASSETS / "textures/item/time_shard.png", TIME_SHARD)
     # Mod icon: the eye front, scaled up
     write_png(ASSETS / "icon.png", EYE_FRONT, scale=16)

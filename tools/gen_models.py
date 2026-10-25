@@ -10,26 +10,27 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "src/main/resources/assets/ender_obelisks"
 
+# Which texture set the shaft and the iron parts use: "hand" (tools/gen_textures.py) or "codex"
+# (tools/gen_codex_art.sh + tools/import_codex_art.py)
+VARIANT = "codex"
+SUFFIX = "" if VARIANT == "hand" else "_codex"
+
 TEXTURES = {
     "obsidian": "minecraft:block/obsidian",
     "deepslate": "minecraft:block/polished_deepslate",
     "trim": "ender_obelisks:block/obelisk_trim",
-    "crystal": "ender_obelisks:block/obelisk_crystal",
-    "stone": "ender_obelisks:block/obelisk_stone",
+    "stone": "ender_obelisks:block/obelisk_stone" + SUFFIX,
     "stone_top": "ender_obelisks:block/obelisk_stone_top",
+    "iron": "ender_obelisks:block/obelisk_iron" + SUFFIX,
 }
 
-# (name, from, to, side texture, top/bottom texture). Obsidian plinth, polished deepslate corners/cage/cap,
-# plain dark trim, the time crystal on top and the ender eye in the cage. (The diamond is only in the recipe.)
+# (name, from, to, side texture, top/bottom texture, optional y-rotation origin). Grim dark fantasy: an obsidian
+# plinth gripped by four iron talons, a black runic basalt shaft, the caged eye, and an iron needle on top.
+# Every element is turned 45 degrees about y when an origin is given (talons and needle show an edge, not a face).
 PARTS = [
     ("plinth", [0.5, 0, 0.5], [15.5, 2, 15.5], "obsidian", "obsidian"),
     ("step", [1.5, 2, 1.5], [14.5, 3.5, 14.5], "obsidian", "obsidian"),
-    ("corner nw", [1, 2, 1], [3, 4.5, 3], "deepslate", "deepslate"),
-    ("corner ne", [13, 2, 1], [15, 4.5, 3], "deepslate", "deepslate"),
-    ("corner sw", [1, 2, 13], [3, 4.5, 15], "deepslate", "deepslate"),
-    ("corner se", [13, 2, 13], [15, 4.5, 15], "deepslate", "deepslate"),
     ("shaft lower", [5, 3.5, 5], [11, 16, 11], "stone", "stone_top"),
-    ("trim band", [4.5, 8, 4.5], [11.5, 10, 11.5], "trim", "trim"),
     ("shaft upper", [5.5, 16, 5.5], [10.5, 21, 10.5], "stone", "stone_top"),
     ("trim collar", [3.5, 21, 3.5], [12.5, 23, 12.5], "trim", "trim"),
     ("cage bar nw", [4, 23, 4], [5, 29, 5], "deepslate", "deepslate"),
@@ -39,14 +40,22 @@ PARTS = [
     ("trim ring", [3.5, 29, 3.5], [12.5, 30, 12.5], "trim", "trim"),
     ("cap", [5, 30, 5], [11, 31, 11], "deepslate", "deepslate"),
     ("cap top", [6.5, 31, 6.5], [9.5, 32, 9.5], "deepslate", "deepslate"),
+    ("needle", [7.4, 32, 7.4], [8.6, 35, 8.6], "iron", "iron", [8, 32, 8]),
+    ("needle tip", [7.75, 35, 7.75], [8.25, 37, 8.25], "iron", "iron", [8, 35, 8]),
 ]
+for corner, (cx, cz) in {"nw": (2, 2), "ne": (14, 2), "sw": (2, 14), "se": (14, 14)}.items():
+    PARTS += [
+        (f"talon foot {corner}", [cx - 1, 2, cz - 1], [cx + 1, 3.5, cz + 1], "iron", "iron"),
+        (f"talon {corner}", [cx - 0.6, 3.5, cz - 0.6], [cx + 0.6, 6, cz + 0.6], "iron", "iron", [cx, 3.5, cz]),
+        (f"talon tip {corner}", [cx - 0.25, 6, cz - 0.25], [cx + 0.25, 7.5, cz + 0.25], "iron", "iron", [cx, 6, cz]),
+    ]
 
 # Ornament rings, one more per tier, 2 units tall with gaps between them so each reads as its own ring.
 # They stand 0.06 off the shaft: closer than that the two surfaces fight and shimmer at a distance.
 RUNE_BANDS = [
     ([4.94, 5, 4.94], [11.06, 7, 11.06]),
-    ([4.94, 10.5, 4.94], [11.06, 12.5, 11.06]),
-    ([4.94, 13.5, 4.94], [11.06, 15.5, 11.06]),
+    ([4.94, 9, 4.94], [11.06, 11, 11.06]),
+    ([4.94, 13, 4.94], [11.06, 15, 11.06]),
     ([5.44, 16.5, 5.44], [10.56, 18.5, 10.56]),
     ([5.44, 19, 5.44], [10.56, 21, 10.56]),
 ]
@@ -67,7 +76,7 @@ def uv(face, frm, to):
     return [x1, z1, x2, z2]
 
 
-def element(name, frm, to, side, end, shift=0.0, cull_down=False):
+def element(name, frm, to, side, end, origin=None, shift=0.0, cull_down=False):
     frm = [frm[0], frm[1] + shift, frm[2]]
     to = [to[0], to[1] + shift, to[2]]
     faces = {}
@@ -80,37 +89,20 @@ def element(name, frm, to, side, end, shift=0.0, cull_down=False):
         if face == "down" and cull_down:
             f["cullface"] = "down"
         faces[face] = f
-    return {"name": name, "from": frm, "to": to, "faces": faces}
-
-
-def crystal_elements(shift=0.0):
-    """The time crystal on top (overall coordinates): a big faceted shard with a point, and three small ones
-    leaning out from its foot."""
-    def el(name, frm, to, rotation):
-        faces = {face: {"uv": [0, 0, 8, 16] if face not in ("up", "down") else [8, 0, 16, 8], "texture": "#crystal"}
-                 for face in ("north", "south", "east", "west", "up", "down")}
-        rotation = dict(rotation, origin=[rotation["origin"][0], round(rotation["origin"][1] + shift, 3), rotation["origin"][2]])
-        return {"name": name, "from": [frm[0], round(frm[1] + shift, 3), frm[2]],
-                "to": [to[0], round(to[1] + shift, 3), to[2]], "rotation": rotation, "faces": faces}
-
-    return [
-        el("crystal body", [6.5, 32, 6.5], [9.5, 36, 9.5], {"origin": [8, 32, 8], "axis": "y", "angle": 45}),
-        el("crystal point", [7.1, 36, 7.1], [8.9, 37.5, 8.9], {"origin": [8, 36, 8], "axis": "y", "angle": 45}),
-        el("shard east", [8.6, 31.5, 7.3], [10, 34.5, 8.7], {"origin": [9, 31.5, 8], "axis": "z", "angle": -22.5}),
-        el("shard west", [6, 31.5, 7.3], [7.4, 34, 8.7], {"origin": [7, 31.5, 8], "axis": "z", "angle": 22.5}),
-        el("shard south", [7.3, 31.5, 8.6], [8.7, 33.5, 10], {"origin": [8, 31.5, 9], "axis": "x", "angle": 22.5}),
-    ]
+    el = {"name": name, "from": frm, "to": to, "faces": faces}
+    if origin is not None:
+        el["rotation"] = {"origin": [origin[0], origin[1] + shift, origin[2]], "axis": "y", "angle": 45}
+    return el
 
 
 def split(lower):
     out = []
-    for name, frm, to, side, end in PARTS:
+    for name, frm, to, side, end, *origin in PARTS:
+        origin = origin[0] if origin else None
         if lower and frm[1] < 16:
-            out.append(element(name, frm, to, side, end, cull_down=frm[1] == 0))
+            out.append(element(name, frm, to, side, end, origin, cull_down=frm[1] == 0))
         elif not lower and frm[1] >= 16:
-            out.append(element(name, frm, to, side, end, shift=-16))
-    if not lower:
-        out += crystal_elements(shift=-16)
+            out.append(element(name, frm, to, side, end, origin, shift=-16))
     return out
 
 
@@ -171,7 +163,7 @@ if __name__ == "__main__":
              "elements": [rune_element(i, frm, to)]})
 
     # Item: the whole obelisk with a still eye in its cage and the first rune ring, shifted down to fit -16..32
-    item_els = [element(n, f, t, s, e, shift=-6) for n, f, t, s, e in PARTS] + crystal_elements(shift=-6)
+    item_els = [element(n, f, t, s, e, o[0] if o else None, shift=-6) for n, f, t, s, e, *o in PARTS]
     for el in eye_elements():
         el = json.loads(json.dumps(el))
         el["from"] = [el["from"][0], el["from"][1] + 26 - 8 - 6, el["from"][2]]
