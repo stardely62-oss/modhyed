@@ -16,10 +16,10 @@ PALETTE = {
     "b": (0x1F, 0x21, 0x26, 255),
     "c": (0x27, 0x2A, 0x30, 255),
     "e": (0x36, 0x3A, 0x42, 255),  # lit edge of a carving
-    # blood: wet at the source, dark and dried at the tips
-    "H": (0x9C, 0x1C, 0x24, 255),
-    "B": (0x6A, 0x0C, 0x14, 255),
-    "T": (0x3E, 0x06, 0x0C, 255),
+    # blood: wet at the source, dark and dried at the tips (letters of their own: T and others belong to the eye)
+    "V": (0x9C, 0x1C, 0x24, 255),
+    "Y": (0x6A, 0x0C, 0x14, 255),
+    "Z": (0x3E, 0x06, 0x0C, 255),
     # dark trim (blued metal)
     "k": (0x2A, 0x2D, 0x33, 255),
     "K": (0x41, 0x46, 0x4E, 255),
@@ -103,29 +103,23 @@ def iron():
     return rows
 
 
-# Blood running down the shaft, one overlay per tier. Columns 0-5 / rows 0-8 cover a lower shaft face, columns
-# 6-10 / rows 0-4 an upper one; blood seeps from the top of each (under the cage, and the joint) and runs down.
-# Each drip: (column, length, wide source?) - "H" wet highlight at the source, "B" blood, "T" the dried tip, "o" a drop.
+# Blood running down the shaft, one overlay per tier; the overlays stack, so tier 4 shows all of them.
+# Columns 0-5 / rows 0-8 cover a lower shaft face, columns 6-10 / rows 0-4 an upper one (half the faces mirror it).
+# Thin streaks only: (column, first row, length) - "V" wet where it starts, "Y" blood, "Z" the dried end.
 BLOOD = {
-    1: {"lower": [(2, 4, False)], "upper": [(8, 3, False)]},
-    2: {"lower": [(4, 6, True)], "upper": [(6, 4, False)], "drops": [(4, 8)]},
-    3: {"lower": [(0, 3, False), (3, 7, False)], "upper": [(10, 5, True)]},
-    4: {"lower": [(1, 9, True), (5, 4, False)], "upper": [(7, 5, False), (9, 2, False)]},
+    1: [(2, 0, 3)],
+    2: [(8, 0, 3), (4, 0, 2)],
+    3: [(0, 0, 4), (4, 4, 1)],
+    4: [(2, 3, 6), (6, 0, 4)],
 }
 
 
 def blood(level):
     rows = [["." for _ in range(16)] for _ in range(16)]
-    spec = BLOOD[level]
-    for section, offset, height in (("lower", 0, 9), ("upper", 6, 5)):
-        for col, length, wide in spec.get(section, []):
-            for y in range(min(length, height)):
-                rows[y][col] = "H" if y == 0 else ("T" if y == length - 1 else "B")
-            if wide and col + 1 < offset + (6 if section == "lower" else 5):
-                rows[0][col + 1] = "B"
-                rows[1][col + 1] = "T"
-    for col, y in spec.get("drops", []):
-        rows[y][col] = "T"
+    for col, top, length in BLOOD[level]:
+        for i in range(length):
+            starts_here = top == 0 and i == 0
+            rows[top + i][col] = "V" if starts_here else ("Z" if i == length - 1 else "Y")
     return ["".join(r) for r in rows]
 
 
