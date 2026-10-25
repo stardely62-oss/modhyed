@@ -14,13 +14,13 @@ TEXTURES = {
     "obsidian": "minecraft:block/obsidian",
     "deepslate": "minecraft:block/polished_deepslate",
     "trim": "ender_obelisks:block/obelisk_trim",
-    "gem": "ender_obelisks:block/obelisk_gem",
+    "crystal": "ender_obelisks:block/obelisk_crystal",
     "stone": "ender_obelisks:block/obelisk_stone",
     "stone_top": "ender_obelisks:block/obelisk_stone_top",
 }
 
 # (name, from, to, side texture, top/bottom texture). Obsidian plinth, polished deepslate corners/cage/cap,
-# dark trim with a burgundy line, a garnet on the tip and the ender eye in the cage. (The diamond is only in the recipe.)
+# plain dark trim, the time crystal on top and the ender eye in the cage. (The diamond is only in the recipe.)
 PARTS = [
     ("plinth", [0.5, 0, 0.5], [15.5, 2, 15.5], "obsidian", "obsidian"),
     ("step", [1.5, 2, 1.5], [14.5, 3.5, 14.5], "obsidian", "obsidian"),
@@ -83,16 +83,23 @@ def element(name, frm, to, side, end, shift=0.0, cull_down=False):
     return {"name": name, "from": frm, "to": to, "faces": faces}
 
 
-def gem_elements(shift=0.0):
-    """A cut garnet: a body turned 45 degrees and a smaller point above it (overall coordinates)."""
-    rot = lambda y: {"origin": [8, y + shift, 8], "axis": "y", "angle": 45}
-    out = []
-    for name, frm, to in (("gem body", [6.75, 32, 6.75], [9.25, 34, 9.25]), ("gem point", [7.4, 34, 7.4], [8.6, 35.2, 8.6])):
-        faces = {face: {"uv": [0, 0, 8, 8] if face not in ("up", "down") else [8, 0, 16, 8], "texture": "#gem"}
+def crystal_elements(shift=0.0):
+    """The time crystal on top (overall coordinates): a big faceted shard with a point, and three small ones
+    leaning out from its foot."""
+    def el(name, frm, to, rotation):
+        faces = {face: {"uv": [0, 0, 8, 16] if face not in ("up", "down") else [8, 0, 16, 8], "texture": "#crystal"}
                  for face in ("north", "south", "east", "west", "up", "down")}
-        out.append({"name": name, "from": [frm[0], round(frm[1] + shift, 3), frm[2]], "to": [to[0], round(to[1] + shift, 3), to[2]],
-                    "rotation": rot(frm[1]), "faces": faces})
-    return out
+        rotation = dict(rotation, origin=[rotation["origin"][0], round(rotation["origin"][1] + shift, 3), rotation["origin"][2]])
+        return {"name": name, "from": [frm[0], round(frm[1] + shift, 3), frm[2]],
+                "to": [to[0], round(to[1] + shift, 3), to[2]], "rotation": rotation, "faces": faces}
+
+    return [
+        el("crystal body", [6.5, 32, 6.5], [9.5, 36, 9.5], {"origin": [8, 32, 8], "axis": "y", "angle": 45}),
+        el("crystal point", [7.1, 36, 7.1], [8.9, 37.5, 8.9], {"origin": [8, 36, 8], "axis": "y", "angle": 45}),
+        el("shard east", [8.6, 31.5, 7.3], [10, 34.5, 8.7], {"origin": [9, 31.5, 8], "axis": "z", "angle": -22.5}),
+        el("shard west", [6, 31.5, 7.3], [7.4, 34, 8.7], {"origin": [7, 31.5, 8], "axis": "z", "angle": 22.5}),
+        el("shard south", [7.3, 31.5, 8.6], [8.7, 33.5, 10], {"origin": [8, 31.5, 9], "axis": "x", "angle": 22.5}),
+    ]
 
 
 def split(lower):
@@ -103,7 +110,7 @@ def split(lower):
         elif not lower and frm[1] >= 16:
             out.append(element(name, frm, to, side, end, shift=-16))
     if not lower:
-        out += gem_elements(shift=-16)
+        out += crystal_elements(shift=-16)
     return out
 
 
@@ -164,7 +171,7 @@ if __name__ == "__main__":
              "elements": [rune_element(i, frm, to)]})
 
     # Item: the whole obelisk with a still eye in its cage and the first rune ring, shifted down to fit -16..32
-    item_els = [element(n, f, t, s, e, shift=-6) for n, f, t, s, e in PARTS] + gem_elements(shift=-6)
+    item_els = [element(n, f, t, s, e, shift=-6) for n, f, t, s, e in PARTS] + crystal_elements(shift=-6)
     for el in eye_elements():
         el = json.loads(json.dumps(el))
         el["from"] = [el["from"][0], el["from"][1] + 26 - 8 - 6, el["from"][2]]

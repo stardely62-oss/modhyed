@@ -33,6 +33,9 @@ public class EnderObelisks implements ModInitializer {
 	public static final BlockEntityType<ObeliskBlockEntity> OBELISK_BLOCK_ENTITY = Registry.register(
 			Registries.BLOCK_ENTITY_TYPE, id("obelisk"), FabricBlockEntityTypeBuilder.create(ObeliskBlockEntity::new, OBELISK).build());
 
+	/** Crafted from redstone and emeralds; the crystal on top of every obelisk. */
+	public static final Item TIME_SHARD = Registry.register(Registries.ITEM, id("time_shard"), new Item(new Item.Settings()));
+
 	public static Identifier id(String path) {
 		return new Identifier(MOD_ID, path);
 	}
@@ -40,6 +43,7 @@ public class EnderObelisks implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries -> entries.add(OBELISK_ITEM));
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> entries.add(TIME_SHARD));
 		ObeliskPackets.registerServerReceivers();
 		LOGGER.info("Ender Obelisks loaded");
 	}

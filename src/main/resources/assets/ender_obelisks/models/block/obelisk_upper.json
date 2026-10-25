@@ -3,7 +3,7 @@
 	"textures": {
 		"deepslate": "minecraft:block/polished_deepslate",
 		"trim": "ender_obelisks:block/obelisk_trim",
-		"gem": "ender_obelisks:block/obelisk_gem",
+		"crystal": "ender_obelisks:block/obelisk_crystal",
 		"stone": "ender_obelisks:block/obelisk_stone",
 		"stone_top": "ender_obelisks:block/obelisk_stone_top",
 		"particle": "minecraft:block/polished_deepslate"
@@ -631,16 +631,16 @@
 			}
 		},
 		{
-			"name": "gem body",
+			"name": "crystal body",
 			"from": [
-				6.75,
+				6.5,
 				16,
-				6.75
+				6.5
 			],
 			"to": [
-				9.25,
-				18,
-				9.25
+				9.5,
+				20,
+				9.5
 			],
 			"rotation": {
 				"origin": [
@@ -657,36 +657,36 @@
 						0,
 						0,
 						8,
-						8
+						16
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				},
 				"south": {
 					"uv": [
 						0,
 						0,
 						8,
-						8
+						16
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				},
 				"east": {
 					"uv": [
 						0,
 						0,
 						8,
-						8
+						16
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				},
 				"west": {
 					"uv": [
 						0,
 						0,
 						8,
-						8
+						16
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				},
 				"up": {
 					"uv": [
@@ -695,7 +695,7 @@
 						16,
 						8
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				},
 				"down": {
 					"uv": [
@@ -704,26 +704,26 @@
 						16,
 						8
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				}
 			}
 		},
 		{
-			"name": "gem point",
+			"name": "crystal point",
 			"from": [
-				7.4,
-				18,
-				7.4
+				7.1,
+				20,
+				7.1
 			],
 			"to": [
-				8.6,
-				19.2,
-				8.6
+				8.9,
+				21.5,
+				8.9
 			],
 			"rotation": {
 				"origin": [
 					8,
-					18,
+					20,
 					8
 				],
 				"axis": "y",
@@ -735,36 +735,36 @@
 						0,
 						0,
 						8,
-						8
+						16
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				},
 				"south": {
 					"uv": [
 						0,
 						0,
 						8,
-						8
+						16
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				},
 				"east": {
 					"uv": [
 						0,
 						0,
 						8,
-						8
+						16
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				},
 				"west": {
 					"uv": [
 						0,
 						0,
 						8,
-						8
+						16
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				},
 				"up": {
 					"uv": [
@@ -773,7 +773,7 @@
 						16,
 						8
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
 				},
 				"down": {
 					"uv": [
@@ -782,7 +782,241 @@
 						16,
 						8
 					],
-					"texture": "#gem"
+					"texture": "#crystal"
+				}
+			}
+		},
+		{
+			"name": "shard east",
+			"from": [
+				8.6,
+				15.5,
+				7.3
+			],
+			"to": [
+				10,
+				18.5,
+				8.7
+			],
+			"rotation": {
+				"origin": [
+					9,
+					15.5,
+					8
+				],
+				"axis": "z",
+				"angle": -22.5
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"south": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"up": {
+					"uv": [
+						8,
+						0,
+						16,
+						8
+					],
+					"texture": "#crystal"
+				},
+				"down": {
+					"uv": [
+						8,
+						0,
+						16,
+						8
+					],
+					"texture": "#crystal"
+				}
+			}
+		},
+		{
+			"name": "shard west",
+			"from": [
+				6,
+				15.5,
+				7.3
+			],
+			"to": [
+				7.4,
+				18,
+				8.7
+			],
+			"rotation": {
+				"origin": [
+					7,
+					15.5,
+					8
+				],
+				"axis": "z",
+				"angle": 22.5
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"south": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"up": {
+					"uv": [
+						8,
+						0,
+						16,
+						8
+					],
+					"texture": "#crystal"
+				},
+				"down": {
+					"uv": [
+						8,
+						0,
+						16,
+						8
+					],
+					"texture": "#crystal"
+				}
+			}
+		},
+		{
+			"name": "shard south",
+			"from": [
+				7.3,
+				15.5,
+				8.6
+			],
+			"to": [
+				8.7,
+				17.5,
+				10
+			],
+			"rotation": {
+				"origin": [
+					8,
+					15.5,
+					9
+				],
+				"axis": "x",
+				"angle": 22.5
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"south": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						8,
+						16
+					],
+					"texture": "#crystal"
+				},
+				"up": {
+					"uv": [
+						8,
+						0,
+						16,
+						8
+					],
+					"texture": "#crystal"
+				},
+				"down": {
+					"uv": [
+						8,
+						0,
+						16,
+						8
+					],
+					"texture": "#crystal"
 				}
 			}
 		}

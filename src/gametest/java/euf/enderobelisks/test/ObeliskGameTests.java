@@ -7,13 +7,16 @@ import euf.enderobelisks.ObeliskService.TeleportResult;
 import euf.enderobelisks.ObeliskTiers;
 import euf.enderobelisks.block.ObeliskBlock;
 import euf.enderobelisks.block.ObeliskBlockEntity;
+import java.util.List;
 import java.util.UUID;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.test.GameTest;
@@ -61,6 +64,23 @@ public class ObeliskGameTests implements FabricGameTest {
 		check(ObeliskTiers.upgradeCost(3).get(0).isOf(Items.NETHER_STAR), "the last upgrade costs a nether star");
 		check(ObeliskTiers.upgradeCost(ObeliskTiers.MAX_TIER).isEmpty(), "no upgrade past the max tier");
 		check(ObeliskService.clampName("  " + "x".repeat(50) + " ").length() == ObeliskService.MAX_NAME_LENGTH, "names are clamped");
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void recipesUseTheTimeShard(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		Recipe<?> shard = world.getRecipeManager().get(EnderObelisks.id("time_shard"))
+				.orElseThrow(() -> new GameTestException("no time shard recipe"));
+		check(shard.getOutput(world.getRegistryManager()).isOf(EnderObelisks.TIME_SHARD), "the time shard recipe makes a time shard");
+		check(shard.getIngredients().stream().anyMatch(i -> i.test(new ItemStack(Items.REDSTONE)))
+				&& shard.getIngredients().stream().anyMatch(i -> i.test(new ItemStack(Items.EMERALD))), "time shard = redstone + emeralds");
+		Recipe<?> obelisk = world.getRecipeManager().get(EnderObelisks.id("obelisk"))
+				.orElseThrow(() -> new GameTestException("no obelisk recipe"));
+		for (ItemStack needed : List.of(new ItemStack(EnderObelisks.TIME_SHARD), new ItemStack(Items.DIAMOND),
+				new ItemStack(Items.OBSIDIAN), new ItemStack(Items.ENDER_PEARL))) {
+			check(obelisk.getIngredients().stream().anyMatch(i -> i.test(needed)), "the obelisk recipe needs " + needed.getItem());
+		}
 		ctx.complete();
 	}
 

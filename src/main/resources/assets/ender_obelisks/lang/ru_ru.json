@@ -27,5 +27,6 @@
 	"ender_obelisks.teleport.no_access": "Этот обелиск закрыт",
 	"ender_obelisks.teleport.too_far": "Слишком далеко для этого обелиска: улучшите его",
 	"ender_obelisks.teleport.cooldown": "Обелиск ещё перезаряжается",
-	"ender_obelisks.teleport.no_space": "Рядом с тем обелиском негде приземлиться"
+	"ender_obelisks.teleport.no_space": "Рядом с тем обелиском негде приземлиться",
+	"item.ender_obelisks.time_shard": "Осколок времени"
 }

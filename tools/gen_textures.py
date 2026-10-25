@@ -16,15 +16,17 @@ PALETTE = {
     "b": (0x2C, 0x2F, 0x34, 255),
     "c": (0x34, 0x37, 0x3D, 255),
     "e": (0x44, 0x48, 0x4F, 255),  # edge highlight
-    # dark trim (blued metal) with a burgundy line, and the garnet on the tip
+    # dark trim (blued metal)
     "k": (0x2A, 0x2D, 0x33, 255),
     "K": (0x41, 0x46, 0x4E, 255),
     "j": (0x17, 0x19, 0x1C, 255),
-    "R": (0x6E, 0x1C, 0x2C, 255),
-    "r": (0x4A, 0x12, 0x1E, 255),
-    "W": (0xB8, 0x4A, 0x5E, 255),  # garnet light
-    "D": (0x80, 0x22, 0x36, 255),  # garnet
-    "d": (0x52, 0x14, 0x22, 255),  # garnet dark
+    # dark burgundy: the drips on the stone and the time crystal
+    "R": (0x62, 0x16, 0x26, 255),
+    "r": (0x45, 0x10, 0x1C, 255),
+    "W": (0xA8, 0x3A, 0x52, 255),  # crystal light
+    "D": (0x6E, 0x1A, 0x2E, 255),  # crystal
+    "d": (0x40, 0x0C, 0x1A, 255),  # crystal dark
+    "X": (0xD8, 0x7A, 0x8E, 255),  # crystal glint
     # ender eye
     "q": (0x05, 0x0A, 0x08, 255),  # pupil
     "g": (0x0F, 0x3A, 0x2C, 255),  # rim
@@ -41,6 +43,15 @@ def speckle(x, y, seed, chars):
     n = (x * 73856093) ^ (y * 19349663) ^ (seed * 83492791)
     n = (n ^ (n >> 13)) * 1274126177
     return chars[(n >> 8) % len(chars)]
+
+
+# Burgundy seeping out of the joints, a few uneven drips (pixel by pixel; "r" is the thin end or a falling drop).
+# Only columns 5-10 show on the narrow shaft faces.
+DRIPS = {
+    (6, 8): "R", (6, 9): "R", (7, 10): "R", (7, 11): "r", (7, 13): "r",
+    (9, 0): "R", (9, 1): "R", (9, 2): "r", (10, 3): "r",
+    (8, 8): "R", (8, 9): "r",
+}
 
 
 def obelisk_stone(top=False):
@@ -63,8 +74,11 @@ def obelisk_stone(top=False):
                 elif y % 8 == 0 or x == (joint_x + 1) % 16:
                     ch = "e"
             row += ch
-        rows.append(row)
-    return rows
+        rows.append(list(row))
+    if not top:
+        for (x, y), ch in DRIPS.items():
+            rows[y][x] = ch
+    return ["".join(r) for r in rows]
 
 
 # One ring = a glowing line with beads hanging under it, drawn at the exact width of each shaft face
@@ -91,34 +105,57 @@ def ornament_frames():
 
 
 def trim():
-    """Blued metal with a burgundy line: rows 0-1 the 2-high band, row 2 the 1-high ring, the rest the top faces."""
+    """Plain blued metal: rows 0-1 the 2-high band, row 2 the 1-high ring, the rest the top faces."""
     rows = []
     for y in range(16):
         if y == 0:
             rows.append("K" * 16)
-        elif y == 1:
-            rows.append("R" * 16)
-        elif y == 2:
-            rows.append("".join("R" if x % 2 else "r" for x in range(16)))
+        elif y in (1, 2):
+            rows.append("".join("k" if x % 4 else "j" for x in range(16)))
         else:
             rows.append("".join("K" if x in (0, 15) or y in (3, 15) else "k" for x in range(16)))
     return rows
 
 
-def gem():
-    """Cut garnet facets: left 8x8 for the sides, right 8x8 for the table and point."""
+def crystal():
+    """Time crystal facets: left 8x16 for the sides (diagonal facets), right 8x8 for the ends."""
     rows = []
     for y in range(16):
         row = ""
         for x in range(16):
             if x < 8:
-                v = (x + y) % 8
-                row += "W" if v < 2 else ("D" if v < 5 else "d")
+                v = (x + y // 2) % 6
+                ch = "W" if v == 0 else ("D" if v < 4 else "d")
+                if (x, y) in ((1, 3), (5, 10), (2, 13)):
+                    ch = "X"
             else:
                 cx, cy = abs(x - 11.5), abs(y % 8 - 3.5)
-                row += "W" if cx + cy < 2 else ("D" if cx + cy < 4 else "d")
+                ch = "W" if cx + cy < 2 else ("D" if cx + cy < 4 else "d")
+            row += ch
         rows.append(row)
     return rows
+
+
+# Item sprite: a small cluster of three time crystals
+TIME_SHARD = [
+    "................",
+    ".......d........",
+    "......dXd.......",
+    "......dWDd......",
+    ".....dWDDd......",
+    ".....dWDDd..d...",
+    ".....dWDDd.dXd..",
+    ".....dWXDd.dWDd.",
+    ".....dWDDd.dWDd.",
+    "..d..dWDDd.dWDd.",
+    ".dXd.dWDDddWDd..",
+    ".dWDddWDDdWDDd..",
+    ".dWDDdWDDDDDd...",
+    "..dDDDDDDDDd....",
+    "...ddddddddd....",
+    "................",
+]
+assert all(len(row) == 16 for row in TIME_SHARD)
 
 
 EYE_FRONT = [
@@ -183,6 +220,7 @@ if __name__ == "__main__":
     frames = ", ".join('{"index": %d, "time": %d}' % f for f in GLOW_RHYTHM)
     runes.with_suffix(".png.mcmeta").write_text('{"animation": {"interpolate": true, "frames": [%s]}}\n' % frames)
     write_png(block / "obelisk_trim.png", trim())
-    write_png(block / "obelisk_gem.png", gem())
+    write_png(block / "obelisk_crystal.png", crystal())
+    write_png(ASSETS / "textures/item/time_shard.png", TIME_SHARD)
     # Mod icon: the eye front, scaled up
     write_png(ASSETS / "icon.png", EYE_FRONT, scale=16)
