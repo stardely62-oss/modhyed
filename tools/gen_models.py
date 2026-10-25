@@ -13,13 +13,15 @@ ASSETS = ROOT / "src/main/resources/assets/ender_obelisks"
 TEXTURES = {
     "obsidian": "minecraft:block/obsidian",
     "deepslate": "minecraft:block/polished_deepslate",
-    "diamond": "minecraft:block/diamond_block",
+    "trim": "ender_obelisks:block/obelisk_trim",
+    "gem": "ender_obelisks:block/obelisk_gem",
     "stone": "ender_obelisks:block/obelisk_stone",
     "stone_top": "ender_obelisks:block/obelisk_stone_top",
 }
 
 # (name, from, to, side texture, top/bottom texture). Every crafting material shows: obsidian plinth,
-# polished deepslate corners/cage/cap, diamond bands and tip, and the ender eye (from the pearl) in the cage.
+# polished deepslate corners/cage/cap, diamonds set into dark trim and cut into the tip, and the ender eye
+# (from the pearl) in the cage.
 PARTS = [
     ("plinth", [0.5, 0, 0.5], [15.5, 2, 15.5], "obsidian", "obsidian"),
     ("step", [1.5, 2, 1.5], [14.5, 3.5, 14.5], "obsidian", "obsidian"),
@@ -28,17 +30,16 @@ PARTS = [
     ("corner sw", [1, 2, 13], [3, 4.5, 15], "deepslate", "deepslate"),
     ("corner se", [13, 2, 13], [15, 4.5, 15], "deepslate", "deepslate"),
     ("shaft lower", [5, 3.5, 5], [11, 16, 11], "stone", "stone_top"),
-    ("diamond band", [4.5, 8.5, 4.5], [11.5, 9.5, 11.5], "diamond", "diamond"),
-    ("shaft upper", [5.5, 16, 5.5], [10.5, 22, 10.5], "stone", "stone_top"),
-    ("diamond collar", [3.5, 22, 3.5], [12.5, 23, 12.5], "diamond", "diamond"),
+    ("trim band", [4.5, 8, 4.5], [11.5, 10, 11.5], "trim", "trim"),
+    ("shaft upper", [5.5, 16, 5.5], [10.5, 21, 10.5], "stone", "stone_top"),
+    ("trim collar", [3.5, 21, 3.5], [12.5, 23, 12.5], "trim", "trim"),
     ("cage bar nw", [4, 23, 4], [5, 29, 5], "deepslate", "deepslate"),
     ("cage bar ne", [11, 23, 4], [12, 29, 5], "deepslate", "deepslate"),
     ("cage bar sw", [4, 23, 11], [5, 29, 12], "deepslate", "deepslate"),
     ("cage bar se", [11, 23, 11], [12, 29, 12], "deepslate", "deepslate"),
-    ("diamond ring", [3.5, 29, 3.5], [12.5, 30, 12.5], "diamond", "diamond"),
+    ("trim ring", [3.5, 29, 3.5], [12.5, 30, 12.5], "trim", "trim"),
     ("cap", [5, 30, 5], [11, 31, 11], "deepslate", "deepslate"),
     ("cap top", [6.5, 31, 6.5], [9.5, 32, 9.5], "deepslate", "deepslate"),
-    ("tip", [7.25, 32, 7.25], [8.75, 34, 8.75], "diamond", "diamond"),
 ]
 
 # Ornament rings, one more per tier, 2 units tall with gaps between them so each reads as its own ring.
@@ -47,8 +48,8 @@ RUNE_BANDS = [
     ([4.94, 5, 4.94], [11.06, 7, 11.06]),
     ([4.94, 10.5, 4.94], [11.06, 12.5, 11.06]),
     ([4.94, 13.5, 4.94], [11.06, 15.5, 11.06]),
-    ([5.44, 17, 5.44], [10.56, 19, 10.56]),
-    ([5.44, 20, 5.44], [10.56, 22, 10.56]),
+    ([5.44, 16.5, 5.44], [10.56, 18.5, 10.56]),
+    ([5.44, 19, 5.44], [10.56, 21, 10.56]),
 ]
 
 
@@ -73,10 +74,26 @@ def element(name, frm, to, side, end, shift=0.0, cull_down=False):
     faces = {}
     for face in ("north", "south", "east", "west", "up", "down"):
         f = {"uv": uv(face, frm, to), "texture": "#" + (end if face in ("up", "down") else side)}
+        if side == "trim" and face not in ("up", "down"):
+            # Rows 0-1 of the trim texture are the 2-high inlay, row 2 the 1-high one
+            w = to[0] - frm[0]
+            f["uv"] = [0, 0, w, 2] if to[1] - frm[1] >= 2 else [0, 2, w, 3]
         if face == "down" and cull_down:
             f["cullface"] = "down"
         faces[face] = f
     return {"name": name, "from": frm, "to": to, "faces": faces}
+
+
+def gem_elements(shift=0.0):
+    """A cut diamond: a body turned 45 degrees and a smaller point above it (overall coordinates)."""
+    rot = lambda y: {"origin": [8, y + shift, 8], "axis": "y", "angle": 45}
+    out = []
+    for name, frm, to in (("gem body", [6.75, 32, 6.75], [9.25, 34, 9.25]), ("gem point", [7.4, 34, 7.4], [8.6, 35.2, 8.6])):
+        faces = {face: {"uv": [0, 0, 8, 8] if face not in ("up", "down") else [8, 0, 16, 8], "texture": "#gem"}
+                 for face in ("north", "south", "east", "west", "up", "down")}
+        out.append({"name": name, "from": [frm[0], round(frm[1] + shift, 3), frm[2]], "to": [to[0], round(to[1] + shift, 3), to[2]],
+                    "rotation": rot(frm[1]), "faces": faces})
+    return out
 
 
 def split(lower):
@@ -86,6 +103,8 @@ def split(lower):
             out.append(element(name, frm, to, side, end, cull_down=frm[1] == 0))
         elif not lower and frm[1] >= 16:
             out.append(element(name, frm, to, side, end, shift=-16))
+    if not lower:
+        out += gem_elements(shift=-16)
     return out
 
 
@@ -146,7 +165,7 @@ if __name__ == "__main__":
              "elements": [rune_element(i, frm, to)]})
 
     # Item: the whole obelisk with a still eye in its cage and the first rune ring, shifted down to fit -16..32
-    item_els = [element(n, f, t, s, e, shift=-6) for n, f, t, s, e in PARTS]
+    item_els = [element(n, f, t, s, e, shift=-6) for n, f, t, s, e in PARTS] + gem_elements(shift=-6)
     for el in eye_elements():
         el = json.loads(json.dumps(el))
         el["from"] = [el["from"][0], el["from"][1] + 26 - 8 - 6, el["from"][2]]

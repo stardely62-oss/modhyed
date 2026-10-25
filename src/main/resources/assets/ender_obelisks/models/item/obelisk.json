@@ -3,7 +3,8 @@
 	"textures": {
 		"obsidian": "minecraft:block/obsidian",
 		"deepslate": "minecraft:block/polished_deepslate",
-		"diamond": "minecraft:block/diamond_block",
+		"trim": "ender_obelisks:block/obelisk_trim",
+		"gem": "ender_obelisks:block/obelisk_gem",
 		"stone": "ender_obelisks:block/obelisk_stone",
 		"stone_top": "ender_obelisks:block/obelisk_stone_top",
 		"particle": "minecraft:block/polished_deepslate",
@@ -495,53 +496,53 @@
 			}
 		},
 		{
-			"name": "diamond band",
+			"name": "trim band",
 			"from": [
 				4.5,
-				2.5,
+				2,
 				4.5
 			],
 			"to": [
 				11.5,
-				3.5,
+				4,
 				11.5
 			],
 			"faces": {
 				"north": {
 					"uv": [
-						4.5,
-						12.5,
-						11.5,
-						13.5
+						0,
+						0,
+						7.0,
+						2
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"south": {
 					"uv": [
-						4.5,
-						12.5,
-						11.5,
-						13.5
+						0,
+						0,
+						7.0,
+						2
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"east": {
 					"uv": [
-						4.5,
-						12.5,
-						11.5,
-						13.5
+						0,
+						0,
+						7.0,
+						2
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"west": {
 					"uv": [
-						4.5,
-						12.5,
-						11.5,
-						13.5
+						0,
+						0,
+						7.0,
+						2
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"up": {
 					"uv": [
@@ -550,7 +551,7 @@
 						11.5,
 						11.5
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"down": {
 					"uv": [
@@ -559,7 +560,7 @@
 						11.5,
 						11.5
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				}
 			}
 		},
@@ -572,14 +573,14 @@
 			],
 			"to": [
 				10.5,
-				16,
+				15,
 				10.5
 			],
 			"faces": {
 				"north": {
 					"uv": [
 						5.5,
-						0.0,
+						1,
 						10.5,
 						6
 					],
@@ -588,7 +589,7 @@
 				"south": {
 					"uv": [
 						5.5,
-						0.0,
+						1,
 						10.5,
 						6
 					],
@@ -597,7 +598,7 @@
 				"east": {
 					"uv": [
 						5.5,
-						0.0,
+						1,
 						10.5,
 						6
 					],
@@ -606,7 +607,7 @@
 				"west": {
 					"uv": [
 						5.5,
-						0.0,
+						1,
 						10.5,
 						6
 					],
@@ -633,10 +634,10 @@
 			}
 		},
 		{
-			"name": "diamond collar",
+			"name": "trim collar",
 			"from": [
 				3.5,
-				16,
+				15,
 				3.5
 			],
 			"to": [
@@ -647,39 +648,39 @@
 			"faces": {
 				"north": {
 					"uv": [
-						3.5,
-						15,
-						12.5,
-						0.0
+						0,
+						0,
+						9.0,
+						2
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"south": {
 					"uv": [
-						3.5,
-						15,
-						12.5,
-						0.0
+						0,
+						0,
+						9.0,
+						2
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"east": {
 					"uv": [
-						3.5,
-						15,
-						12.5,
-						0.0
+						0,
+						0,
+						9.0,
+						2
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"west": {
 					"uv": [
-						3.5,
-						15,
-						12.5,
-						0.0
+						0,
+						0,
+						9.0,
+						2
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"up": {
 					"uv": [
@@ -688,7 +689,7 @@
 						12.5,
 						12.5
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"down": {
 					"uv": [
@@ -697,7 +698,7 @@
 						12.5,
 						12.5
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				}
 			}
 		},
@@ -978,7 +979,7 @@
 			}
 		},
 		{
-			"name": "diamond ring",
+			"name": "trim ring",
 			"from": [
 				3.5,
 				23,
@@ -992,39 +993,39 @@
 			"faces": {
 				"north": {
 					"uv": [
-						3.5,
-						8,
-						12.5,
-						9
+						0,
+						2,
+						9.0,
+						3
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"south": {
 					"uv": [
-						3.5,
-						8,
-						12.5,
-						9
+						0,
+						2,
+						9.0,
+						3
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"east": {
 					"uv": [
-						3.5,
-						8,
-						12.5,
-						9
+						0,
+						2,
+						9.0,
+						3
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"west": {
 					"uv": [
-						3.5,
-						8,
-						12.5,
-						9
+						0,
+						2,
+						9.0,
+						3
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"up": {
 					"uv": [
@@ -1033,7 +1034,7 @@
 						12.5,
 						12.5
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				},
 				"down": {
 					"uv": [
@@ -1042,7 +1043,7 @@
 						12.5,
 						12.5
 					],
-					"texture": "#diamond"
+					"texture": "#trim"
 				}
 			}
 		},
@@ -1185,71 +1186,158 @@
 			}
 		},
 		{
-			"name": "tip",
+			"name": "gem body",
 			"from": [
-				7.25,
+				6.75,
 				26,
-				7.25
+				6.75
 			],
 			"to": [
-				8.75,
+				9.25,
 				28,
-				8.75
+				9.25
 			],
+			"rotation": {
+				"origin": [
+					8,
+					26,
+					8
+				],
+				"axis": "y",
+				"angle": 45
+			},
 			"faces": {
 				"north": {
 					"uv": [
-						7.25,
-						4,
-						8.75,
-						6
+						0,
+						0,
+						8,
+						8
 					],
-					"texture": "#diamond"
+					"texture": "#gem"
 				},
 				"south": {
 					"uv": [
-						7.25,
-						4,
-						8.75,
-						6
+						0,
+						0,
+						8,
+						8
 					],
-					"texture": "#diamond"
+					"texture": "#gem"
 				},
 				"east": {
 					"uv": [
-						7.25,
-						4,
-						8.75,
-						6
+						0,
+						0,
+						8,
+						8
 					],
-					"texture": "#diamond"
+					"texture": "#gem"
 				},
 				"west": {
 					"uv": [
-						7.25,
-						4,
-						8.75,
-						6
+						0,
+						0,
+						8,
+						8
 					],
-					"texture": "#diamond"
+					"texture": "#gem"
 				},
 				"up": {
 					"uv": [
-						7.25,
-						7.25,
-						8.75,
-						8.75
+						8,
+						0,
+						16,
+						8
 					],
-					"texture": "#diamond"
+					"texture": "#gem"
 				},
 				"down": {
 					"uv": [
-						7.25,
-						7.25,
-						8.75,
-						8.75
+						8,
+						0,
+						16,
+						8
 					],
-					"texture": "#diamond"
+					"texture": "#gem"
+				}
+			}
+		},
+		{
+			"name": "gem point",
+			"from": [
+				7.4,
+				28,
+				7.4
+			],
+			"to": [
+				8.6,
+				29.2,
+				8.6
+			],
+			"rotation": {
+				"origin": [
+					8,
+					28,
+					8
+				],
+				"axis": "y",
+				"angle": 45
+			},
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						0,
+						8,
+						8
+					],
+					"texture": "#gem"
+				},
+				"south": {
+					"uv": [
+						0,
+						0,
+						8,
+						8
+					],
+					"texture": "#gem"
+				},
+				"east": {
+					"uv": [
+						0,
+						0,
+						8,
+						8
+					],
+					"texture": "#gem"
+				},
+				"west": {
+					"uv": [
+						0,
+						0,
+						8,
+						8
+					],
+					"texture": "#gem"
+				},
+				"up": {
+					"uv": [
+						8,
+						0,
+						16,
+						8
+					],
+					"texture": "#gem"
+				},
+				"down": {
+					"uv": [
+						8,
+						0,
+						16,
+						8
+					],
+					"texture": "#gem"
 				}
 			}
 		},

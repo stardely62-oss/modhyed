@@ -16,14 +16,19 @@ PALETTE = {
     "b": (0x2C, 0x2F, 0x34, 255),
     "c": (0x34, 0x37, 0x3D, 255),
     "e": (0x44, 0x48, 0x4F, 255),  # edge highlight
-    # ornament glow: ender teal, in tone with the eye and the diamond
-    "o": (0x8A, 0xF5, 0xDC, 255),
+    # dark trim (blued metal) and the diamonds set into it
+    "k": (0x2A, 0x2D, 0x33, 255),
+    "K": (0x41, 0x46, 0x4E, 255),
+    "j": (0x17, 0x19, 0x1C, 255),
+    "W": (0xDC, 0xFF, 0xF8, 255),
+    "D": (0x52, 0xD6, 0xCD, 255),
+    "d": (0x1F, 0x86, 0x82, 255),
     # ender eye
-    "k": (0x05, 0x0A, 0x08, 255),  # pupil
+    "q": (0x05, 0x0A, 0x08, 255),  # pupil
     "g": (0x0F, 0x3A, 0x2C, 255),  # rim
     "G": (0x1F, 0x7A, 0x5A, 255),  # iris
     "L": (0x4F, 0xD6, 0x9C, 255),  # iris light
-    "W": (0xE8, 0xFF, 0xF4, 255),  # glint
+    "w": (0xE8, 0xFF, 0xF4, 255),  # glint
     "t": (0x12, 0x4A, 0x3A, 255),  # side swirl dark
     "T": (0x2C, 0x8C, 0x6C, 255),  # side swirl light
 }
@@ -67,22 +72,63 @@ ORNAMENT = [
     "ooooo",   # upper shaft (5 wide)
     ".o.o.",
 ]
+# Very dim "breathing": brightness levels and an uneven rhythm (ticks per level), as if power seeps through
+GLOW_LEVELS = [0.84, 0.9, 0.95, 1.0]
+GLOW_RHYTHM = [(0, 40), (1, 12), (2, 10), (3, 18), (2, 14), (1, 22), (0, 30), (1, 8), (2, 26), (1, 16)]
+GLOW = (0x8A, 0xF5, 0xDC)
 
 
-def ornament():
+def ornament_frames():
+    out = []
+    for level in GLOW_LEVELS:
+        color = tuple(int(c * level) for c in GLOW) + (255,)
+        for y in range(16):
+            out.append([color if y < len(ORNAMENT) and x < len(ORNAMENT[y]) and ORNAMENT[y][x] == "o" else (0, 0, 0, 0)
+                        for x in range(16)])
+    return out
+
+
+def trim():
+    """Blued metal with diamond chips: rows 0-1 the 2-high inlay, row 2 the 1-high one, the rest the top faces."""
     rows = []
     for y in range(16):
-        rows.append("".join(ORNAMENT[y][x] if y < len(ORNAMENT) and x < len(ORNAMENT[y]) else "." for x in range(16)))
+        row = ""
+        for x in range(16):
+            if y == 0:
+                row += "W" if x % 4 == 1 else ("D" if x % 4 == 2 else "K")
+            elif y == 1:
+                row += "D" if x % 4 == 1 else ("d" if x % 4 == 2 else "j")
+            elif y == 2:
+                row += "D" if x % 4 == 1 else "k"
+            else:
+                row += "D" if x % 4 == 1 and y % 4 == 1 else ("K" if x % 4 == 1 or y % 4 == 1 else "k")
+        rows.append(row)
+    return rows
+
+
+def gem():
+    """Cut diamond facets: left 8x8 for the sides, right 8x8 for the table and point."""
+    rows = []
+    for y in range(16):
+        row = ""
+        for x in range(16):
+            if x < 8:
+                v = (x + y) % 8
+                row += "W" if v < 2 else ("D" if v < 5 else "d")
+            else:
+                cx, cy = abs(x - 11.5), abs(y % 8 - 3.5)
+                row += "W" if cx + cy < 2 else ("D" if cx + cy < 4 else "d")
+        rows.append(row)
     return rows
 
 
 EYE_FRONT = [
     "ggGGGGgg",
     "gGLLLLGg",
-    "GLLkkLLG",
-    "GLLkkWLG",
-    "GLLkkLLG",
-    "GLGkkGLG",
+    "GLLqqLLG",
+    "GLLqqwLG",
+    "GLLqqLLG",
+    "GLGqqGLG",
     "gGLLLLGg",
     "ggGGGGgg",
 ]
@@ -133,7 +179,11 @@ if __name__ == "__main__":
     write_png(block / "obelisk_stone.png", obelisk_stone())
     write_png(block / "obelisk_stone_top.png", obelisk_stone(top=True))
     write_png(block / "obelisk_eye.png", eye_texture())
-    # Steady glow, no animation: the pulsing read as flicker
-    write_png(block / "obelisk_runes.png", ornament())
+    runes = block / "obelisk_runes.png"
+    write_png(runes, ornament_frames())
+    frames = ", ".join('{"index": %d, "time": %d}' % f for f in GLOW_RHYTHM)
+    runes.with_suffix(".png.mcmeta").write_text('{"animation": {"interpolate": true, "frames": [%s]}}\n' % frames)
+    write_png(block / "obelisk_trim.png", trim())
+    write_png(block / "obelisk_gem.png", gem())
     # Mod icon: the eye front, scaled up
     write_png(ASSETS / "icon.png", EYE_FRONT, scale=16)
