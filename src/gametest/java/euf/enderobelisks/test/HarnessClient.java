@@ -300,7 +300,8 @@ public class HarnessClient implements ClientModInitializer {
 		});
 		step(20, false, c -> {
 			ruin = onServer(c, s -> {
-				for (BlockPos p : BlockPos.iterate(home.add(4, -12, 0), home.add(24, 12, 20))) {
+				// /place snaps the structure to its chunk and the surface, so search a generous box around the spot
+				for (BlockPos p : BlockPos.iterate(home.add(-16, -24, -16), home.add(40, 24, 36))) {
 					if (s.getOverworld().getBlockState(p).isOf(EnderObelisks.RUINED_OBELISK)) {
 						return p.toImmutable();
 					}
