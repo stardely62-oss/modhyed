@@ -104,5 +104,7 @@
 	"ender_obelisks.menu.pill_far": "Слишком далеко",
 	"ender_obelisks.menu.pill_dimension": "Другое измерение",
 	"ender_obelisks.menu.pill_cooldown": "Перезарядка %s с",
-	"ender_obelisks.tooltip.more": "Shift — как пользоваться"
+	"ender_obelisks.tooltip.more": "Shift — как пользоваться",
+	"ender_obelisks.return.channel": "Возвращение к «%s» %s",
+	"ender_obelisks.return.released": "Возвращение прервано: держите ПКМ %s с"
 }

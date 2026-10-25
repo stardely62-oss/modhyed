@@ -104,5 +104,7 @@
 	"ender_obelisks.menu.pill_far": "Too far",
 	"ender_obelisks.menu.pill_dimension": "Another dimension",
 	"ender_obelisks.menu.pill_cooldown": "Recharging %s s",
-	"ender_obelisks.tooltip.more": "Shift: how to use"
+	"ender_obelisks.tooltip.more": "Shift: how to use",
+	"ender_obelisks.return.channel": "Returning to \"%s\" %s",
+	"ender_obelisks.return.released": "Return interrupted: hold right click for %s s"
 }

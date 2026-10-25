@@ -44,7 +44,7 @@ public class ObeliskConfig {
 	public boolean takePets = true;
 	public int petRadius = 12;
 	/** Return shard: how long to hold it, its cooldown, and whether it may cross dimensions. */
-	public int returnShardSeconds = 5;
+	public int returnShardSeconds = 3;
 	public int returnShardCooldownSeconds = 60;
 	public boolean returnShardCrossDimension = true;
 

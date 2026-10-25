@@ -104,7 +104,33 @@ public class ReturnShardItem extends Item {
 			double a = remainingUseTicks * 0.4;
 			serverWorld.spawnParticles(ParticleTypes.REVERSE_PORTAL, user.getX() + Math.cos(a) * 0.8, user.getY() + 1.0,
 					user.getZ() + Math.sin(a) * 0.8, 2, 0.05, 0.3, 0.05, 0);
+			if (user instanceof ServerPlayerEntity player) {
+				// Without a visible charge the hold looked like nothing happens: show it filling above the hotbar
+				int total = getMaxUseTime(stack);
+				player.sendMessage(Text.translatable("ender_obelisks.return.channel", boundName(stack),
+						bar(1 - remainingUseTicks / (float) total)), true);
+			}
 		}
+	}
+
+	@Override
+	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+		if (!world.isClient() && user instanceof ServerPlayerEntity player && remainingUseTicks > 0) {
+			player.sendMessage(Text.translatable("ender_obelisks.return.released", ObeliskConfig.get().returnShardSeconds)
+					.formatted(Formatting.YELLOW), true);
+		}
+	}
+
+	private static String boundName(ItemStack stack) {
+		NbtCompound nbt = stack.getSubNbt(KEY);
+		return nbt == null ? "" : nbt.getString("name");
+	}
+
+	/** Ten blocks, lit ender teal up to the charge. */
+	private static Text bar(float progress) {
+		int lit = Math.round(10 * Math.max(0, Math.min(1, progress)));
+		return Text.literal("■".repeat(lit)).formatted(Formatting.DARK_AQUA)
+				.append(Text.literal("■".repeat(10 - lit)).formatted(Formatting.DARK_GRAY));
 	}
 
 	@Override
