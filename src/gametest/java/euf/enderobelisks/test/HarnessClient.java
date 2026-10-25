@@ -117,10 +117,11 @@ public class HarnessClient implements ClientModInitializer {
 			tp(c, Vec3d.ofBottomCenter(home).add(-3.2, 0, 0.6), Vec3d.ofBottomCenter(home).add(0, 1.2, 0));
 		});
 		step(40, true, c -> screenshot(c, "obelisk_front"));
-		step(40, false, c -> fly(c, Vec3d.ofBottomCenter(home).add(-1.4, 1.0, -1.4), Vec3d.ofBottomCenter(home).add(0, 1.6, 0)));
+		// Cameras sit off the diagonals: on a diagonal a corner bar of the cage hides the pupil
+		step(40, false, c -> fly(c, Vec3d.ofBottomCenter(home).add(-2.0, 0.7, -0.8), Vec3d.ofBottomCenter(home).add(0, 1.6, 0)));
 		step(30, true, c -> screenshot(c, "obelisk_cage"));
 		// Walk around it: the eye should have turned to follow
-		step(40, false, c -> fly(c, Vec3d.ofBottomCenter(home).add(1.6, 1.4, 2.0), Vec3d.ofBottomCenter(home).add(0, 1.6, 0)));
+		step(40, false, c -> fly(c, Vec3d.ofBottomCenter(home).add(0.9, 0.5, 2.4), Vec3d.ofBottomCenter(home).add(0, 1.6, 0)));
 		step(30, true, c -> screenshot(c, "obelisk_eye_follows"));
 		step(30, false, c -> {
 			commands(c, "time set 18000");
