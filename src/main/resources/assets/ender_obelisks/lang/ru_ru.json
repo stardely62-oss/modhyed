@@ -4,7 +4,7 @@
 	"ender_obelisks.menu.title": "Эндер-обелиск",
 	"ender_obelisks.menu.this_obelisk": "Этот обелиск",
 	"ender_obelisks.menu.name": "Название",
-	"ender_obelisks.menu.tier": "Уровень %s · дальность %s блоков",
+	"ender_obelisks.menu.tier": "Уровень %s · %s блоков",
 	"ender_obelisks.menu.access_public": "Доступ: для всех",
 	"ender_obelisks.menu.access_private": "Доступ: только я",
 	"ender_obelisks.menu.next_tier": "Улучшить до %s блоков:",

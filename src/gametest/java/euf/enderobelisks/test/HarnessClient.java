@@ -263,6 +263,8 @@ public class HarnessClient implements ClientModInitializer {
 
 	/** A 7x7 polished deepslate pad on the surface with room above it; returns the block above the pad's centre. */
 	private static BlockPos prepareSite(ServerWorld world, int x, int z) {
+		// Heightmaps of unloaded chunks read as the bottom of the world: generate the chunk first
+		world.getChunk(x >> 4, z >> 4);
 		BlockPos top = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, new BlockPos(x, 0, z));
 		for (int dx = -3; dx <= 3; dx++) {
 			for (int dz = -3; dz <= 3; dz++) {

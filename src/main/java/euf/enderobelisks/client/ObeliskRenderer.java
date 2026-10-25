@@ -32,6 +32,7 @@ public class ObeliskRenderer implements BlockEntityRenderer<ObeliskBlockEntity> 
 	public static final Identifier EYE_MODEL = EnderObelisks.id("block/obelisk_eye");
 	public static final Identifier[] RUNE_MODELS = new Identifier[ObeliskTiers.MAX_TIER + 1];
 	private static final double EYE_Y = 26 / 16.0;
+	private static final float EYE_SCALE = 1.3f;
 	private static final double WATCH_DISTANCE = 12.0;
 	private static final double NAME_DISTANCE = 8.0;
 	private static final int FULL_BRIGHT = LightmapTextureManager.MAX_LIGHT_COORDINATE;
@@ -71,6 +72,8 @@ public class ObeliskRenderer implements BlockEntityRenderer<ObeliskBlockEntity> 
 		matrices.translate(0.5, EYE_Y + MathHelper.sin(time * 0.08f) * 0.03, 0.5);
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.eyeYaw));
 		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(entity.eyePitch));
+		// A little bigger than the gap between the bars: the eye is wedged into its cage
+		matrices.scale(EYE_SCALE, EYE_SCALE, EYE_SCALE);
 		matrices.translate(-0.5, -0.5, -0.5);
 		renderer.render(matrices.peek(), cutout, state, models.getModel(EYE_MODEL), 1.0f, 1.0f, 1.0f, FULL_BRIGHT,
 				OverlayTexture.DEFAULT_UV);

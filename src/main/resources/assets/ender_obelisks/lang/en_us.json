@@ -4,7 +4,7 @@
 	"ender_obelisks.menu.title": "Ender Obelisk",
 	"ender_obelisks.menu.this_obelisk": "This obelisk",
 	"ender_obelisks.menu.name": "Name",
-	"ender_obelisks.menu.tier": "Tier %s · range %s blocks",
+	"ender_obelisks.menu.tier": "Tier %s · %s blocks",
 	"ender_obelisks.menu.access_public": "Access: everyone",
 	"ender_obelisks.menu.access_private": "Access: only me",
 	"ender_obelisks.menu.next_tier": "Upgrade to %s blocks:",
