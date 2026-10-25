@@ -3,7 +3,7 @@
 	"textures": {
 		"obsidian": "minecraft:block/obsidian",
 		"deepslate": "minecraft:block/polished_deepslate",
-		"stone": "ender_obelisks:block/obelisk_stone_codex",
+		"stone": "ender_obelisks:block/obelisk_stone",
 		"stone_top": "ender_obelisks:block/obelisk_stone_top",
 		"iron": "ender_obelisks:block/obelisk_iron_codex",
 		"particle": "minecraft:block/polished_deepslate"

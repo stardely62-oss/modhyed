@@ -1,7 +1,6 @@
 package euf.enderobelisks.client;
 
 import euf.enderobelisks.EnderObelisks;
-import euf.enderobelisks.ObeliskTiers;
 import euf.enderobelisks.block.ObeliskBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -27,24 +26,15 @@ import org.joml.Vector3f;
 
 /**
  * The animated parts of an obelisk, drawn from the lower half's block entity: the ender eye floating in the cage
- * (it turns to watch the nearest player, or idly looks around), blood running down the shaft (more with every
- * tier), and the name plate.
+ * (it turns to watch the nearest player, or idly looks around) and the name plate.
  */
 public class ObeliskRenderer implements BlockEntityRenderer<ObeliskBlockEntity> {
 	public static final Identifier EYE_MODEL = EnderObelisks.id("block/obelisk_eye");
-	/** Blood overlays for tiers 1..4: a tier-0 obelisk is clean. */
-	public static final Identifier[] BLOOD_MODELS = new Identifier[ObeliskTiers.MAX_TIER];
 	private static final double EYE_Y = 26 / 16.0;
 	private static final float EYE_SCALE = 1.3f;
 	private static final double WATCH_DISTANCE = 12.0;
 	private static final double NAME_DISTANCE = 8.0;
 	private static final int FULL_BRIGHT = LightmapTextureManager.MAX_LIGHT_COORDINATE;
-
-	static {
-		for (int i = 0; i < BLOOD_MODELS.length; i++) {
-			BLOOD_MODELS[i] = EnderObelisks.id("block/obelisk_blood_" + (i + 1));
-		}
-	}
 
 	private final BlockEntityRenderDispatcher dispatcher;
 	private final TextRenderer textRenderer;
@@ -63,12 +53,6 @@ public class ObeliskRenderer implements BlockEntityRenderer<ObeliskBlockEntity> 
 		BlockModelRenderer renderer = client.getBlockRenderManager().getModelRenderer();
 		VertexConsumer cutout = vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout());
 		float time = entity.getWorld().getTime() + tickDelta;
-
-		// Blood: each upgrade adds another layer of drips. Lit like the world around it, it does not glow.
-		for (int level = 1; level <= Math.min(entity.getTier(), ObeliskTiers.MAX_TIER); level++) {
-			renderer.render(matrices.peek(), cutout, state, models.getModel(BLOOD_MODELS[level - 1]), 1.0f, 1.0f, 1.0f, light,
-					OverlayTexture.DEFAULT_UV);
-		}
 
 		updateEye(entity, time);
 		matrices.push();

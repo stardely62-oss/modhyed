@@ -5,22 +5,17 @@ import euf.enderobelisks.client.map.MapScanner;
 import euf.enderobelisks.client.screen.ObeliskScreen;
 import euf.enderobelisks.net.MenuData;
 import euf.enderobelisks.net.ObeliskPackets;
-import java.util.ArrayList;
-import java.util.List;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.util.Identifier;
 
 public class EnderObelisksClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		BlockEntityRendererFactories.register(EnderObelisks.OBELISK_BLOCK_ENTITY, ObeliskRenderer::new);
-		// The eye and blood models belong to no blockstate, so they have to be loaded explicitly
-		List<Identifier> extraModels = new ArrayList<>(List.of(ObeliskRenderer.BLOOD_MODELS));
-		extraModels.add(ObeliskRenderer.EYE_MODEL);
-		ModelLoadingPlugin.register(context -> context.addModels(extraModels));
+		// The eye model belongs to no blockstate, so it has to be loaded explicitly
+		ModelLoadingPlugin.register(context -> context.addModels(ObeliskRenderer.EYE_MODEL));
 
 		MapScanner.register();
 		ClientPlayNetworking.registerGlobalReceiver(ObeliskPackets.MENU, (client, handler, buf, sender) -> {

@@ -1,7 +1,7 @@
 """Writes the obelisk's JSON models and blockstate.
 
 The obelisk is described once in "overall" coordinates (two blocks: y 0..32+), then split into the lower and upper
-block models; the item model shows the whole thing. The eye and the blood overlays are separate models drawn (and
+block models; the item model shows the whole thing. The eye is a separate model drawn (and
 animated) by ObeliskRenderer.  Run: python3 tools/gen_models.py
 """
 import json
@@ -10,22 +10,19 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "src/main/resources/assets/ender_obelisks"
 
-# Which texture set the shaft and the iron parts use: "hand" (tools/gen_textures.py) or "codex"
-# (tools/gen_codex_art.sh + tools/import_codex_art.py)
-VARIANT = "codex"
-SUFFIX = "" if VARIANT == "hand" else "_codex"
-
+# The shaft uses the hand-drawn dressed slate (tools/gen_textures.py); the iron parts use the Codex texture
+# (tools/gen_codex_art.sh + tools/import_codex_art.py).
 TEXTURES = {
     "obsidian": "minecraft:block/obsidian",
     "deepslate": "minecraft:block/polished_deepslate",
     "trim": "ender_obelisks:block/obelisk_trim",
-    "stone": "ender_obelisks:block/obelisk_stone" + SUFFIX,
+    "stone": "ender_obelisks:block/obelisk_stone",
     "stone_top": "ender_obelisks:block/obelisk_stone_top",
-    "iron": "ender_obelisks:block/obelisk_iron" + SUFFIX,
+    "iron": "ender_obelisks:block/obelisk_iron_codex",
 }
 
 # (name, from, to, side texture, top/bottom texture, optional y-rotation origin). Grim dark fantasy: an obsidian
-# plinth gripped by four iron talons, a black runic basalt shaft, the caged eye, and an iron needle on top.
+# plinth gripped by four iron talons, a dressed slate shaft, the caged eye, and an iron needle on top.
 # An element with an origin point is turned 45 degrees about y (it shows an edge, not a face); a rotation dict
 # turns it any other way.
 PARTS = [
@@ -76,24 +73,6 @@ for corner, ((cx, cz), k, (axis, sign), (spur_axis, spur_sign)) in TALONS.items(
                   {"origin": [tx, y2, tz], "axis": axis, "angle": 45 * sign}))
     PARTS.append((f"talon spur {corner}", [cx - 0.3, y1 - 0.4, cz - 0.3], [cx + 0.3, y1 + 1.2 * k, cz + 0.3], "iron", "iron",
                   {"origin": [cx, y1 - 0.4, cz], "axis": spur_axis, "angle": 45 * spur_sign}))
-
-# Blood that runs down the shaft as the obelisk is upgraded: one overlay per tier (1-4), drawn on top of each
-# other. Each wraps the lower and upper shaft a little further out than the last, so they never fight for depth.
-BLOOD_LEVELS = 4
-
-
-def blood_elements(level):
-    e = 0.04 + 0.02 * level
-    out = []
-    for name, frm, to, uv_box in (
-            ("lower", [5 - e, 7.5, 5 - e], [11 + e, 16, 11 + e], [0, 0, 6, 8.5]),
-            ("upper", [5.5 - e, 16, 5.5 - e], [10.5 + e, 21, 10.5 + e], [6, 0, 11, 5])):
-        mirrored = [uv_box[2], uv_box[1], uv_box[0], uv_box[3]]
-        faces = {face: {"uv": uv_box if face in ("north", "east") else mirrored, "texture": "#blood"}
-                 for face in ("north", "south", "east", "west")}
-        out.append({"name": f"blood {level} {name}", "from": frm, "to": to, "faces": faces})
-    return out
-
 
 def uv(face, frm, to):
     """Blockbench-style automatic UVs from the element's own extents (local block coordinates)."""
@@ -186,12 +165,6 @@ if __name__ == "__main__":
     dump("models/block/obelisk_eye.json", {"ambientocclusion": False,
          "textures": {"eye": "ender_obelisks:block/obelisk_eye", "particle": "ender_obelisks:block/obelisk_eye"},
          "elements": eye_elements()})
-    for level in range(1, BLOOD_LEVELS + 1):
-        dump(f"models/block/obelisk_blood_{level}.json", {"ambientocclusion": False,
-             "textures": {"blood": f"ender_obelisks:block/obelisk_blood_{level}",
-                          "particle": f"ender_obelisks:block/obelisk_blood_{level}"},
-             "elements": blood_elements(level)})
-
     # Item: the whole obelisk with a still eye in its cage, shifted down to fit -16..32
     item_els = [element(n, f, t, s, e, o[0] if o else None, shift=-6) for n, f, t, s, e, *o in PARTS]
     for el in eye_elements():

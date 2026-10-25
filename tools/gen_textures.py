@@ -11,15 +11,11 @@ ASSETS = ROOT / "src/main/resources/assets/ender_obelisks"
 
 PALETTE = {
     ".": (0, 0, 0, 0),
-    # obelisk stone: black basalt with a cold tint
-    "a": (0x10, 0x11, 0x14, 255),  # carved groove / crack
-    "b": (0x1F, 0x21, 0x26, 255),
-    "c": (0x27, 0x2A, 0x30, 255),
-    "e": (0x36, 0x3A, 0x42, 255),  # lit edge of a carving
-    # blood: wet at the source, dark and dried at the tips (letters of their own: T and others belong to the eye)
-    "V": (0x9C, 0x1C, 0x24, 255),
-    "Y": (0x6A, 0x0C, 0x14, 255),
-    "Z": (0x3E, 0x06, 0x0C, 255),
+    # obelisk stone: neutral dark slate, like polished deepslate
+    "a": (0x1E, 0x20, 0x24, 255),  # joint
+    "b": (0x2C, 0x2F, 0x34, 255),
+    "c": (0x34, 0x37, 0x3D, 255),
+    "e": (0x44, 0x48, 0x4F, 255),  # edge highlight
     # dark trim (blued metal)
     "k": (0x2A, 0x2D, 0x33, 255),
     "K": (0x41, 0x46, 0x4E, 255),
@@ -50,41 +46,28 @@ def speckle(x, y, seed, chars):
     return chars[(n >> 8) % len(chars)]
 
 
-# Sigils carved down the middle of the shaft (columns 6-9 show on both shaft widths), one every 5 rows
-SIGILS = [
-    ["aaaa", "a..a", "a.a."],
-    [".aa.", "aaaa", ".aa."],
-    ["a..a", ".aa.", "a..a"],
-]
-# Hairline cracks and two thin burgundy drips, placed by hand (x, y): grim, but not noisy
-CRACKS = [(5, 2), (5, 3), (6, 4), (10, 9), (10, 10), (11, 11), (5, 13), (6, 14)]
-DRIPS = {(7, 13): "R", (7, 14): "R", (8, 15): "r", (9, 5): "R", (9, 6): "r"}
-
-
 def obelisk_stone(top=False):
-    """Black basalt: a quiet two-tone surface; the shaft faces carry a column of carved sigils."""
-    rows = [["b" if (x * 3 + y * 5) % 7 else "c" for x in range(16)] for y in range(16)]
-    if top:
-        for i in range(16):
-            for x, y in ((i, 0), (i, 15), (0, i), (15, i)):
-                rows[y][x] = "a"
-            for x, y in ((i, 1), (1, i)):
-                if 0 < i < 15:
-                    rows[y][x] = "e"
-    else:
-        for n, top_row in enumerate(range(1, 16, 5)):
-            glyph = SIGILS[n % len(SIGILS)]
-            for gy, line in enumerate(glyph):
-                for gx, ch in enumerate(line):
-                    if ch == "a" and top_row + gy < 16:
-                        rows[top_row + gy][6 + gx] = "a"
-                        if top_row + gy + 1 < 16 and glyph[gy + 1][gx] != "a" if gy + 1 < len(glyph) else top_row + gy + 1 < 16:
-                            rows[top_row + gy + 1][6 + gx] = "e"  # light catches the lower lip of the groove
-        for x, y in CRACKS:
-            rows[y][x] = "a"
-        for (x, y), ch in DRIPS.items():
-            rows[y][x] = ch
-    return ["".join(r) for r in rows]
+    """Two courses of dressed stone: dark joints, a lit top-left edge on each block, faint even texture."""
+    rows = []
+    for y in range(16):
+        row = ""
+        for x in range(16):
+            ch = "b" if (x + y) % 3 else "c"  # a regular, low-contrast tooling pattern
+            if top:
+                if x in (0, 15) or y in (0, 15):
+                    ch = "a"
+                elif x in (1, 14) or y in (1, 14):
+                    ch = "e"
+            else:
+                course = y // 8
+                joint_x = 0 if course == 0 else 8  # staggered vertical joints
+                if y % 8 == 7 or x == joint_x:
+                    ch = "a"
+                elif y % 8 == 0 or x == (joint_x + 1) % 16:
+                    ch = "e"
+            row += ch
+        rows.append(row)
+    return rows
 
 
 def iron():
@@ -101,26 +84,6 @@ def iron():
             row += ch
         rows.append(row)
     return rows
-
-
-# Blood running down the shaft, one overlay per tier; the overlays stack, so tier 4 shows all of them.
-# Columns 0-5 / rows 0-8 cover a lower shaft face, columns 6-10 / rows 0-4 an upper one (half the faces mirror it).
-# Thin streaks only: (column, first row, length) - "V" wet where it starts, "Y" blood, "Z" the dried end.
-BLOOD = {
-    1: [(2, 0, 3)],
-    2: [(8, 0, 3), (4, 0, 2)],
-    3: [(0, 0, 4), (4, 4, 1)],
-    4: [(2, 3, 6), (6, 0, 4)],
-}
-
-
-def blood(level):
-    rows = [["." for _ in range(16)] for _ in range(16)]
-    for col, top, length in BLOOD[level]:
-        for i in range(length):
-            starts_here = top == 0 and i == 0
-            rows[top + i][col] = "V" if starts_here else ("Z" if i == length - 1 else "Y")
-    return ["".join(r) for r in rows]
 
 
 def trim():
@@ -215,8 +178,6 @@ if __name__ == "__main__":
     write_png(block / "obelisk_stone.png", obelisk_stone())
     write_png(block / "obelisk_stone_top.png", obelisk_stone(top=True))
     write_png(block / "obelisk_eye.png", eye_texture())
-    for level in BLOOD:
-        write_png(block / f"obelisk_blood_{level}.png", blood(level))
     write_png(block / "obelisk_trim.png", trim())
     write_png(block / "obelisk_iron.png", iron())
     write_png(ASSETS / "textures/item/time_shard.png", TIME_SHARD)
