@@ -387,15 +387,16 @@ public class HarnessClient implements ClientModInitializer {
 			KeyBinding.onKeyPressed(c.options.useKey.getDefaultKey());
 			c.options.useKey.setPressed(true);
 		});
-		step(40, false, c -> {
+		// The shard needs returnShardSeconds (5 s) of holding; the wait after this step covers it with room to spare
+		step(120, false, c -> {
 			LOGGER.info("shard hold: using={} item={} left={}", c.player.isUsingItem(), c.player.getActiveItem(), c.player.getItemUseTimeLeft());
 			check("shard_channeling", c.player.isUsingItem() && c.player.getActiveItem().isOf(EnderObelisks.RETURN_SHARD));
 		});
-		step(100, false, c -> {
+		step(20, false, c -> {
 			c.options.useKey.setPressed(false);
 			LOGGER.info("after the hold: at {} home {} hand {}", c.player.getBlockPos(), home, c.player.getMainHandStack());
 			check("shard_returned_home", c.player.getPos().isInRange(Vec3d.ofCenter(home), 4));
-			check("shard_used_up", !c.player.getInventory().contains(new ItemStack(EnderObelisks.RETURN_SHARD)));
+			check("shard_used_up", c.player.getInventory().count(EnderObelisks.RETURN_SHARD) == 0);
 		});
 		step(40, false, this::finish);
 
