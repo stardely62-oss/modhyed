@@ -19,9 +19,8 @@ TEXTURES = {
     "stone_top": "ender_obelisks:block/obelisk_stone_top",
 }
 
-# (name, from, to, side texture, top/bottom texture). Every crafting material shows: obsidian plinth,
-# polished deepslate corners/cage/cap, diamonds set into dark trim and cut into the tip, and the ender eye
-# (from the pearl) in the cage.
+# (name, from, to, side texture, top/bottom texture). Obsidian plinth, polished deepslate corners/cage/cap,
+# dark trim with a burgundy line, a garnet on the tip and the ender eye in the cage. (The diamond is only in the recipe.)
 PARTS = [
     ("plinth", [0.5, 0, 0.5], [15.5, 2, 15.5], "obsidian", "obsidian"),
     ("step", [1.5, 2, 1.5], [14.5, 3.5, 14.5], "obsidian", "obsidian"),
@@ -85,7 +84,7 @@ def element(name, frm, to, side, end, shift=0.0, cull_down=False):
 
 
 def gem_elements(shift=0.0):
-    """A cut diamond: a body turned 45 degrees and a smaller point above it (overall coordinates)."""
+    """A cut garnet: a body turned 45 degrees and a smaller point above it (overall coordinates)."""
     rot = lambda y: {"origin": [8, y + shift, 8], "axis": "y", "angle": 45}
     out = []
     for name, frm, to in (("gem body", [6.75, 32, 6.75], [9.25, 34, 9.25]), ("gem point", [7.4, 34, 7.4], [8.6, 35.2, 8.6])):

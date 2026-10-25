@@ -16,13 +16,15 @@ PALETTE = {
     "b": (0x2C, 0x2F, 0x34, 255),
     "c": (0x34, 0x37, 0x3D, 255),
     "e": (0x44, 0x48, 0x4F, 255),  # edge highlight
-    # dark trim (blued metal) and the diamonds set into it
+    # dark trim (blued metal) with a burgundy line, and the garnet on the tip
     "k": (0x2A, 0x2D, 0x33, 255),
     "K": (0x41, 0x46, 0x4E, 255),
     "j": (0x17, 0x19, 0x1C, 255),
-    "W": (0xDC, 0xFF, 0xF8, 255),
-    "D": (0x52, 0xD6, 0xCD, 255),
-    "d": (0x1F, 0x86, 0x82, 255),
+    "R": (0x6E, 0x1C, 0x2C, 255),
+    "r": (0x4A, 0x12, 0x1E, 255),
+    "W": (0xB8, 0x4A, 0x5E, 255),  # garnet light
+    "D": (0x80, 0x22, 0x36, 255),  # garnet
+    "d": (0x52, 0x14, 0x22, 255),  # garnet dark
     # ender eye
     "q": (0x05, 0x0A, 0x08, 255),  # pupil
     "g": (0x0F, 0x3A, 0x2C, 255),  # rim
@@ -89,25 +91,22 @@ def ornament_frames():
 
 
 def trim():
-    """Blued metal with diamond chips: rows 0-1 the 2-high inlay, row 2 the 1-high one, the rest the top faces."""
+    """Blued metal with a burgundy line: rows 0-1 the 2-high band, row 2 the 1-high ring, the rest the top faces."""
     rows = []
     for y in range(16):
-        row = ""
-        for x in range(16):
-            if y == 0:
-                row += "W" if x % 4 == 1 else ("D" if x % 4 == 2 else "K")
-            elif y == 1:
-                row += "D" if x % 4 == 1 else ("d" if x % 4 == 2 else "j")
-            elif y == 2:
-                row += "D" if x % 4 == 1 else "k"
-            else:
-                row += "D" if x % 4 == 1 and y % 4 == 1 else ("K" if x % 4 == 1 or y % 4 == 1 else "k")
-        rows.append(row)
+        if y == 0:
+            rows.append("K" * 16)
+        elif y == 1:
+            rows.append("R" * 16)
+        elif y == 2:
+            rows.append("".join("R" if x % 2 else "r" for x in range(16)))
+        else:
+            rows.append("".join("K" if x in (0, 15) or y in (3, 15) else "k" for x in range(16)))
     return rows
 
 
 def gem():
-    """Cut diamond facets: left 8x8 for the sides, right 8x8 for the table and point."""
+    """Cut garnet facets: left 8x8 for the sides, right 8x8 for the table and point."""
     rows = []
     for y in range(16):
         row = ""
