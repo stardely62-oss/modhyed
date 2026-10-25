@@ -21,6 +21,7 @@ public class ObeliskBlockEntity extends BlockEntity {
 	private UUID obeliskId;
 	private String name = "";
 	private int tier;
+	private int color;
 
 	/** Client-side animation state, never saved: where the eye's pupil currently points (unit vector). */
 	public final Vector3f eyeDirection = new Vector3f(0, 0, -1);
@@ -29,10 +30,11 @@ public class ObeliskBlockEntity extends BlockEntity {
 		super(EnderObelisks.OBELISK_BLOCK_ENTITY, pos, state);
 	}
 
-	public void update(UUID id, String name, int tier) {
+	public void update(UUID id, String name, int tier, int color) {
 		this.obeliskId = id;
 		this.name = name;
 		this.tier = tier;
+		this.color = color;
 		markDirty();
 		if (world != null) {
 			world.updateListeners(pos, getCachedState(), getCachedState(), 3);
@@ -52,6 +54,10 @@ public class ObeliskBlockEntity extends BlockEntity {
 		return tier;
 	}
 
+	public int getColor() {
+		return color;
+	}
+
 	@Override
 	protected void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
@@ -60,6 +66,7 @@ public class ObeliskBlockEntity extends BlockEntity {
 		}
 		nbt.putString("name", name);
 		nbt.putInt("tier", tier);
+		nbt.putInt("color", color);
 	}
 
 	@Override
@@ -68,6 +75,7 @@ public class ObeliskBlockEntity extends BlockEntity {
 		obeliskId = nbt.containsUuid("id") ? nbt.getUuid("id") : null;
 		name = nbt.getString("name");
 		tier = nbt.getInt("tier");
+		color = nbt.getInt("color");
 	}
 
 	@Override

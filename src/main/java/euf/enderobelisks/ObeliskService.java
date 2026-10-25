@@ -1,8 +1,10 @@
 package euf.enderobelisks;
 
+import com.mojang.authlib.GameProfile;
 import euf.enderobelisks.block.ObeliskBlock;
 import euf.enderobelisks.block.ObeliskBlockEntity;
 import euf.enderobelisks.net.ObeliskPackets;
+import euf.enderobelisks.net.ObeliskSync;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -67,12 +69,16 @@ public final class ObeliskService {
 		ObeliskInfo info = new ObeliskInfo(UUID.randomUUID(), world.getRegistryKey(), lower, ownerId, ownerName, name, true, 0);
 		registry.put(info);
 		syncBlockEntity(world, info);
+		ObeliskSync.broadcast(world.getServer());
 		return info;
 	}
 
 	public static void unregister(ServerWorld world, BlockPos lower) {
 		ObeliskRegistry registry = ObeliskRegistry.get(world.getServer());
-		registry.at(world.getRegistryKey(), lower).ifPresent(info -> registry.remove(info.id));
+		registry.at(world.getRegistryKey(), lower).ifPresent(info -> {
+			registry.remove(info.id);
+			ObeliskSync.broadcast(world.getServer());
+		});
 	}
 
 	public static Optional<ObeliskInfo> at(ServerWorld world, BlockPos lower) {
@@ -229,6 +235,7 @@ public final class ObeliskService {
 		// Loads the target chunk; an obelisk destroyed while its chunk was unloaded is dropped from the registry here
 		if (targetWorld == null || !(targetWorld.getBlockState(target.pos).getBlock() instanceof ObeliskBlock)) {
 			registry.remove(target.id);
+			ObeliskSync.broadcast(world.getServer());
 			return TeleportResult.NO_TARGET;
 		}
 		Optional<Vec3d> landing = findLanding(targetWorld, target.pos);
@@ -306,8 +313,7 @@ public final class ObeliskService {
 			cost.forEach(stack -> take(inventory, stack.getItem(), stack.getCount()));
 		}
 		info.tier++;
-		ObeliskRegistry.get(world.getServer()).markDirty();
-		syncBlockEntity(world, info);
+		changed(world.getServer(), world, info);
 		world.playSound(null, sourcePos, SoundEvents.BLOCK_BEACON_POWER_SELECT, SoundCategory.BLOCKS, 1.0f, 1.2f);
 		return true;
 	}
@@ -331,8 +337,7 @@ public final class ObeliskService {
 			return false;
 		}
 		found.get().name = clean;
-		ObeliskRegistry.get(player.getServer()).markDirty();
-		syncBlockEntity(player.getServerWorld(), found.get());
+		changed(player.getServer(), player.getServerWorld(), found.get());
 		return true;
 	}
 
@@ -342,8 +347,53 @@ public final class ObeliskService {
 			return false;
 		}
 		found.get().isPublic = !found.get().isPublic;
-		ObeliskRegistry.get(player.getServer()).markDirty();
+		changed(player.getServer(), player.getServerWorld(), found.get());
 		return true;
+	}
+
+	public static boolean setColor(ServerPlayerEntity player, BlockPos sourcePos, int color) {
+		Optional<ObeliskInfo> found = at(player.getServerWorld(), sourcePos);
+		if (found.isEmpty() || !isNear(player, sourcePos) || !isOwner(found.get(), player)) {
+			return false;
+		}
+		found.get().color = Math.floorMod(color, ObeliskColors.RGB.length);
+		changed(player.getServer(), player.getServerWorld(), found.get());
+		return true;
+	}
+
+	/** Lets a player into a private obelisk, by name: someone online, or anyone who has played on this server. */
+	public static boolean addFriend(ServerPlayerEntity player, BlockPos sourcePos, String name) {
+		Optional<ObeliskInfo> found = at(player.getServerWorld(), sourcePos);
+		if (found.isEmpty() || !isNear(player, sourcePos) || !isOwner(found.get(), player) || name.isBlank()) {
+			return false;
+		}
+		MinecraftServer server = player.getServer();
+		ServerPlayerEntity online = server.getPlayerManager().getPlayer(name.strip());
+		Optional<GameProfile> profile = online != null ? Optional.of(online.getGameProfile())
+				: server.getUserCache() == null ? Optional.empty() : server.getUserCache().findByName(name.strip());
+		if (profile.isEmpty() || profile.get().getId().equals(found.get().owner)) {
+			return false;
+		}
+		found.get().friends.put(profile.get().getId(), profile.get().getName());
+		changed(server, player.getServerWorld(), found.get());
+		return true;
+	}
+
+	public static boolean removeFriend(ServerPlayerEntity player, BlockPos sourcePos, UUID friend) {
+		Optional<ObeliskInfo> found = at(player.getServerWorld(), sourcePos);
+		if (found.isEmpty() || !isNear(player, sourcePos) || !isOwner(found.get(), player)) {
+			return false;
+		}
+		found.get().friends.remove(friend);
+		changed(player.getServer(), player.getServerWorld(), found.get());
+		return true;
+	}
+
+	/** After an edit: save, update the block entity, tell every client. */
+	private static void changed(MinecraftServer server, ServerWorld world, ObeliskInfo info) {
+		ObeliskRegistry.get(server).markDirty();
+		syncBlockEntity(world, info);
+		ObeliskSync.broadcast(server);
 	}
 
 	/** Opens (or refreshes) the obelisk menu for a player standing at it. */
@@ -365,7 +415,7 @@ public final class ObeliskService {
 	/** Copies what the renderer needs (name, tier) into the loaded block entity and sends it to clients. */
 	static void syncBlockEntity(ServerWorld world, ObeliskInfo info) {
 		if (world.isChunkLoaded(info.pos) && world.getBlockEntity(info.pos) instanceof ObeliskBlockEntity entity) {
-			entity.update(info.id, info.name, info.tier);
+			entity.update(info.id, info.name, info.tier, info.color);
 		}
 	}
 }

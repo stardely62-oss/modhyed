@@ -66,6 +66,7 @@ public class ObeliskScreen extends Screen {
 	private TextFieldWidget nameField;
 	private ButtonWidget renameButton;
 	private ButtonWidget accessButton;
+	private ButtonWidget friendsButton;
 	private ButtonWidget upgradeButton;
 	private ButtonWidget teleportButton;
 
@@ -117,12 +118,14 @@ public class ObeliskScreen extends Screen {
 		addDrawableChild(nameField);
 		renameButton = addDrawableChild(ButtonWidget.builder(Text.literal("✔"), b -> rename()).dimensions(x + w - 20, 30, 20, 16).build());
 		accessButton = addDrawableChild(ButtonWidget.builder(Text.empty(), b -> send(ObeliskPackets.TOGGLE_PUBLIC, null))
-				.dimensions(x, 64, w, 16).build());
+				.dimensions(x, 64, w - 50, 16).build());
+		friendsButton = addDrawableChild(ButtonWidget.builder(Text.empty(), b -> client.setScreen(new FriendsScreen(this)))
+				.dimensions(x + w - 48, 64, 48, 16).build());
 		upgradeButton = addDrawableChild(ButtonWidget.builder(Text.translatable("ender_obelisks.menu.upgrade"), b -> upgrade())
-				.dimensions(x, 122, w, 16).build());
+				.dimensions(x, 138, w, 16).build());
 		teleportButton = addDrawableChild(ButtonWidget.builder(Text.translatable("ender_obelisks.menu.teleport"), b -> teleportSelected())
-				.dimensions(x, 204, w, 18).build());
-		listY = 238;
+				.dimensions(x, 220, w, 18).build());
+		listY = 254;
 		refreshButtons();
 	}
 
@@ -135,6 +138,8 @@ public class ObeliskScreen extends Screen {
 		renameButton.active = owner;
 		accessButton.active = owner;
 		accessButton.setMessage(Text.translatable(data.isPublic() ? "ender_obelisks.menu.access_public" : "ender_obelisks.menu.access_private"));
+		friendsButton.visible = owner;
+		friendsButton.setMessage(Text.translatable("ender_obelisks.menu.friends", data.friends().size()));
 		List<ItemStack> cost = data.nextCost();
 		upgradeButton.active = owner && !data.maxTier() && (creative() || cost.stream().allMatch(s -> have(s) >= s.getCount()));
 		Entry target = selectedEntry();
@@ -409,34 +414,43 @@ public class ObeliskScreen extends Screen {
 		context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.tier", data.tier(), data.range()),
 				x, 52, 0xFFFFFFFF);
 
+		// Marker colour: eight swatches; the chosen one is framed. Only the owner can change it.
+		for (int i = 0; i < ObeliskColors.RGB.length; i++) {
+			int sx = swatchX(i);
+			if (i == data.color()) {
+				context.fill(sx - 1, SWATCH_Y - 1, sx + SWATCH + 1, SWATCH_Y + SWATCH + 1, 0xFFFFFFFF);
+			}
+			context.fill(sx, SWATCH_Y, sx + SWATCH, SWATCH_Y + SWATCH, 0xFF000000 | ObeliskColors.rgb(i));
+		}
+
 		List<ItemStack> cost = data.nextCost();
 		if (data.maxTier()) {
-			context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.max_tier"), x, 88, 0xFFFFD24A);
+			context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.max_tier"), x, 104, 0xFFFFD24A);
 		} else {
 			context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.next_tier", data.nextRange()),
-					x, 88, COLOR_MUTED);
+					x, 104, COLOR_MUTED);
 			int ix = x;
 			for (ItemStack stack : cost) {
-				context.drawItem(stack, ix, 100);
+				context.drawItem(stack, ix, 116);
 				String count = have(stack) + "/" + stack.getCount();
 				boolean enough = creative() || have(stack) >= stack.getCount();
-				context.drawTextWithShadow(textRenderer, count, ix + 18, 104, enough ? 0xFF8CF08C : 0xFFF07070);
+				context.drawTextWithShadow(textRenderer, count, ix + 18, 120, enough ? 0xFF8CF08C : 0xFFF07070);
 				ix += 22 + textRenderer.getWidth(count);
 			}
-			if (mouseY >= 100 && mouseY < 116 && mouseX >= x && mouseX < ix) {
+			if (mouseY >= 116 && mouseY < 132 && mouseX >= x && mouseX < ix) {
 				int index = Math.min(cost.size() - 1, (mouseX - x) / Math.max(1, (ix - x) / cost.size()));
 				context.drawItemTooltip(textRenderer, cost.get(index), mouseX, mouseY);
 			}
 		}
 
-		context.fill(x, 144, right, 145, COLOR_LINE);
+		context.fill(x, 160, right, 161, COLOR_LINE);
 		Entry target = selectedEntry();
 		if (target == null) {
-			context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.pick"), x, 152, COLOR_MUTED);
+			context.drawTextWithShadow(textRenderer, Text.translatable("ender_obelisks.menu.pick"), x, 168, COLOR_MUTED);
 		} else {
 			List<Text> lines = describe(target);
 			for (int i = 0; i < lines.size() && i < 5; i++) {
-				context.drawTextWithShadow(textRenderer, lines.get(i), x, 150 + i * 10, 0xFFFFFFFF);
+				context.drawTextWithShadow(textRenderer, lines.get(i), x, 166 + i * 10, 0xFFFFFFFF);
 			}
 		}
 
@@ -484,12 +498,30 @@ public class ObeliskScreen extends Screen {
 		return lines;
 	}
 
+	private static final int SWATCH = 12;
+	private static final int SWATCH_Y = 86;
+
+	private int swatchX(int i) {
+		return panelX + PAD + i * (SWATCH + 9);
+	}
+
 	// ---- input ----
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		if (super.mouseClicked(mouseX, mouseY, button)) {
 			return true;
+		}
+		if (data.isOwner() && mouseY >= SWATCH_Y && mouseY < SWATCH_Y + SWATCH) {
+			for (int i = 0; i < ObeliskColors.RGB.length; i++) {
+				if (mouseX >= swatchX(i) && mouseX < swatchX(i) + SWATCH) {
+					PacketByteBuf buf = PacketByteBufs.create();
+					buf.writeBlockPos(data.sourcePos());
+					buf.writeVarInt(i);
+					ClientPlayNetworking.send(ObeliskPackets.SET_COLOR, buf);
+					return true;
+				}
+			}
 		}
 		if (inMap(mouseX, mouseY)) {
 			Entry entry = entryAt(mouseX, mouseY);

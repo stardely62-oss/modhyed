@@ -11,6 +11,7 @@ ASSETS = ROOT / "src/main/resources/assets/ender_obelisks"
 
 PALETTE = {
     ".": (0, 0, 0, 0),
+    "O": (0xFF, 0xFF, 0xFF, 255),  # pure white, for textures that get tinted
     # obelisk stone: neutral dark slate, like polished deepslate
     "a": (0x1E, 0x20, 0x24, 255),  # joint
     "b": (0x2C, 0x2F, 0x34, 255),
@@ -117,6 +118,26 @@ def trim():
 
 
 # Item sprite: a small cluster of three time crystals
+# JourneyMap marker: a white ("O") diamond with a dark rim; JourneyMap tints it with the obelisk's colour
+MAP_MARKER = [
+    "................",
+    ".......aa.......",
+    "......aOOa......",
+    ".....aOOOOa.....",
+    "....aOOOOOOa....",
+    "...aOOOOOOOOa...",
+    "..aOOOOaaOOOOa..",
+    ".aOOOOa..aOOOOa.",
+    ".aOOOOa..aOOOOa.",
+    "..aOOOOaaOOOOa..",
+    "...aOOOOOOOOa...",
+    "....aOOOOOOa....",
+    ".....aOOOOa.....",
+    "......aOOa......",
+    ".......aa.......",
+    "................",
+]
+
 TIME_SHARD = [
     "................",
     ".......d........",
@@ -202,5 +223,6 @@ if __name__ == "__main__":
     glow.with_suffix(".png.mcmeta").write_text('{"animation": {"interpolate": true, "frames": [%s]}}\n' % frames)
     write_png(block / "obelisk_iron.png", iron())
     write_png(ASSETS / "textures/item/time_shard.png", TIME_SHARD)
+    write_png(ASSETS / "textures/gui/map_marker.png", MAP_MARKER)
     # Mod icon: the eye front, scaled up
     write_png(ASSETS / "icon.png", EYE_FRONT, scale=16)

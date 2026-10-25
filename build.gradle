@@ -19,6 +19,8 @@ sourceSets {
 }
 
 loom {
+	createRemapConfigurations(sourceSets.gametest)
+
 	mods {
 		ender_obelisks {
 			sourceSet sourceSets.main
@@ -65,11 +67,36 @@ tasks.named('runGametest') {
 	}
 }
 
+repositories {
+	// JourneyMap's API (compile only; JourneyMap itself is optional at runtime)
+	maven {
+		name = 'JourneyMap'
+		url = 'https://jm.gserv.me/repository/maven-public/'
+	}
+	// JourneyMap itself, for the client harness
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = 'Modrinth'
+				url = 'https://api.modrinth.com/maven'
+			}
+		}
+		filter {
+			includeGroup 'maven.modrinth'
+		}
+	}
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// Its pom drags an old Fabric API onto the classpath, hence transitive = false
+	modCompileOnly("info.journeymap:journeymap-api:${project.journeymap_api_version}") { transitive = false }
+	// The harness runs with the real JourneyMap so the markers can be photographed
+	modGametestRuntimeOnly("maven.modrinth:journeymap:${project.journeymap_version}") { transitive = false }
 }
 
 processResources {

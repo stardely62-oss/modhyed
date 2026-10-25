@@ -4,9 +4,11 @@ import euf.enderobelisks.EnderObelisks;
 import euf.enderobelisks.ObeliskInfo;
 import euf.enderobelisks.ObeliskRegistry;
 import euf.enderobelisks.ObeliskService;
+import euf.enderobelisks.client.ObeliskClientCache;
 import euf.enderobelisks.client.screen.ObeliskScreen;
 import euf.enderobelisks.net.MenuData;
 import euf.enderobelisks.net.ObeliskPackets;
+import euf.enderobelisks.net.ObeliskSync;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -23,8 +25,11 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -36,6 +41,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Heightmap;
+import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -238,6 +244,10 @@ public class HarnessClient implements ClientModInitializer {
 			sendSimple(c, ObeliskPackets.TOGGLE_PUBLIC, home);
 		});
 		step(20, false, c -> {
+			// The client keeps a list of visible obelisks for map mods: ours, the public ones, never someone else's private one
+			List<String> synced = ObeliskClientCache.entries().stream().map(ObeliskSync.Entry::name).toList();
+			check("client_list_synced", synced.containsAll(List.of("Деревня", "Далёкий форпост", "Мой тайник")) && !synced.contains("Чужой секрет"));
+			sendColor(c, home, 4);
 			check("renamed", onServer(c, s -> ObeliskService.at(s.getOverworld(), home).map(o -> o.name.equals("Дом")).orElse(false)));
 			check("made_private", onServer(c, s -> ObeliskService.at(s.getOverworld(), home).map(o -> !o.isPublic).orElse(false)));
 			sendSimple(c, ObeliskPackets.TOGGLE_PUBLIC, home);
@@ -247,6 +257,7 @@ public class HarnessClient implements ClientModInitializer {
 		});
 		step(30, false, c -> {
 			check("upgraded_to_max", onServer(c, s -> ObeliskService.at(s.getOverworld(), home).map(o -> o.tier == 4 && o.isPublic).orElse(false)));
+			check("colour_set", onServer(c, s -> ObeliskService.at(s.getOverworld(), home).map(o -> o.color == 4).orElse(false)));
 			if (c.currentScreen != null) {
 				c.currentScreen.close();
 			}
@@ -275,6 +286,25 @@ public class HarnessClient implements ClientModInitializer {
 			}
 		});
 		step(20, false, c -> screenshot(c, "menu_zoomed"));
+		// JourneyMap's full-screen map (its key is J) should show the obelisks as markers
+		step(10, false, c -> {
+			if (c.currentScreen != null) {
+				c.currentScreen.close();
+			}
+			c.options.hudHidden = false;
+			if (FabricLoader.getInstance().isModLoaded("journeymap")) {
+				KeyBinding.onKeyPressed(InputUtil.Type.KEYSYM.createFromCode(GLFW.GLFW_KEY_J));
+			}
+		});
+		step(60, false, c -> {
+			check("journeymap_loaded", FabricLoader.getInstance().isModLoaded("journeymap"));
+			screenshot(c, "journeymap");
+		});
+		step(10, false, c -> {
+			if (c.currentScreen != null) {
+				c.currentScreen.close();
+			}
+		});
 		step(40, false, this::finish);
 
 		ClientTickEvents.END_CLIENT_TICK.register(this::tick);
@@ -421,6 +451,13 @@ public class HarnessClient implements ClientModInitializer {
 		buf.writeBlockPos(source);
 		buf.writeString(name);
 		ClientPlayNetworking.send(ObeliskPackets.RENAME, buf);
+	}
+
+	private static void sendColor(MinecraftClient client, BlockPos source, int color) {
+		PacketByteBuf buf = PacketByteBufs.create();
+		buf.writeBlockPos(source);
+		buf.writeVarInt(color);
+		ClientPlayNetworking.send(ObeliskPackets.SET_COLOR, buf);
 	}
 
 	private static void sendSimple(MinecraftClient client, Identifier channel, BlockPos source) {

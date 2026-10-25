@@ -1,6 +1,7 @@
 package euf.enderobelisks.client;
 
 import euf.enderobelisks.EnderObelisks;
+import euf.enderobelisks.ObeliskColors;
 import euf.enderobelisks.ObeliskTiers;
 import euf.enderobelisks.block.ObeliskBlockEntity;
 import net.minecraft.block.BlockState;
@@ -101,7 +102,10 @@ public class ObeliskRenderer implements BlockEntityRenderer<ObeliskBlockEntity> 
 			matrices.scale(-0.025f, -0.025f, 0.025f);
 			Matrix4f matrix = matrices.peek().getPositionMatrix();
 			int background = (int) (client.options.getTextBackgroundOpacity(0.25f) * 255.0f) << 24;
-			textRenderer.draw(name, -textRenderer.getWidth(name) / 2.0f, 0, 0xFFE6E8EA, false, matrix, vertexConsumers,
+			// The name plate takes the obelisk's colour, softened toward white so it stays readable
+			int rgb = ObeliskColors.rgb(entity.getColor());
+			int plate = 0xFF000000 | ((((rgb >> 16) & 0xFF) + 0xE6) / 2 << 16) | ((((rgb >> 8) & 0xFF) + 0xE8) / 2 << 8) | (((rgb & 0xFF) + 0xEA) / 2);
+			textRenderer.draw(name, -textRenderer.getWidth(name) / 2.0f, 0, plate, false, matrix, vertexConsumers,
 					TextRenderer.TextLayerType.NORMAL, background, FULL_BRIGHT);
 			matrices.pop();
 		}

@@ -43,5 +43,12 @@
 	"ender_obelisks.dim.the_end": "Энд",
 	"ender_obelisks.tooltip.use": "ПКМ: карта ваших обелисков и телепорт",
 	"ender_obelisks.tooltip.upgrade": "Улучшения увеличивают дальность с 500 до 5000 блоков",
-	"ender_obelisks.tooltip.name": "Переименуйте на наковальне, чтобы задать название"
+	"ender_obelisks.tooltip.name": "Переименуйте на наковальне, чтобы задать название",
+	"ender_obelisks.menu.friends": "Друзья %s",
+	"ender_obelisks.friends.title": "Друзья этого обелиска",
+	"ender_obelisks.friends.hint": "Они могут пользоваться им, даже когда он личный",
+	"ender_obelisks.friends.name": "Ник игрока",
+	"ender_obelisks.friends.add": "Добавить",
+	"ender_obelisks.friends.none": "Пока никого",
+	"ender_obelisks.message.friend_unknown": "Игрок %s ни разу не заходил на этот сервер"
 }

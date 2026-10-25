@@ -253,6 +253,24 @@ public class ObeliskGameTests implements FabricGameTest {
 	}
 
 	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "player")
+	public void ownerSetsColourAndUnknownFriendsAreRefused(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos lower = ctx.getAbsolutePos(new BlockPos(2, 2, 2));
+		setObelisk(world, lower, Direction.NORTH);
+		ServerPlayerEntity owner = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		owner.refreshPositionAndAngles(lower.getX() + 0.5, lower.getY(), lower.getZ() - 1.5, 0, 0);
+		ObeliskInfo info = ObeliskService.register(world, lower, owner, "Mine");
+		check(ObeliskService.setColor(owner, lower, 5) && info.color == 5, "the owner should set the colour");
+		check(world.getBlockEntity(lower) instanceof ObeliskBlockEntity entity && entity.getColor() == 5,
+				"the colour should reach the block entity (name plate)");
+		check(!ObeliskService.addFriend(owner, lower, "NobodyEverPlayedHere"), "an unknown name must be refused");
+		check(info.friends.isEmpty(), "nobody should have been added");
+		world.removePlayer(owner, Entity.RemovalReason.DISCARDED);
+		world.breakBlock(lower, false);
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "player")
 	public void rangeAndAccessRules(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
 		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();

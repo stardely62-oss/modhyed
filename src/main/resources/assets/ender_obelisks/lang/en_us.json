@@ -43,5 +43,12 @@
 	"ender_obelisks.dim.the_end": "The End",
 	"ender_obelisks.tooltip.use": "Right click: a map of your obelisks, and teleport",
 	"ender_obelisks.tooltip.upgrade": "Upgrades raise the range from 500 to 5000 blocks",
-	"ender_obelisks.tooltip.name": "Rename it on an anvil to name the obelisk"
+	"ender_obelisks.tooltip.name": "Rename it on an anvil to name the obelisk",
+	"ender_obelisks.menu.friends": "Friends %s",
+	"ender_obelisks.friends.title": "Friends of this obelisk",
+	"ender_obelisks.friends.hint": "They may use it even while it is private",
+	"ender_obelisks.friends.name": "Player name",
+	"ender_obelisks.friends.add": "Add",
+	"ender_obelisks.friends.none": "Nobody yet",
+	"ender_obelisks.message.friend_unknown": "No player called %s has been on this server"
 }
